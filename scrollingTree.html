@@ -27,21 +27,8 @@
          Although there are similarities between JavaScript and Java, including language name, syntax, and respective standard libraries, the two languages are distinct and differ greatly in design.
       </div>
    </body>
-   <script>
-      var firstsec = document.getElementById('f');
-      var secondsec = document.getElementById('s');
-      var lastScrollTop = 0;
-      window.onscroll = function(){
-         var st = window.pageYOffset || document.documentElement.scrollTop; 
-         if (st > lastScrollTop){
-            secondsec.scrollIntoView({behavior: "smooth"});
-         } else {
-            firstsec.scrollIntoView({behavior: "smooth"});
-         }
-         lastScrollTop = st <= 0 ? 0 : st; 
-      } 
-
-   </script>
+   <script src="//cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.7/ScrollMagic.min.js"></script>
+   <script src="//cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.7/plugins/debug.addIndicators.min.js"></script>
 </html>
 
 
