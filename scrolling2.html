@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0;
+      }
+      section {
+        height: 100vh;
+        width: 100vw;
+        position: relative;
+        background: blue;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="f" class="section">
+      Lorem Ipsum PORCO DIO
+    </div>
+    <div id="s">
+      E LA MADONNA TROIA
+    </div>
+  </body>
+  <script>
+
+      var firstsec = document.getElementById('f');
+      var secondsec = document.getElementById('s');
+      var lastScrollTop = 0;
+
+      window.onscroll = function() {
+        var st = window.pageYOffset || document.documentElement.scrollTop;
+        if (st > lastScrollTop) {
+          secondsec.scrollIntoView({behavior: "smooth"});
+        }
+        else {
+          firstsec.scrollIntoView({behavior: "smooth"});
+        }
+        lastScrollTop = st <= 0 ? 0 : st;
+      }
+
+  </script>
+</html>
+
+
+
+
+
+
