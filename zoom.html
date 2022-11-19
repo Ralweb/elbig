@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+
+            body {
+                margin: 0;
+            }
+            .container {
+                height: 100vh;
+                width: 100vw;
+                background-color: white;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .logo {
+                width: 30%;
+                position: absolute;
+            }
+
+            .logo2 {
+                width: 30%;
+                opacity: 0;
+                position: absolute;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class="container" id="container">
+            <img src="black.png" alt="" id="logo" class="logo">
+            <img src="whitescritta.png" alt="" id="logo2" class="logo2">
+        </div>
+    </body>
+    <script>
+        const logo = document.getElementById('logo')
+        const logo2 = document.getElementById('logo2')
+        const container = document.getElementById('container')
+
+        function zoomOut() {
+            
+            logo.style.webkitTransitionDuration="5s"
+            logo.style.webkitTransform = "scale(50)"
+        }
+
+        function zoomIn() {
+            logo2.style.webkitTransitionDuration='2s'
+            container.style.background = "black"
+            logo.style.display = "none"
+            logo2.style.opacity = 1
+        }
+
+        setTimeout(zoomOut, 1000)
+        setTimeout(zoomIn, 6000)
+    </script>
+</html>
