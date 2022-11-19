@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            .containeranimationmob {
+                height: 100vh;
+                width: 100vw;
+                background-color: white;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .logoelmob {
+                width: 30%;
+                position: absolute;
+            }
+        
+            .logoel2mob {
+                width: 70%;
+                opacity: 0;
+                position: absolute;
+            }
+        
+        </style>
+    </head>
+    <body>
+        <div class="containeranimationmob" id="containeranimationmob">
+            <img src="black.png" alt="" id="logoelmob" class="logoelmob">
+            <img src="whitescritta.png" alt="" id="logoel2mob" class="logoel2mob">
+        </div>
+    </body>
+    <script>
+        const logoelmob = document.getElementById('logoelmob')
+        const logoel2mob = document.getElementById('logoel2mob')
+        const containeranimationmob = document.getElementById('containeranimationmob')
+
+        function zoomOut() {
+            
+            logoelmob.style.webkitTransitionDuration="5s"
+            logoelmob.style.webkitTransform = "scale(50)"
+        }
+
+        function zoomIn() {
+            logoel2mob.style.webkitTransitionDuration='2s'
+            containeranimationmob.style.background = "black"
+            logoelmob.style.display = "none"
+            logoel2mob.style.opacity = 1
+        }
+
+        setTimeout(zoomOut, 1000)
+        setTimeout(zoomIn, 6000)
+    </script>
+</html>
+
+
+
