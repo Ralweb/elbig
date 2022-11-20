@@ -5,11 +5,16 @@
       body {
         margin: 0;
       }
-      section {
+      .section {
         height: 100vh;
         width: 100vw;
         position: relative;
-        background: blue;
+      }
+      #f {
+        background: red;
+      }
+      #s {
+        background: yellow;
       }
     </style>
   </head>
@@ -17,7 +22,7 @@
     <div id="f" class="section">
       Lorem Ipsum PORCO DIO
     </div>
-    <div id="s">
+    <div id="s" class="section">
       E LA MADONNA TROIA
     </div>
   </body>
@@ -27,7 +32,8 @@
       var secondsec = document.getElementById('s');
       var lastScrollTop = 0;
 
-      window.onscroll = function() {
+      window.onscroll = function(e) {
+        e.preventDefault();
         var st = window.pageYOffset || document.documentElement.scrollTop;
         if (st > lastScrollTop) {
           secondsec.scrollIntoView({behavior: "smooth"});
