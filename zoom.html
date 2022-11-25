@@ -17,9 +17,9 @@
             .container {
                 height: 100vh;
                 width: 100vw;
-                display: flex;
                 justify-content: center;
                 align-items: center;
+                display: none;
             }
             .one {
                 background-color: red;
@@ -67,7 +67,8 @@
     <script>
         const logoel = document.getElementById('logoel')
         const logoel2 = document.getElementById('logoel2')
-        const container = document.getElementById('containeranimation')
+        const containeranimation = document.getElementById('containeranimation')
+        const containers = document.getElementsByClassName('container')
 
         function zoomOut() {
             
@@ -79,12 +80,17 @@
 
         function zoomIn() {
             logoel2.style.webkitTransitionDuration='2s'
-            container.style.background = "black"
+            containeranimation.style.background = "black"
             logoel.style.display = "none"
             logoel2.style.opacity = 1
+            for (let i = 0; i<containers.length; i++) {
+                containers[i].style.display = "flex"
+            }
+            
         }
 
-        container.addEventListener("wheel", zoomOut)
+
+        containeranimation.addEventListener("wheel", zoomOut)
         
 
  /*           setTimeout(zoomOut, 1000)
