@@ -12,6 +12,26 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                overflow: hidden;
+            }
+            .container {
+                height: 100vh;
+                width: 100vw;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .one {
+                background-color: red;
+            }
+            .two {
+                background-color: yellowgreen;
+            }
+            .three {
+                background-color: blue;
+            }
+            .four {
+                background-color: forestgreen;
             }
             .logoel {
                 width: 30%;
@@ -31,6 +51,18 @@
             <img src="black.png" alt="" id="logoel" class="logoel">
             <img src="whitescritta.png" alt="" id="logoel2" class="logoel2">
         </div>
+        <div class="container one" id="container">
+            <p>LOREM IPSUM</p>
+        </div>
+        <div class="container two" id="container">
+            <p>LOREM IPSUM</p>
+        </div>
+        <div class="container three" id="container">
+            <p>LOREM IPSUM</p>
+        </div>
+        <div class="container four" id="container">
+            <p>LOREM IPSUM</p>
+        </div>
     </body>
     <script>
         const logoel = document.getElementById('logoel')
@@ -41,6 +73,8 @@
             
             logoel.style.webkitTransitionDuration="5s"
             logoel.style.webkitTransform = "scale(50)"
+
+            setTimeout(zoomIn, 5000)
         }
 
         function zoomIn() {
@@ -50,7 +84,10 @@
             logoel2.style.opacity = 1
         }
 
-        setTimeout(zoomOut, 1000)
-        setTimeout(zoomIn, 6000)
+        container.addEventListener("wheel", zoomOut)
+        
+
+ /*           setTimeout(zoomOut, 1000)
+            setTimeout(zoomIn, 6000) */
     </script>
 </html>
