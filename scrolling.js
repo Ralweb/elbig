@@ -1,18 +1,19 @@
-
- ( function( $ ) {
- $( document ).on( 'mousewheel DOMMouseScroll', function( event ) {
- if ( ( $( '.et_pb_side_nav' ).length === 0 ) || $( 'html, body' ).is( ':animated' ) ) return;
- event.preventDefault();
- var direction = event.originalEvent.wheelDelta || -event.originalEvent.detail;
- var $position = $( '.et_pb_side_nav' ).find( '.active' );
- var $target;
- if( direction < 0 ) {
- $target = $( $position ).parent().next();
- } else {
- $target = $( $position ).parent().prev();
- }
- if ( $( $target.length ) !== 0 ) {
- $( $target ).children( 'a' ).trigger( "click" );
- }
- } );
- } )( jQuery );
+var square = document.createElement('div');
+square.style.width = '100px';
+square.style.height = '100px';
+square.style.backgroundColor = 'blue';
+document.body.appendChild(square);
+/* create a red circle */
+var circle = document.createElement('div');
+circle.style.width = '100px';
+circle.style.height = '100px';
+circle.style.borderRadius = '50px';
+circle.style.backgroundColor = 'red';
+document.body.appendChild(circle);
+/* make circle perspective of 1000px */
+circle.style.perspective = '1000px';
+/* create an animation where circle rotate on Y axis */
+var animation = document.createElement('div');
+animation.style.animation = 'spin 2s infinite linear';
+animation.style.transformStyle = 'preserve-3d';
+circle.appendChild(animation);

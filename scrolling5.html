@@ -1,62 +1,63 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <style>
-            html {
-                scroll-behavior: smooth;
-                margin: 0;
-            }
-            body {
-                margin: 0;
-            }
-        </style>
-    </head>
-    
-    <body>
-        <div style="background-color: red; height: 100vh;"></div>
-        <div style="background-color: yellow; height: 100vh;"></div>
-        <div style="background-color: green; height: 100vh;"></div>
-    </body>
-    <script>
-        /* 1) create 3 full size page sections and call the first one "First" and make it green, call the second one "Second" and make it black, call the third one "Third" and make it yellow.
-    var first = document.createElement('div');
-    first.innerHTML = 'First';
-    first.style.backgroundColor = 'green';
-    first.style.height = '100%';
-    document.body.appendChild(first);
-    var second = document.createElement('div');
-    second.innerHTML = 'Second';
-    second.style.backgroundColor = 'black';
-    second.style.height = '100%';
-    document.body.appendChild(second);
-    var third = document.createElement('div');
-    third.innerHTML = 'Third';
-    third.style.backgroundColor = 'yellow';
-    third.style.height = '100%';
-    document.body.appendChild(third);  */
-    /* 2) create a function that force you to snap through sections on a single mouse scroll in a smooth way */
-    var sections = document.getElementsByTagName('div');
-    var currentSection = 0;
-    function scrollToSection(section) {
-      if (section < 0) {
-        section = 0;
-      } else if (section >= sections.length) {
-        section = sections.length - 1;
+  <head>
+    <style>
+        
+      body {
+        margin: 0;
       }
-      currentSection = section;
-      for (var i = 0; i < sections.length; i++) {
-        sections[i].style.display = 'none';
-      }
-      sections[currentSection].style.display = 'block';
-    }
-    document.body.onwheel = function(e) {
-      if (e.deltaY > 0) {
-        scrollToSection(currentSection + 1);
-      } else {
-        scrollToSection(currentSection - 1);
-      }
-    };
-    scrollToSection(0);
-    </script>
-</html>
 
+      .section {
+        height: 100vh; /* 100% of the viewport height */
+      }
+
+      /* First section */
+      .section1 {
+        background-color: #f44336; /* Red */
+      }
+
+      /* Second section */
+      .section2 {
+        background-color: #4caf50; /* Green */
+      }
+
+      /* Third section */
+      .section3 {
+        background-color: #2196f3; /* Blue */
+      }
+    </style>
+    <script>
+      function switching() {
+        // Get the current scroll position
+        var scrollPos = window.pageYOffset;
+
+        // Get all the section elements on the page
+        var sections = document.querySelectorAll('section');
+
+        // Find the current section by comparing the scroll position to the top of each section
+        var currentSection;
+        for (var i = 0; i < sections.length; i++) {
+          var section = sections[i];
+          if (section.offsetTop <= scrollPos) {
+            currentSection = section;
+          } else {
+            break;
+          }
+        }
+
+        // If the user has scrolled down, move to the next section
+        if (currentSection && currentSection.nextElementSibling) {
+          window.scrollTo(0, currentSection.nextElementSibling.offsetTop);
+        }
+      }
+
+      // Attach the `switching` function to the `scroll` event
+      window.addEventListener('scroll', switching);
+    </script>
+  </head>
+  <body>
+    <div class="section section1"></div>
+    <div class="section section2"></div>
+    <div class="section section3"></div>
+  </body>
+</html>
