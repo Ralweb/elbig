@@ -2,62 +2,64 @@
 <html>
   <head>
     <style>
-        
+
       body {
         margin: 0;
       }
-
-      .section {
+      section {
         height: 100vh; /* 100% of the viewport height */
       }
-
-      /* First section */
-      .section1 {
-        background-color: #f44336; /* Red */
+      #section1 {
+        background-color: red;
       }
-
-      /* Second section */
-      .section2 {
-        background-color: #4caf50; /* Green */
+      #section2 {
+        background-color: green;
       }
-
-      /* Third section */
-      .section3 {
-        background-color: #2196f3; /* Blue */
+      #section3 {
+        background-color: blue;
+      }
+      #section4 {
+        background-color: yellow;
       }
     </style>
     <script>
-      function switching() {
-        // Get the current scroll position
-        var scrollPos = window.pageYOffset;
-
-        // Get all the section elements on the page
-        var sections = document.querySelectorAll('section');
-
-        // Find the current section by comparing the scroll position to the top of each section
-        var currentSection;
-        for (var i = 0; i < sections.length; i++) {
-          var section = sections[i];
-          if (section.offsetTop <= scrollPos) {
-            currentSection = section;
-          } else {
-            break;
-          }
+      var currentSection = 0;
+      document.addEventListener('wheel', function(event) {
+        // If the mouse wheel is scrolled up
+        if (event.deltaY < 0) {
+          currentSection--;
+        }
+        // If the mouse wheel is scrolled down
+        else if (event.deltaY > 0) {
+          currentSection++;
         }
 
-        // If the user has scrolled down, move to the next section
-        if (currentSection && currentSection.nextElementSibling) {
-          window.scrollTo(0, currentSection.nextElementSibling.offsetTop);
+        // Make sure the current section is within bounds
+        if (currentSection < 0) {
+          currentSection = 0;
         }
-      }
+        else if (currentSection > 3) {
+          currentSection = 3;
+        }
 
-      // Attach the `switching` function to the `scroll` event
-      window.addEventListener('scroll', switching);
+        // Scroll to the current section
+        document.getElementById('section' + (currentSection + 1)).scrollIntoView({behavior: "smooth"});
+      });
     </script>
   </head>
   <body>
-    <div class="section section1"></div>
-    <div class="section section2"></div>
-    <div class="section section3"></div>
+    <section id="section1">
+      Section 1
+    </section>
+    <section id="section2">
+      Section 2
+    </section>
+    <section id="section3">
+      Section 3
+    </section>
+    <section id="section4">
+      Section 4
+    </section>
   </body>
+
 </html>

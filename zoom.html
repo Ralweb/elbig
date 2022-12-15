@@ -47,6 +47,7 @@
         </style>
     </head>
     <body>
+
         <div class="containeranimation" id="containeranimation">
             <img src="black.png" alt="" id="logoel" class="logoel">
             <img src="whitescritta.png" alt="" id="logoel2" class="logoel2">
@@ -89,6 +90,26 @@
             
         }
 
+        function hideOnScroll() {
+            // Get the section element
+            var section = document.getElementById("containeranimation");
+
+            // Get the current scroll position
+            var scrollPosition = window.scrollY;
+
+            // Get the height of the section
+            var sectionHeight = section.offsetHeight;
+
+            // Calculate the trigger point for the section to disappear
+            var triggerPoint = section.offsetTop + sectionHeight;
+
+            // If the user has scrolled past the trigger point, hide the section
+            if (scrollPosition > triggerPoint) {
+                section.style.display = "none";
+              }
+        }
+
+        window.addEventListener("scroll", hideOnScroll)
 
         containeranimation.addEventListener("wheel", zoomOut)
         
