@@ -27,18 +27,16 @@
         }
   
         .cls-1 {
-          stroke-dashoffset: 0;
-          animation: lineaway 2s infinite;
+          animation: fadeoutline 2s infinite linear;
         }
-        
         .cls-3 {
             animation-name: circleup, fadeout;
             animation-duration: 2s, 2s;
             animation-iteration-count: infinite, infinite;
             animation-timing-function: ease-out, linear;
           }
-  
-  
+        
+        
           @keyframes circleup {
             0% {
               transform: translateY(0);
@@ -58,17 +56,28 @@
           }
   
           @keyframes fadeout {
-            75% {
+            80% {
               opacity: 1;
             }
             100% {
               opacity: 0;
             }
           }
+
+          @keyframes fadeoutline {
+            80% {
+              opacity: 1;
+            }
+            81% {
+              opacity: 0;
+            }
+          }
       </style>
     </defs>
     <circle class="cls-3" cx="25" cy="175" r="25"/>
-    <line class="cls-1" x1="25" y1="150" x2="25" y2="25"/>
+    <line class="cls-1" x1="25" y1="150" x2="25" y2="25">
+      <animate attributeName="y1" from="150" to="25" dur="2s" fill="freeze" repeatCount="indefinite"/>
+    </line>
     <line class="cls-2" x1="25" y1="25" x2="25"/>
   </svg>
 </div>
