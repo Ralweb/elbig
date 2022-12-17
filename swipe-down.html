@@ -1,0 +1,26 @@
+
+<div class="circle" >
+</div>
+<div class="line">
+</div>
+<style>
+@keyframes swipe-down {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+.circle {
+  animation: swipe-down 1s linear;
+  background-color: green;
+}
+
+.line {
+  background-color: blue;
+  height: 200px; 
+  width: 2px;
+}
+</style>
