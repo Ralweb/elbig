@@ -9,6 +9,26 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                overflow: hidden;
+            }
+            .container {
+                height: 100vh;
+                width: 100vw;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .one {
+                background-color: red;
+            }
+            .two {
+                background-color: yellowgreen;
+            }
+            .three {
+                background-color: blue;
+            }
+            .four {
+                background-color: forestgreen;
             }
             .logoelmob {
                 width: 30%;
@@ -28,6 +48,19 @@
             <img src="black.png" alt="" id="logoelmob" class="logoelmob">
             <img src="whitescritta.png" alt="" id="logoel2mob" class="logoel2mob">
         </div>
+        <div class="container one" id="container">
+            <p>LOREM IPSUM</p>
+        </div>
+        <div class="container two" id="container">
+            <p>LOREM IPSUM</p>
+        </div>
+        <div class="container three" id="container">
+            <p>LOREM IPSUM</p>
+        </div>
+        <div class="container four" id="container">
+            <p>LOREM IPSUM</p>
+        </div>
+
     </body>
     <script>
         const logoelmob = document.getElementById('logoelmob')
@@ -38,6 +71,9 @@
             
             logoelmob.style.webkitTransitionDuration="5s"
             logoelmob.style.webkitTransform = "scale(50)"
+
+            setTimeout(zoomIn, 5000)
+
         }
 
         function zoomIn() {
@@ -47,8 +83,7 @@
             logoel2mob.style.opacity = 1
         }
 
-        setTimeout(zoomOut, 1000)
-        setTimeout(zoomIn, 6000)
+        containeranimationmob.addEventListener('touchmove', zoomOut)
     </script>
 </html>
 

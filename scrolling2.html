@@ -5,38 +5,83 @@
       body {
         margin: 0;
       }
-      section {
+      .section {
         height: 100vh;
         width: 100vw;
         position: relative;
-        background: blue;
+        display: none;
+      }
+      .section.active {
+        display: block;
+      }
+      #f {
+        background: red;
+      }
+      #s {
+        background: yellow;
+      }
+
+      #t {
+        background: green;
+      }
+      button {
+        position: absolute;
+        z-index: 5;
       }
     </style>
   </head>
   <body>
-    <div id="f" class="section">
+    <button id="button">CLICK</button>
+    <section id="f" class="section active">
       Lorem Ipsum PORCO DIO
-    </div>
-    <div id="s">
+    </section>
+    <section id="s" class="section">
       E LA MADONNA TROIA
-    </div>
+    </section>
+    <section id="t" class="section">
+      E GLI ANGELI IN COLONNA
+    </section>
   </body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
   <script>
 
-      var firstsec = document.getElementById('f');
-      var secondsec = document.getElementById('s');
-      var lastScrollTop = 0;
+    ( function( $ ) {
+    $( document ).on( 'mousewheel DOMMouseScroll', function( event ) {
+    if ( ( $( '.et_pb_side_nav' ).length === 0 ) || $( 'html, body' ).is( ':animated' ) ) return;
+    event.preventDefault();
+    var direction = event.originalEvent.wheelDelta || -event.originalEvent.detail;
+    var $position = $( '.et_pb_side_nav' ).find( '.active' );
+    var $target;
+    if( direction < 0 ) {
+    $target = $( $position ).parent().next();
+    } else {
+    $target = $( $position ).parent().prev();
+    }
+    if ( $( $target.length ) !== 0 ) {
+    $( $target ).children( 'a' ).trigger( "click" );
+    }
+    } );
+    } )( jQuery );
 
-      window.onscroll = function() {
-        var st = window.pageYOffset || document.documentElement.scrollTop;
-        if (st > lastScrollTop) {
-          secondsec.scrollIntoView({behavior: "smooth"});
-        }
-        else {
-          firstsec.scrollIntoView({behavior: "smooth"});
-        }
-        lastScrollTop = st <= 0 ? 0 : st;
+    /*
+    var slidesec = document.getElementsByTagName("section")
+    var but = document.getElementById("button")
+    i=0
+    function changeslide() {
+      if (i<slidesec.length-1) {
+        slidesec[i].classList.remove('active')
+        slidesec[i+1].classList.add('active')
+        i++
       }
+
+
+
+
+    }
+
+    button.addEventListener('click', changeslide)
+    window.addEventListener('wheel', changeslide)
+    */
 
   </script>
 </html>

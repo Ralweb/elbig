@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+
+      body {
+        margin: 0;
+      }
+      section {
+        height: 100vh; /* 100% of the viewport height */
+      }
+      #section1 {
+        background-color: red;
+      }
+      #section2 {
+        background-color: green;
+      }
+      #section3 {
+        background-color: blue;
+      }
+      #section4 {
+        background-color: yellow;
+      }
+    </style>
+    <script>
+      var currentSection = 0;
+      document.addEventListener('wheel', function(event) {
+        // If the mouse wheel is scrolled up
+        if (event.deltaY < 0) {
+          currentSection--;
+        }
+        // If the mouse wheel is scrolled down
+        else if (event.deltaY > 0) {
+          currentSection++;
+        }
+
+        // Make sure the current section is within bounds
+        if (currentSection < 0) {
+          currentSection = 0;
+        }
+        else if (currentSection > 3) {
+          currentSection = 3;
+        }
+
+        // Scroll to the current section
+        document.getElementById('section' + (currentSection + 1)).scrollIntoView({behavior: "smooth"});
+      });
+    </script>
+  </head>
+  <body>
+    <section id="section1">
+      Section 1
+    </section>
+    <section id="section2">
+      Section 2
+    </section>
+    <section id="section3">
+      Section 3
+    </section>
+    <section id="section4">
+      Section 4
+    </section>
+  </body>
+
+</html>
