@@ -1,19 +1,74 @@
-<svg width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M25 50C38.8071 50 50 38.8071 50 25C50 11.1929 38.8071 0 25 0C11.1929 0 0 11.1929 0 25C0 38.8071 11.1929 50 25 50Z" fill="#333333"/>
-    <path class="arrow" d="M25 35L16.6667 25L25 15" stroke="#FFFFFF" stroke-width="2"/>
+<style>
+  .container {
+    width: 100px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+  }
+</style>
+
+<div class="container">
+  <svg id="Livello_1" data-name="Livello 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 200">
+    <defs>
+      <style>
+        .cls-1 {
+          stroke: #000000;
+        }
+  
+        .cls-1, .cls-2 {
+          stroke-miterlimit: 10;
+          stroke-width: 5px;
+        }
+  
+
+  
+        .cls-2 {
+          stroke: rgba(255, 255, 255, 0);
+        }
+  
+        .cls-1 {
+          stroke-dashoffset: 0;
+          animation: lineaway 2s infinite;
+        }
+        
+        .cls-3 {
+            animation-name: circleup, fadeout;
+            animation-duration: 2s, 2s;
+            animation-iteration-count: infinite, infinite;
+            animation-timing-function: ease-out, linear;
+          }
+  
+  
+          @keyframes circleup {
+            0% {
+              transform: translateY(0);
+            }
+            100% {
+              transform: translateY(-150px);
+            }
+          }
+    
+          @keyframes lineaway {
+            from {
+              stroke-dashoffset: 0;
+            }
+            to {
+              stroke-dashoffset: 100%;
+            }
+          }
+  
+          @keyframes fadeout {
+            75% {
+              opacity: 1;
+            }
+            100% {
+              opacity: 0;
+            }
+          }
+      </style>
+    </defs>
+    <circle class="cls-3" cx="25" cy="175" r="25"/>
+    <line class="cls-1" x1="25" y1="150" x2="25" y2="25"/>
+    <line class="cls-2" x1="25" y1="25" x2="25"/>
   </svg>
-  
-  <style>
-    .arrow {
-      stroke-dasharray: 50;
-      stroke-dashoffset: 50;
-      animation: arrow-anim 2s linear infinite;
-    }
-  
-    @keyframes arrow-anim {
-      to {
-        stroke-dashoffset: 0;
-      }
-    }
-  </style>
-  
+</div>

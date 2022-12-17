@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Livello_1" data-name="Livello 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 200">
+  <defs>
+    <style>
+      .cls-1 {
+        stroke: #1d1d1b;
+      }
+
+      .cls-1, .cls-2 {
+        stroke-miterlimit: 10;
+        stroke-width: 5px;
+      }
+
+      .cls-1, .cls-2, .cls-3 {
+        fill: #1d1d1b;
+      }
+
+      .cls-2 {
+        stroke: #fff;
+      }
+
+      .cls-1, .cls-3 {
+          fill: #000000;
+          animation-name: circleup, lineaway, fadeout;
+          animation-duration: 2s, 2s, 2s;
+          animation-iteration-count: infinite, infinite, infinite;
+          animation-timing-function: ease-out, linear, linear;
+        }
+
+
+        @keyframes circleup {
+          0% {
+            transform: translateY(0);
+          }
+          100% {
+            transform: translateY(-150px);
+          }
+        }
+  
+        @keyframes lineaway {
+          0% {
+            stroke-dashoffset: 0;
+          }
+          100% {
+            stroke-dashoffset: 1;
+          }
+        }
+
+        @keyframes fadeout {
+          75% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 0;
+          }
+        }
+    </style>
+  </defs>
+  <circle class="cls-3" cx="25" cy="175" r="25"/>
+  <line class="cls-1" x1="25" y1="150" x2="25" y2="25"/>
+  <line class="cls-2" x1="25" y1="25" x2="25"/>
+</svg>

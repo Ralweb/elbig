@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Livello_1" data-name="Livello 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 200">
+  <defs>
+    <style>
+      .cls-1 {
+        stroke: #1d1d1b;
+        stroke-miterlimit: 10;
+        stroke-width: 5px;
+      }
+
+      .cls-1, .cls-2 {
+        fill: #1d1d1b;
+        animation-name: circleup, lineaway;
+        animation-duration: 2s, 2s;
+        animation-iteration-count: infinite, infinite;
+      }
+
+      @keyframes circleup {
+        0% {
+          transform: translateY(0); /* Start at the bottom of the page */
+        }
+        100% {
+          transform: translateY(-200px); /* End at the top of the page */
+        }
+      }
+
+      @keyframes lineaway {
+        0% {
+          stroke-dashoffset: 0;
+        }
+        100% {
+          stroke-dashoffset: 1;
+        }
+      }
+    </style>
+  </defs>
+  <circle class="cls-2" cx="25" cy="175" r="25"/>
+  <line class="cls-1" x1="25" y1="156.59" x2="25"/>
+</svg>
