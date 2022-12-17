@@ -5,7 +5,7 @@
             .scene {
                 width: 200px;
                 height: 260px;
-                margin: 40px 0;
+                margin: 100px 100px;
                 perspective: 600px;
                 
             }
@@ -14,8 +14,7 @@
                 height: 100%;
                 transform-style: preserve-3d;
                 position: relative;
-                animation: rotate 10s infinite;
-                box-shadow: 0 4px 2px -2px gray;
+                animation: rotate 7s infinite;
             }
             
             .front,
@@ -26,12 +25,8 @@
                 backface-visibility: hidden;
             }
             
-            .front {
-                background-color: red;
-            }
             
             .back {
-                background-color: blue;
                 transform: rotateY(180deg);
             }
             @keyframes rotate{
@@ -46,8 +41,8 @@
     <body>
         <div class="scene">
             <div class="card">
-                <div class="front"></div>
-                <div class="back"></div>
+                <img src="giftfront.png" alt="" class="front">
+                <img src="giftback.png" alt="" class="back">
             </div>
         </div>
     </body>
