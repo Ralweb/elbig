@@ -8,64 +8,47 @@
 </style>
 
 <div class="container">
-  <svg id="Livello_1" data-name="Livello 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 200">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 200">
     <defs>
       <style>
         .cls-1 {
-          stroke: #00000000;
+          fill: none;
         }
-  
-        .cls-1, .cls-2 {
-          stroke-miterlimit: 10;
-          stroke-width: 5px;
-        }
-  
-
   
         .cls-2 {
-          stroke: rgba(255, 255, 255, 0);
+          fill: #231f20;
+          animation-name: swipeUp, fadeOut;
+          animation-duration: 1.5s, 1.5s;
+          animation-iteration-count: infinite, infinite;
         }
   
-
-        .cls-3 {
-            animation-name: circleup, fadeout;
-            animation-duration: 2s, 2s;
-            animation-iteration-count: infinite, infinite;
-            animation-timing-function: ease-out, linear;
-          }
-        
-        
-          @keyframes circleup {
-            0% {
-              transform: translateY(0);
-            }
-            100% {
-              transform: translateY(-150px);
-            }
-          }
   
-          @keyframes fadeout {
-            80% {
-              opacity: 1;
-            }
-            100% {
-              opacity: 0;
-            }
+        @keyframes swipeUp {
+          0% {
+            transform: translateY(0);
           }
-
-          @keyframes fadeoutline {
-            80% {
-              opacity: 1;
-            }
-            100% {
-              opacity: 0;
-            }
+          100% {
+            transform: translateY(-125px);
           }
+        }
+  
+        @keyframes fadeOut {
+          70% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 0;
+          }
+        }
       </style>
     </defs>
-    <circle class="cls-3" cx="25" cy="175" r="25"/>
-    <line class="cls-1" x1="25" y1="150" x2="25" y2="25">
-    </line>
-    <line class="cls-2" x1="25" y1="25" x2="25"/>
+    <g id="Layer_2" data-name="Layer 2">
+      <rect class="cls-1" width="50" height="200"/>
+    </g>
+    <g id="Layer_1" data-name="Layer 1">
+      <path class="cls-2" d="M49.02,195.75c-7.42-7.19-14.83-14.39-22.25-21.58-.98-.95-2.55-.95-3.54,0-7.42,7.19-14.83,14.39-22.25,21.58-2.31,2.24,1.22,5.78,3.54,3.54,7.42-7.19,14.83-14.39,22.25-21.58h-3.54c7.42,7.19,14.83,14.39,22.25,21.58,2.31,2.24,5.85-1.29,3.54-3.54h0Z"/>
+      <path class="cls-2" d="M49.02,174.16c-7.42-7.19-14.83-14.39-22.25-21.58-.98-.95-2.55-.95-3.54,0-7.42,7.19-14.83,14.39-22.25,21.58-2.31,2.24,1.22,5.78,3.54,3.54,7.42-7.19,14.83-14.39,22.25-21.58h-3.54c7.42,7.19,14.83,14.39,22.25,21.58,2.31,2.24,5.85-1.29,3.54-3.54h0Z"/>
+      <path class="cls-2" d="M49.02,152.58c-7.42-7.19-14.83-14.39-22.25-21.58-.98-.95-2.55-.95-3.54,0-7.42,7.19-14.83,14.39-22.25,21.58-2.31,2.24,1.22,5.78,3.54,3.54,7.42-7.19,14.83-14.39,22.25-21.58h-3.54c7.42,7.19,14.83,14.39,22.25,21.58,2.31,2.24,5.85-1.29,3.54-3.54h0Z"/>
+    </g>
   </svg>
 </div>
