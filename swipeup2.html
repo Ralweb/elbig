@@ -12,7 +12,7 @@
     <defs>
       <style>
         .cls-1 {
-          stroke: #000000;
+          stroke: #00000000;
         }
   
         .cls-1, .cls-2 {
@@ -26,9 +26,7 @@
           stroke: rgba(255, 255, 255, 0);
         }
   
-        .cls-1 {
-          animation: fadeoutline 2s infinite linear;
-        }
+
         .cls-3 {
             animation-name: circleup, fadeout;
             animation-duration: 2s, 2s;
@@ -43,15 +41,6 @@
             }
             100% {
               transform: translateY(-150px);
-            }
-          }
-    
-          @keyframes lineaway {
-            from {
-              stroke-dashoffset: 0;
-            }
-            to {
-              stroke-dashoffset: 100%;
             }
           }
   
@@ -76,7 +65,6 @@
     </defs>
     <circle class="cls-3" cx="25" cy="175" r="25"/>
     <line class="cls-1" x1="25" y1="150" x2="25" y2="25">
-      <animate id= 'op' attributeName="y1" from="150" to="25" dur="2s" begin="0.0s;op.end+0.5s" fill="freeze"/>
     </line>
     <line class="cls-2" x1="25" y1="25" x2="25"/>
   </svg>
