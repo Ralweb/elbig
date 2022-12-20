@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 200.19">
+  <defs>
+    <style>
+      .cls-1 {
+        stroke: #1d1d1b;
+        stroke-linecap: round;
+        stroke-miterlimit: 10;
+        stroke-width: 4px;
+      }
+
+      .cls-1, .cls-2 {
+        fill: none;
+      }
+
+      .cls-1 {
+        animation-name: circleup, fadeout;
+        animation-duration: 2s, 2s;
+        animation-iteration-count: infinite, infinite;
+        animation-timing-function: ease-out, linear;
+      }
+    
+    
+      @keyframes circleup {
+        0% {
+          transform: translateY(150px);
+        }
+        100% {
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fadeout {
+        80% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+
+
+    </style>
+  </defs>
+  <g id="Livello_1" data-name="Livello 1">
+    <rect class="cls-2" y=".19" width="50" height="200"/>
+  </g>
+  <g id="Livello_2" data-name="Livello 2">
+    <polyline class="cls-1" points="47.68 24.13 25 2.75 2.32 24.13"/>
+    <polyline class="cls-1" points="47.68 45.51 25 24.13 2.32 45.51"/>
+    <polyline class="cls-1" points="47.68 66.9 25 45.51 2.32 66.9"/>
+    <animate>
+      
+    </animate>
+  </g>
+</svg>
