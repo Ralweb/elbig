@@ -1,0 +1,81 @@
+<svg id="Livello_1" data-name="Livello 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 200">
+    <defs>
+      <style>
+        .cls-1 {
+          stroke: #00000000;
+        }
+  
+        .cls-1, .cls-2 {
+          stroke-miterlimit: 10;
+          stroke-width: 5px;
+        }
+  
+        .cls-2 {
+          stroke: rgba(255, 255, 255, 0);
+        }
+  
+        .cls-3 {
+          animation-name: swipeUp;
+          animation-duration: 2s;
+          animation-iteration-count: infinite;
+          animation-timing-function: ease-in-out;
+        }
+        
+        @keyframes swipeUp {
+          0% {
+            opacity: 0;
+            scale: 1.1;
+          }
+
+          10% {
+            transform: translateY(0);
+            opacity: 1;
+            scale: 1;
+          }
+
+          90% {
+            transform: translateY(-150px);
+            opacity: 1;
+            scale: 1;
+          }
+
+          100% {
+            transform: translateY(-150px);
+            opacity: 0;
+            scale: 1.1;
+          }
+        }
+
+        @keyframes circleup {
+          0% {
+            transform: translateY(0);
+          }
+          100% {
+            transform: translateY(-150px);
+          }
+        }
+
+        @keyframes fadeout {
+          80% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 0;
+          }
+        }
+
+        @keyframes fadeoutline {
+          80% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 0;
+          }
+        }
+      </style>
+    </defs>
+    <circle class="cls-3" cx="25" cy="175" r="25"/>
+    <line class="cls-1" x1="25" y1="150" x2="25" y2="25">
+    </line>
+    <line class="cls-2" x1="25" y1="25" x2="25"/>
+  </svg>

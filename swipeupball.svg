@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 200">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-2 {
+        
+        fill: #000000;
+        transform-origin: center;
+        animation-name: swipeUp;
+        animation-duration: 1.5s;
+        animation-iteration-count: infinite;
+        animation-timing-function: ease-in-out;
+      }
+        
+        @keyframes swipeUp {
+          0% {
+            opacity: 0;
+            scale: 1.1;
+          }
+
+          20% {
+            transform: translateY(0);
+            opacity: 1;
+            scale: 1;
+          }
+
+          25% {
+            transform: translateY(0);
+            opacity: 1;
+            scale: 1;
+          }
+
+          65% {
+            transform: translateY(-150px);
+            opacity: 1;
+            scale: 1;
+          }
+          70% {
+            transform: translateY(-150px);
+            opacity: 1;
+            scale: 1;
+          }
+
+          90% {
+            transform: translateY(-150px);
+            opacity: 0;
+            scale: 1.1;
+          }
+
+          100% {
+            transform: translateY(-150px);
+            opacity: 0;
+            scale: 1.1;
+          }
+        }
+    </style>
+  </defs>
+  <g id="Livello_1" data-name="Livello 1">
+    <rect class="cls-1" width="50" height="200"/>
+  </g>
+  <g id="Livello_2" data-name="Livello 2">
+    <circle class="cls-2" cx="25" cy="179.13" r="20.62"/>
+  </g>
+
+</svg>

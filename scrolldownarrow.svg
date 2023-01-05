@@ -16,7 +16,7 @@
       
       .cls-1 {
         animation-name: circleup, fadeout;
-        animation-duration: 2s, 2s;
+        animation-duration: 1s, 1s;
         animation-iteration-count: infinite, infinite;
         animation-timing-function: ease-out, linear;
       }
@@ -24,7 +24,7 @@
     
       @keyframes circleup {
         0% {
-          transform: translateY(-125px);
+          transform: translateY(-50px);
         }
         100% {
           transform: translateY(0);
