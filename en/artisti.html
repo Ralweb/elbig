@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Artists &mdash; Big Art Gallery</title>
+  <meta name="description" content="The artists at Big Art Gallery in Rome: black &amp; grey, realism, portrait, fine line. Each tattooer&rsquo;s speciality and work.">
+
+  <!-- Colore della barra browser su mobile: allineato al fondo pagina -->
+  <meta name="theme-color" content="#0a0a0a">
+
+  <!-- PLACEHOLDER — sostituire con il logo reale del cliente.
+       Serve anche un favicon.ico in root per i browser più vecchi. -->
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../assets/favicon.svg">
+
+  <!-- Open Graph: da completare con og:image quando arrivano le foto reali -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_GB">
+  <meta property="og:locale:alternate" content="it_IT">
+  <meta property="og:title" content="Artists &mdash; Big Art Gallery">
+  <meta property="og:description" content="The artists at Big Art Gallery in Rome: black &amp; grey, realism, portrait, fine line.">
+
+  <!-- FONT — stessa accoppiata della home (Oswald + Archivo). Se si cambia
+       qui va cambiata anche in index.html, oltre ai token in css/style.css. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;700&family=Archivo:wght@400&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../css/style.css">
+
+  <link rel="alternate" hreflang="it" href="../artisti.html">
+  <link rel="alternate" hreflang="en" href="artisti.html">
+  <link rel="alternate" hreflang="x-default" href="../artisti.html">
+  <script src="../js/lang.js"></script>
+</head>
+
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ==========================================================================
+       HEADER + NAV
+
+       Stessi componenti della home, con due sole differenze, entrambe dovute
+       al fatto che qui NON siamo più in home:
+
+       1. Logo e voce "Home" puntano a index.html, non a #top. Il logo resta
+          la via di ritorno alla home, come ovunque nel sito.
+       2. Le ancore di sezione diventano assolute (index.html#our-work): da
+          qui #our-work non esiste, e un'ancora morta è peggio di un link.
+
+       "Contatti" resta #contatti: il footer di questa pagina è lo stesso
+       della home e porta lo stesso id. La voce "Tutti gli artisti" della home
+       qui sparisce — è questa pagina — e "Artisti" prende aria-current.
+       ========================================================================== -->
+
+  <div id="top" class="header-sentinel"></div>
+
+  <header class="site-header" id="site-header">
+    <div class="site-header__inner container">
+
+      <!-- PLACEHOLDER — sostituire tutto il contenuto di <a> con l'SVG del
+           logo reale, mantenendo l'aria-label. -->
+      <a class="logo" href="index.html" aria-label="Big Art Gallery, back to home">
+        <span class="logo__diamond" aria-hidden="true"></span>
+        <span class="logo__text">BIG</span>
+      </a>
+
+      <nav class="nav-desktop" aria-label="Main">
+        <ul class="nav-desktop__list" role="list">
+          <li><a class="nav-desktop__link" href="index.html">Home</a></li>
+          <li><a class="nav-desktop__link" href="index.html#our-work">Our Work</a></li>
+          <li><a class="nav-desktop__link" href="artisti.html" aria-current="page">Artists</a></li>
+          <li><a class="nav-desktop__link" href="index.html#studio">Studio</a></li>
+          <li><a class="nav-desktop__link" href="#contatti">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="site-header__actions">
+        <nav class="lang-switch" aria-label="Language">
+          <a class="lang-switch__link" href="../artisti.html" lang="it" hreflang="it" data-set-lang="it">IT</a>
+          <span class="lang-switch__sep" aria-hidden="true"></span>
+          <span class="lang-switch__current" lang="en" aria-current="true">EN</span>
+        </nav>
+
+        <!-- data-open-modal apre il modale contatti (js/main.js). Resta un
+             <a href="#contatti">: senza JS cade sui recapiti del footer. -->
+        <a class="btn btn--primary btn--sm" href="#contatti" data-open-modal>
+          <span class="btn__label">Book your tattoo</span>
+          <span class="btn__label btn__label--short">Book</span>
+        </a>
+
+        <button
+          class="nav-toggle"
+          id="nav-toggle"
+          type="button"
+          aria-label="Open menu"
+          aria-expanded="false"
+          aria-controls="nav-overlay">
+          <span class="nav-toggle__bar" aria-hidden="true"></span>
+          <span class="nav-toggle__bar" aria-hidden="true"></span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <div class="nav-overlay" id="nav-overlay" inert>
+    <nav class="nav-overlay__nav container" aria-label="Menu">
+
+      <ul class="nav-overlay__list" role="list">
+        <li class="nav-overlay__item">
+          <a class="nav-overlay__link" href="index.html">Home</a>
+        </li>
+        <li class="nav-overlay__item">
+          <a class="nav-overlay__link" href="index.html#our-work">Our Work</a>
+        </li>
+        <li class="nav-overlay__item">
+          <a class="nav-overlay__link" href="artisti.html" aria-current="page">Artists</a>
+        </li>
+        <li class="nav-overlay__item">
+          <a class="nav-overlay__link" href="index.html#studio">Studio</a>
+        </li>
+        <li class="nav-overlay__item">
+          <a class="nav-overlay__link" href="#contatti">Contact</a>
+        </li>
+      </ul>
+
+      <!-- ⚠️ Stessi dati placeholder del footer e del menu della home:
+           vanno aggiornati in tutti e tre i punti insieme. -->
+      <div class="nav-overlay__meta">
+        <p class="nav-overlay__meta-line">Via Nomentana 1111, 00100 Roma RM</p>
+        <p class="nav-overlay__meta-line">
+          <a href="tel:+393511234567">351 1234567</a>
+        </p>
+        <p class="nav-overlay__meta-line">
+          <a href="https://instagram.com/bigartgallerystudio" target="_blank" rel="noopener">
+            &#64;bigartgallerystudio
+          </a>
+        </p>
+      </div>
+
+    </nav>
+  </div>
+
+  <main id="main">
+
+    <!-- ==========================================================================
+         TESTATA DI PAGINA
+
+         Non è una hero e non deve sembrarlo: nessuna foto, nessuna altezza di
+         viewport, nessun invito a scorrere. È il frontespizio del catalogo —
+         fondo nero pieno, titolo, divisore, una riga di orientamento — e si
+         chiude con la hairline che consegna la pagina alla griglia.
+         ========================================================================== -->
+
+    <section class="page-hero" aria-labelledby="artisti-title">
+      <div class="page-hero__inner container">
+
+        <h1 class="page-hero__title" id="artisti-title">Our artists</h1>
+
+        <div class="rule page-hero__rule" aria-hidden="true">
+          <span class="rule__diamond"></span>
+        </div>
+
+        <p class="page-hero__lead">
+          Three different hands, one range: black and grey. Choose the artist
+          closest to the idea you have in mind.
+        </p>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         GRIGLIA ARTISTI
+
+         La cornice è la stessa della home — stesse classi, nessun override —
+         perché deve essere riconoscibile come lo stesso oggetto. Quello che si
+         aggiunge (bio + link) sta sotto la cornice, non dentro.
+
+         Qui la card NON è un link: dentro c'è un paragrafo di bio, e infilarlo
+         nel nome accessibile di un link lungo tre righe peggiora la pagina per
+         chi la ascolta. Un solo <a> per voce, in fondo. Vedi la nota nel blocco
+         "Pagina artisti" di css/style.css.
+
+         Gli id big / roman / simone sono i bersagli delle card della home
+         (artisti.html#big …): non rinominarli senza aggiornare index.html.
+
+         ⚠️ PLACEHOLDER — le bio sono testi di prova, plausibili ma inventati.
+         Vanno sostituite con quelle reali prima della pubblicazione, insieme
+         alle foto. L'href="#" di "Vedi i lavori" resta finché non esistono le
+         gallery per artista.
+
+         .section--tight e non .section: la testata qui sopra e questa griglia
+         non sono due sezioni diverse, sono un titolo e la sua lista. Il ritmo
+         pieno della home metterebbe tra le due un vuoto che non separa niente.
+         ========================================================================== -->
+
+    <section class="section section--tight roster" aria-label="List of artists">
+      <div class="container">
+
+        <ul class="roster__grid" role="list">
+
+          <!-- PLACEHOLDER — sostituire ogni <div class="placeholder"> con:
+
+               <img class="artist__img"
+                    src="../images/artista-big.jpg"
+                    alt="Ritratto di Big, tatuatore"
+                    width="900" height="1200"
+                    loading="lazy" decoding="async">
+
+               Formato verticale 3/4 (il ritaglio lo fa object-fit) e
+               trattamento b/n applicato in CSS: i file originali restano
+               intatti sul disco. L'alt descrive la persona — è contenuto,
+               non decorazione. -->
+
+          <li class="roster__slot">
+            <article class="artist-entry" id="big">
+
+              <div class="artist">
+                <div class="artist__media">
+                  <div class="placeholder" aria-hidden="true">
+                    <span class="placeholder__label">Photo Big</span>
+                  </div>
+                </div>
+                <div class="artist__scrim" aria-hidden="true"></div>
+                <div class="artist__caption">
+                  <h2 class="artist__name">Big</h2>
+                  <p class="artist__craft">Black &amp; Grey / Realism</p>
+                </div>
+              </div>
+
+              <div class="artist-entry__body">
+                <p class="artist-entry__bio">
+                  He opened the studio and has worked almost only on large
+                  skin since: backs, sleeves, ribs. He builds volume with
+                  grey, not with outline.
+                </p>
+                <a class="artist-entry__link" href="#">
+                  See their work
+                  <span class="visually-hidden">by Big</span>
+                  <span class="artist__arrow" aria-hidden="true">&#8594;</span>
+                </a>
+              </div>
+
+            </article>
+          </li>
+
+          <li class="roster__slot">
+            <article class="artist-entry" id="roman">
+
+              <div class="artist">
+                <div class="artist__media">
+                  <div class="placeholder" aria-hidden="true">
+                    <span class="placeholder__label">Photo Roman</span>
+                  </div>
+                </div>
+                <div class="artist__scrim" aria-hidden="true"></div>
+                <div class="artist__caption">
+                  <h2 class="artist__name">Roman</h2>
+                  <p class="artist__craft">Realism / Portrait</p>
+                </div>
+              </div>
+
+              <div class="artist-entry__body">
+                <p class="artist-entry__bio">
+                  Portraits and the human figure. He always starts from a
+                  photograph and spends more time on the drawing than on the
+                  machine: by the time the session begins, the likeness is
+                  already decided.
+                </p>
+                <a class="artist-entry__link" href="#">
+                  See their work
+                  <span class="visually-hidden">by Roman</span>
+                  <span class="artist__arrow" aria-hidden="true">&#8594;</span>
+                </a>
+              </div>
+
+            </article>
+          </li>
+
+          <li class="roster__slot">
+            <article class="artist-entry" id="simone">
+
+              <div class="artist">
+                <div class="artist__media">
+                  <div class="placeholder" aria-hidden="true">
+                    <span class="placeholder__label">Photo Simone</span>
+                  </div>
+                </div>
+                <div class="artist__scrim" aria-hidden="true"></div>
+                <div class="artist__caption">
+                  <h2 class="artist__name">Simone</h2>
+                  <p class="artist__craft">Black &amp; Grey / Fine Line</p>
+                </div>
+              </div>
+
+              <div class="artist-entry__body">
+                <p class="artist-entry__bio">
+                  Fine line and light texture, on small and ornamental pieces.
+                  He&rsquo;s the artist the studio trusts with first tattoos
+                  and delicate cover-ups.
+                </p>
+                <a class="artist-entry__link" href="#">
+                  See their work
+                  <span class="visually-hidden">by Simone</span>
+                  <span class="artist__arrow" aria-hidden="true">&#8594;</span>
+                </a>
+              </div>
+
+            </article>
+          </li>
+
+          <!-- Slot libero, come sulla home: non è un link e non deve fingersi
+               tale. Al posto della bio una riga sola, senza link — non c'è
+               ancora niente da aprire. Il "+" è disegnato con due hairline
+               (vedi CSS), non è un glifo né un'icona di sistema. -->
+          <li class="roster__slot">
+            <article class="artist-entry">
+
+              <div class="artist artist--open">
+                <span class="artist__plus" aria-hidden="true"></span>
+                <p class="artist__open-label">Coming soon</p>
+              </div>
+
+              <div class="artist-entry__body">
+                <p class="artist-entry__note">
+                  The next artist&rsquo;s place in the studio.
+                </p>
+              </div>
+
+            </article>
+          </li>
+
+        </ul>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       FOOTER — identico a quello della home, id #contatti compreso: è il
+       bersaglio dei bottoni "Prenota" quando il JS non c'è.
+
+       Il logo qui punta a index.html come quello in header. "Torna su" resta
+       su #top: la sentinella è in cima anche a questa pagina.
+
+       ⚠️ PLACEHOLDER — indirizzo, telefono, handle e orari sono gli stessi
+       dati non confermati della home. Vanno aggiornati in index.html,
+       artisti.html e nei due menu overlay insieme.
+       ========================================================================== -->
+
+  <footer class="footer" id="contatti">
+    <div class="container">
+
+      <div class="footer__top">
+
+        <!-- PLACEHOLDER — sostituire con l'SVG del logo reale, come in header. -->
+        <div class="footer__brand">
+          <a class="logo footer__logo" href="index.html" aria-label="Big Art Gallery, back to home">
+            <span class="logo__diamond" aria-hidden="true"></span>
+            <span class="logo__text">BIG</span>
+          </a>
+          <p class="footer__tagline">Black &amp; Grey Tattoo Studio</p>
+        </div>
+
+        <div class="footer__col">
+          <h2 class="footer__label">Find us</h2>
+          <address class="footer__value">
+            Via Nomentana 1111<br>
+            00100 Roma RM
+          </address>
+        </div>
+
+        <div class="footer__col">
+          <h2 class="footer__label">Bookings</h2>
+          <p class="footer__value">
+            <a class="footer__link" href="tel:+393511234567">351 1234567</a>
+          </p>
+        </div>
+
+        <div class="footer__col">
+          <h2 class="footer__label">Instagram</h2>
+          <p class="footer__value">
+            <a class="footer__link"
+               href="https://instagram.com/bigartgallerystudio"
+               target="_blank" rel="noopener">
+              &#64;bigartgallerystudio
+              <span class="visually-hidden">(opens in a new tab)</span>
+            </a>
+          </p>
+        </div>
+
+        <div class="footer__col">
+          <h2 class="footer__label">Hours</h2>
+          <p class="footer__value">
+            Monday &ndash; Saturday<br>
+            10:00 &ndash; 19:00
+          </p>
+        </div>
+
+      </div>
+
+      <div class="footer__bottom">
+        <p class="footer__legal">&copy; 2026 Big Art Gallery</p>
+
+        <nav class="lang-switch" aria-label="Language">
+          <a class="lang-switch__link" href="../artisti.html" lang="it" hreflang="it" data-set-lang="it">IT</a>
+          <span class="lang-switch__sep" aria-hidden="true"></span>
+          <span class="lang-switch__current" lang="en" aria-current="true">EN</span>
+        </nav>
+
+        <!-- TODO prima della pubblicazione: P. IVA e link alla privacy policy
+             / cookie policy vanno qui, come in index.html. -->
+
+        <a class="footer__top-link" href="#top">
+          Back to top
+          <span class="footer__arrow" aria-hidden="true">&#8593;</span>
+        </a>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       MODALE CONTATTI — stesso markup di index.html.
+
+       Sta qui perché il bottone "Prenota il tuo tattoo" nell'header esiste
+       anche su questa pagina e deve fare la stessa cosa. Vive fuori da <main>
+       e in fondo al body: a modale aperto il JS mette `inert` su tutti gli
+       altri figli del body, e un elemento non può inertizzare il proprio
+       antenato.
+
+       ⚠️ Se si tocca il form, va toccato in entrambe le pagine.
+       ========================================================================== -->
+
+  <div class="modal" id="contact-modal" inert>
+
+    <div class="modal__scrim" id="contact-modal-scrim" aria-hidden="true"></div>
+
+    <div class="modal__panel"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="modal-title"
+         aria-describedby="modal-lead">
+
+      <button class="modal__close" type="button" id="contact-modal-close" aria-label="Close">
+        <span class="modal__close-mark" aria-hidden="true"></span>
+      </button>
+
+      <div class="modal__scroll">
+
+        <div class="modal__head" id="contact-modal-head">
+          <h2 class="modal__title" id="modal-title">Request your tattoo</h2>
+          <div class="rule rule--sm modal__rule" aria-hidden="true">
+            <span class="rule__diamond"></span>
+          </div>
+          <p class="modal__lead" id="modal-lead">
+            Tell us the idea, even if for now it&rsquo;s only a picture
+            in your head. We come back with a drawing proposal and a date.
+          </p>
+        </div>
+
+        <form class="form" id="contact-form" novalidate>
+
+          <div class="field">
+            <label class="field__label" for="cf-nome">Name</label>
+            <input class="field__input"
+                   type="text"
+                   id="cf-nome"
+                   name="nome"
+                   autocomplete="name"
+                   required
+                   aria-describedby="cf-nome-error">
+            <p class="field__error" id="cf-nome-error" hidden></p>
+          </div>
+
+          <div class="form__row">
+
+            <div class="field">
+              <label class="field__label" for="cf-email">Email</label>
+              <input class="field__input"
+                     type="email"
+                     id="cf-email"
+                     name="email"
+                     autocomplete="email"
+                     inputmode="email"
+                     required
+                     aria-describedby="cf-email-error">
+              <p class="field__error" id="cf-email-error" hidden></p>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="cf-telefono">
+                Phone
+                <span class="field__optional">optional</span>
+              </label>
+              <input class="field__input"
+                     type="tel"
+                     id="cf-telefono"
+                     name="telefono"
+                     autocomplete="tel"
+                     inputmode="tel"
+                     aria-describedby="cf-telefono-error">
+              <p class="field__error" id="cf-telefono-error" hidden></p>
+            </div>
+
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="cf-stile">Style</label>
+            <div class="field__select-wrap">
+              <select class="field__input field__select"
+                      id="cf-stile"
+                      name="stile"
+                      required
+                      aria-describedby="cf-stile-error">
+                <option value="" disabled selected>Choose a style</option>
+                <option value="Black &amp; Grey">Black &amp; Grey</option>
+                <option value="Realism">Realism</option>
+                <option value="Fine Line">Fine Line</option>
+                <option value="Lettering">Lettering</option>
+                <option value="Other">Other / not sure yet</option>
+              </select>
+              <span class="field__chevron" aria-hidden="true"></span>
+            </div>
+            <p class="field__error" id="cf-stile-error" hidden></p>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="cf-messaggio">The project</label>
+            <textarea class="field__input field__textarea"
+                      id="cf-messaggio"
+                      name="messaggio"
+                      rows="4"
+                      required
+                      placeholder="Subject, placement, rough size, references you like."
+                      aria-describedby="cf-messaggio-error"></textarea>
+            <p class="field__error" id="cf-messaggio-error" hidden></p>
+          </div>
+
+          <!-- Trappola per bot: un campo che un umano non vede e non
+               raggiunge col tab. Se arriva compilato, l'invio viene scartato
+               in silenzio. -->
+          <div class="form__trap" aria-hidden="true">
+            <label for="cf-sito">Do not fill in this field</label>
+            <input type="text" id="cf-sito" name="sito" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div class="form__foot">
+            <button class="btn btn--primary form__submit" type="submit" id="cf-submit">
+              Send request
+            </button>
+
+            <p class="form__status" id="cf-status" role="status" hidden></p>
+
+            <p class="form__note">
+              We reply within two working days. No commitment.
+            </p>
+          </div>
+
+        </form>
+
+        <div class="modal__done" id="contact-done" tabindex="-1" hidden>
+          <span class="modal__done-mark" aria-hidden="true"></span>
+          <h3 class="modal__done-title">Request sent</h3>
+          <p class="modal__done-body">
+            We have your idea. We&rsquo;ll write within two working days
+            to the address you left us.
+          </p>
+          <button class="btn btn--outline" type="button" id="contact-done-close">
+            Close
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/main.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,3006 @@
+/* ============================================================================
+   BIG ART GALLERY — Black & Grey Tattoo Studio
+   style.css
+
+   Ordine del file:
+   1. Reset minimo
+   2. Design tokens (custom properties)
+   3. Base / elementi
+   4. Primitive di layout e utility
+   5. Componenti
+
+   Nota: nessun build step. Questo file va caricato così com'è.
+   ========================================================================== */
+
+
+/* ============================================================================
+   1. RESET MINIMO
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  /* Dice al browser di rendere scrollbar, form control e UI nativa in scuro */
+  color-scheme: dark;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100svh;
+  /* Testo chiaro su fondo nero: l'antialiasing di default ingrassa le aste.
+     Questo lo riporta al peso corretto su schermi Apple. */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Con max-width:100% e attributi width/height, senza questo l'altezza resta
+   quella nominale e l'immagine si schiaccia o spinge il layout. I riquadri
+   (hero/work/artist/studio/instagram) sovrascrivono con height:100%. */
+img,
+video {
+  height: auto;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+p,
+h1,
+h2,
+h3,
+h4 {
+  overflow-wrap: break-word;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  text-wrap: balance;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/* Le classi con un `display` esplicito battono la regola [hidden] dello UA
+   stylesheet: .form e .modal__done sono flex, e senza questo `hidden` da JS
+   non li nasconderebbe. */
+[hidden] {
+  display: none !important;
+}
+
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+  padding: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+
+/* ============================================================================
+   2. DESIGN TOKENS
+   ========================================================================== */
+
+:root {
+
+  /* --- Palette grezza ------------------------------------------------------
+     Tre neri, non uno. Il nero pieno è riservato alle aree fotografiche
+     full-bleed: se la pagina fosse tutta #000 le foto b/n non avrebbero
+     nulla contro cui staccare. Il fondo pagina sta un gradino sopra. */
+  --black-void:      #000000;  /* hero, aree foto full-bleed */
+  --black-base:      #0a0a0a;  /* fondo pagina */
+  --black-raised:    #121212;  /* card, CTA banner, superfici sollevate */
+  --black-sunken:    #050505;  /* footer, fondi più profondi del base */
+
+  --white:           #ffffff;
+  --grey-light:      #b5b5b5;  /* sottotitoli, corpo testo secondario */
+  --grey-mid:        #7a7a7a;  /* meta, didascalie, stati "coming soon" */
+  --grey-dark:       #3a3a3a;  /* bordi marcati, elementi disabilitati */
+
+  /* Bordi come alpha, non come tinta: restano hairline sopra qualsiasi
+     fondo, foto incluse. */
+  --alpha-line:      rgba(255, 255, 255, 0.14);
+  --alpha-line-soft: rgba(255, 255, 255, 0.08);
+  --alpha-line-loud: rgba(255, 255, 255, 0.40);
+
+  /* --- Colori semantici ---------------------------------------------------- */
+  --color-bg:            var(--black-base);
+  --color-bg-raised:     var(--black-raised);
+  --color-bg-sunken:     var(--black-sunken);
+  --color-bg-inverse:    var(--white);        /* bottone primario */
+
+  --color-text:          var(--white);
+  --color-text-muted:    var(--grey-light);
+  --color-text-faint:    var(--grey-mid);
+  --color-text-inverse:  var(--black-void);   /* testo su bottone primario */
+
+  --color-border:        var(--alpha-line);
+  --color-border-soft:   var(--alpha-line-soft);
+  --color-border-strong: var(--alpha-line-loud);
+
+  --color-focus:         var(--white);
+
+  /* Unico colore della palette che non sia bianco o grigio, e ha un solo
+     impiego: gli errori del form. Un rosso pieno spaccherebbe il black &
+     grey, quindi è tirato verso il mattone — resta sopra 5:1 su
+     --black-raised, che è l'unico fondo su cui compare. Il colore non porta
+     mai l'informazione da solo: c'è sempre il testo dell'errore e
+     aria-invalid sul campo. */
+  --color-error:         #e2695c;
+
+  /* --- Scrim sulle foto ----------------------------------------------------
+     Le foto del cliente arriveranno con contrasti diversi tra loro. Questi
+     scrim garantiscono la leggibilità del testo a prescindere dallo scatto. */
+  --scrim-hero: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.70) 0%,
+    rgba(0, 0, 0, 0.45) 40%,
+    rgba(0, 0, 0, 0.80) 100%
+  );
+  --scrim-card: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.00) 35%,
+    rgba(0, 0, 0, 0.85) 100%
+  );
+
+  /* --- Tipografia ----------------------------------------------------------
+     display = titoli condensed maiuscoli
+     body    = corpo testo
+     Cambiare famiglia = cambiare queste due righe + il <link> in <head>. */
+  --font-display: "Oswald", "Arial Narrow", "Helvetica Neue Condensed", sans-serif;
+  --font-body:    "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  --weight-light:    300;
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-bold:     700;
+
+  /* Scala fluida. Il salto tra display e body è volutamente ampio: è il
+     rapporto che fa leggere "poster" invece di "documento". */
+  --fs-hero:     clamp(3.25rem, 15vw, 8.5rem);   /*  52 → 136px  nome studio  */
+  --fs-title:    clamp(2.25rem, 8vw, 4rem);      /*  36 →  64px  titoli sezione */
+  --fs-subtitle: clamp(1.5rem, 4vw, 2.25rem);    /*  24 →  36px  sottotitoli   */
+  --fs-name:     clamp(1.25rem, 2.5vw, 1.5rem);  /*  20 →  24px  nomi artisti  */
+  --fs-lead:     clamp(1rem, 1.6vw, 1.125rem);   /*  16 →  18px  paragrafi     */
+  --fs-body:     1rem;                            /*  16px                      */
+  --fs-small:    0.875rem;                        /*  14px                      */
+  --fs-eyebrow:  0.75rem;                         /*  12px  label tracciate     */
+  --fs-meta:     0.6875rem;                       /*  11px  didascalie          */
+
+  /* Tracking: i condensed maiuscoli in grande si stringono, le label piccole
+     si aprono. Sono due direzioni opposte, non una sola scala. */
+  --tracking-hero:   -0.015em;
+  --tracking-title:  -0.005em;
+  --tracking-body:    0;
+  --tracking-wide:    0.18em;
+  --tracking-widest:  0.32em;   /* "BLACK & GREY TATTOO STUDIO" */
+
+  --lh-hero:  0.86;   /* condensed in grande: interlinea sotto 1 */
+  --lh-title: 0.95;
+  --lh-tight: 1.2;
+  --lh-body:  1.65;   /* chiaro su scuro ha bisogno di più aria del contrario */
+
+  /* --- Spacing (base 4px) -------------------------------------------------- */
+  --space-3xs: 0.25rem;   /*   4 */
+  --space-2xs: 0.5rem;    /*   8 */
+  --space-xs:  0.75rem;   /*  12 */
+  --space-sm:  1rem;      /*  16 */
+  --space-md:  1.5rem;    /*  24 */
+  --space-lg:  2rem;      /*  32 */
+  --space-xl:  3rem;      /*  48 */
+  --space-2xl: 4rem;      /*  64 */
+  --space-3xl: 6rem;      /*  96 */
+  --space-4xl: 8rem;      /* 128 */
+
+  /* Ritmo verticale tra sezioni. Il brief chiede "molto nero vuoto":
+     è qui che vive quella richiesta — un solo token da alzare o abbassare. */
+  --space-section:       clamp(4.5rem, 12vw, 9rem);
+  --space-section-tight: clamp(3rem, 8vw, 5rem);
+
+  /* --- Layout -------------------------------------------------------------- */
+  --container-max:    1440px;
+  --container-narrow: 960px;
+  --gutter:           clamp(1.25rem, 5vw, 3rem);
+  --header-height:    4rem;
+
+  /* --- Bordi e raggi -------------------------------------------------------
+     Squadrato, non pill. Il rombo del logo e le foto a filo vogliono angoli
+     vivi; 2px toglie solo la durezza sui bottoni piccoli. */
+  --hairline:      1px;
+  --radius-button: 2px;
+  --radius-card:   2px;
+
+  /* --- Z-index ------------------------------------------------------------- */
+  --z-base:      1;
+  --z-sticky:    100;   /* header */
+  --z-overlay:   200;   /* nav mobile a tutto schermo */
+  --z-modal:     300;   /* popup contatti */
+
+  /* --- Motion --------------------------------------------------------------
+     Curve da STANDARDS (emilkowalski/skills): ease-out forte per entrate/
+     uscite e press; ease-in-out per morfosi in scena; `ease` (keyword) per
+     hover e cambi di colore. */
+  --duration-fast: 150ms;  /* press 100–160ms; hover ridotto (tens/day) */
+  --duration-base: 250ms;  /* overlay, modale — sotto i 300ms UI */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --header-height: 5rem;
+  }
+}
+
+
+/* ============================================================================
+   3. BASE / ELEMENTI
+   ========================================================================== */
+
+html {
+  /* Gli anchor interni non devono finire sotto l'header sticky */
+  scroll-padding-top: var(--header-height);
+
+  /* Lo spazio della scrollbar resta riservato sempre. Serve al modale: a
+     popup aperto il body va in overflow:hidden e senza questo la pagina
+     sotto — header fisso compreso — salterebbe di lato di una quindicina di
+     pixel su Windows e Linux. Sui browser con scrollbar a scomparsa (macOS,
+     touch) la dichiarazione non ha effetto visibile. */
+  scrollbar-gutter: stable;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  font-weight: var(--weight-regular);
+  line-height: var(--lh-body);
+}
+
+::selection {
+  background-color: var(--white);
+  color: var(--black-void);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+
+/* ============================================================================
+   4. PRIMITIVE DI LAYOUT E UTILITY
+   ========================================================================== */
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.container--narrow {
+  max-width: var(--container-narrow);
+}
+
+/* Nasconde visivamente ma lascia leggibile agli screen reader */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+
+/* ============================================================================
+   5. COMPONENTI
+   Skip link, bottoni, header, nav, hero, gallery, artisti, studio, CTA,
+   Instagram, footer, modale contatti.
+   ========================================================================== */
+
+
+/* --- Skip link -------------------------------------------------------------
+   Primo elemento focusabile: resta fuori schermo finché non riceve il focus
+   da tastiera, poi scende sopra l'header. */
+
+.skip-link {
+  position: fixed;
+  inset-block-start: var(--space-2xs);
+  inset-inline-start: var(--space-2xs);
+  z-index: var(--z-modal);
+  padding: var(--space-2xs) var(--space-sm);
+  background-color: var(--color-bg-inverse);
+  color: var(--color-text-inverse);
+  font-family: var(--font-display);
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  border-radius: var(--radius-button);
+  transform: translateY(calc(-100% - var(--space-md)));
+}
+
+/* Niente transizione: è un’azione da tastiera. Le azioni da tastiera non
+   si animano — l’interfaccia deve essere già lì quando arriva il focus. */
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+
+/* --- Bottoni ---------------------------------------------------------------
+   Due varianti sole, come nel mockup: pieno bianco e outline. Il primario
+   in hover si svuota e tiene il solo bordo — l'inverso esatto dell'outline,
+   così le due varianti restano lo stesso oggetto in due stati. */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2xs);
+  min-height: 2.75rem;
+  padding: var(--space-xs) var(--space-md);
+  font-family: var(--font-display);
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wide);
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  border: var(--hairline) solid transparent;
+  border-radius: var(--radius-button);
+  transition:
+    background-color var(--duration-fast) ease,
+    border-color var(--duration-fast) ease,
+    color var(--duration-fast) ease,
+    transform var(--duration-fast) var(--ease-out);
+}
+
+/* Press: il bottone deve sentire il dito, non solo il hover. 0.97 sta nel
+   range 0.95–0.98; :active non si gatta perché è un press vero, anche touch. */
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn--sm {
+  min-height: 2.5rem;
+  padding-inline: var(--space-sm);
+}
+
+.btn--primary {
+  background-color: var(--color-bg-inverse);
+  color: var(--color-text-inverse);
+}
+
+.btn--outline {
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+/* Outline sopra una foto: il bordo a 14% di bianco sparisce su uno scatto
+   chiaro. Qui sale a 40%, che regge su qualsiasi immagine. Definito PRIMA del
+   blocco :hover apposta — stessa specificità, vincerebbe l'ultimo dichiarato
+   e l'hover smetterebbe di riempirsi. */
+.btn--on-photo {
+  border-color: var(--color-border-strong);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn--primary:hover {
+    background-color: transparent;
+    color: var(--color-text);
+    border-color: var(--color-border-strong);
+  }
+
+  .btn--outline:hover {
+    background-color: var(--color-bg-inverse);
+    color: var(--color-text-inverse);
+    border-color: var(--color-bg-inverse);
+  }
+}
+
+/* Etichetta corta sotto i 480px: "PRENOTA IL TUO TATTOO" non ci sta accanto
+   a logo e hamburger su uno schermo da 360px. display:none, non
+   visibility, così gli screen reader ne leggono una sola. */
+.btn__label--short {
+  display: none;
+}
+
+@media (max-width: 479px) {
+  .btn__label {
+    display: none;
+  }
+
+  .btn__label--short {
+    display: inline;
+  }
+}
+
+
+/* --- Sentinella scroll -----------------------------------------------------
+   Fuori dal flusso: serve solo all'IntersectionObserver in main.js e come
+   bersaglio dell'ancora #top. */
+
+.header-sentinel {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  width: 1px;
+  height: var(--header-height);
+  pointer-events: none;
+}
+
+
+/* --- Header ----------------------------------------------------------------
+   Trasparente sopra la hero, poi fondo sfumato + hairline. Nessuna ombra:
+   il sistema separa i piani con hairline in alpha, non con elevazione. */
+
+.site-header {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: var(--z-sticky);
+  height: var(--header-height);
+  background-color: transparent;
+  border-block-end: var(--hairline) solid transparent;
+  transition:
+    background-color var(--duration-base) ease,
+    border-color var(--duration-base) ease;
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  height: 100%;
+}
+
+.site-header.is-scrolled {
+  background-color: rgba(10, 10, 10, 0.72);
+  border-block-end-color: var(--color-border-soft);
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+}
+
+/* Senza backdrop-filter il fondo semi-trasparente lascerebbe leggere la
+   foto sotto il testo: si passa a quasi opaco. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .site-header.is-scrolled {
+    background-color: rgba(10, 10, 10, 0.94);
+  }
+}
+
+/* A menu aperto l'header sale sopra l'overlay: logo e hamburger (ora X)
+   restano visibili e cliccabili, e il fondo torna trasparente. */
+.site-header.is-nav-open {
+  z-index: calc(var(--z-overlay) + 1);
+  background-color: transparent;
+  border-block-end-color: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+
+/* --- Logo ------------------------------------------------------------------
+   PLACEHOLDER testuale. Il rombo anticipa il monogramma reale ed è lo stesso
+   segno che marca le voci del menu overlay. */
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wide);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.logo__diamond {
+  width: 0.6em;
+  height: 0.6em;
+  border: var(--hairline) solid currentColor;
+  transform: rotate(45deg);
+}
+
+.logo__text {
+  /* Il tracking maiuscolo aggiunge spazio anche dopo l'ultima lettera */
+  margin-inline-end: calc(var(--tracking-wide) * -1);
+}
+
+
+/* --- Nav desktop -----------------------------------------------------------
+   Stesso trattamento tipografico dell'occhiello "BLACK & GREY TATTOO
+   STUDIO": condensed piccolo, molto tracciato. Si legge come didascalia,
+   non come barra di menu. */
+
+.nav-desktop {
+  display: none;
+}
+
+.nav-desktop__list {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav-desktop__link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  padding-block: var(--space-2xs);
+  font-family: var(--font-display);
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--weight-regular);
+  letter-spacing: var(--tracking-wide);
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  transition: color var(--duration-fast) ease;
+}
+
+.nav-desktop__link::after {
+  content: "";
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline: 0;
+  height: var(--hairline);
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.nav-desktop__link:focus-visible,
+.nav-desktop__link[aria-current] {
+  color: var(--color-text);
+}
+
+.nav-desktop__link:focus-visible::after,
+.nav-desktop__link[aria-current]::after {
+  transform: scaleX(1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nav-desktop__link:hover {
+    color: var(--color-text);
+  }
+
+  .nav-desktop__link:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+
+/* --- Hamburger -------------------------------------------------------------
+   Due hairline da 1px, non tre barre spesse: stessa materia dei bordi del
+   resto della pagina. In apertura si incrociano. */
+
+.site-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+
+/* --- Lingua ----------------------------------------------------------------
+   IT | EN. Stessa materia della nav desktop: condensed tracciato, non una
+   bandiera e non un menu. La lingua in pagina è testo, l'altra è il link.
+   Vive nelle azioni dell'header (sempre visibile, anche sotto i 900px)
+   e in coda al footer, sullo stesso registro tipografico del legal. */
+
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  font-family: var(--font-display);
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--weight-regular);
+  letter-spacing: var(--tracking-wide);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.lang-switch__current {
+  color: var(--color-text);
+}
+
+.lang-switch__link {
+  color: var(--color-text-muted);
+  padding-block: var(--space-2xs);
+  transition: color var(--duration-fast) ease;
+}
+
+.lang-switch__link:focus-visible {
+  color: var(--color-text);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .lang-switch__link:hover {
+    color: var(--color-text);
+  }
+}
+
+.lang-switch__sep {
+  display: block;
+  width: var(--hairline);
+  height: 0.7em;
+  background-color: var(--color-border);
+  flex-shrink: 0;
+}
+
+.footer .lang-switch {
+  font-size: var(--fs-meta);
+  color: var(--color-text-faint);
+}
+
+.footer .lang-switch__current {
+  color: var(--color-text-muted);
+}
+
+.error-page__lang {
+  margin-block-start: var(--space-md);
+}
+
+.nav-toggle {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6px;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  color: var(--color-text);
+}
+
+.nav-toggle__bar {
+  display: block;
+  width: 22px;
+  height: 1px;
+  background-color: currentColor;
+  /* clip-path, non width: width è layout. Il tratto corto è un inset da
+     sinistra, così resta allineato a destra (align-items: flex-end). */
+  transition:
+    clip-path var(--duration-base) var(--ease-in-out),
+    transform var(--duration-base) var(--ease-in-out);
+}
+
+.nav-toggle__bar:last-child {
+  clip-path: inset(0 0 0 8px);
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle__bar:first-child {
+  transform: translateY(3.5px) rotate(45deg);
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle__bar:last-child {
+  clip-path: inset(0);
+  transform: translateY(-3.5px) rotate(-45deg);
+}
+
+
+/* --- Nav overlay -----------------------------------------------------------
+   Non un menu ma un indice: voci in condensed grande separate da hairline,
+   ognuna marcata dal rombo del monogramma. Lo slot del rombo è a larghezza
+   fissa, così hover e stato attivo non spostano il testo. */
+
+.nav-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  background-color: var(--color-bg);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  opacity: 0;
+  visibility: hidden;
+  /* visibility non si interpola: se la si mette in transizione resta
+     `hidden` per tutto il primo frame e il focus sulla prima voce non
+     attecchisce. Qui commuta subito in apertura e solo a dissolvenza
+     finita in chiusura. */
+  transition:
+    opacity var(--duration-base) var(--ease-out),
+    visibility 0s linear var(--duration-base);
+}
+
+.nav-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity var(--duration-base) var(--ease-out),
+    visibility 0s linear 0s;
+}
+
+.nav-overlay__nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-2xl);
+  min-height: 100%;
+  padding-block: calc(var(--header-height) + var(--space-xl)) var(--space-xl);
+}
+
+.nav-overlay__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav-overlay__item + .nav-overlay__item {
+  border-block-start: var(--hairline) solid var(--color-border-soft);
+}
+
+.nav-overlay__link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding-block: var(--space-md);
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 9vw, 2.75rem);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-title);
+  line-height: var(--lh-title);
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+
+/* Il rombo: slot a larghezza fissa, sempre presente ma tenuto basso — è lui
+   a spiegare il rientro del testo. Si accende su hover/focus e si riempie
+   sulla sezione corrente. */
+.nav-overlay__link::before {
+  content: "";
+  flex: 0 0 8px;
+  width: 8px;
+  height: 8px;
+  border: var(--hairline) solid currentColor;
+  transform: rotate(45deg);
+  opacity: 0.3;
+  transition: opacity var(--duration-fast) ease;
+}
+
+.nav-overlay__link:focus-visible::before,
+.nav-overlay__link[aria-current]::before {
+  opacity: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nav-overlay__link:hover::before {
+    opacity: 1;
+  }
+}
+
+.nav-overlay__link[aria-current]::before {
+  background-color: currentColor;
+}
+
+.nav-overlay__ext {
+  font-size: 0.5em;
+  color: var(--color-text-faint);
+}
+
+.nav-overlay__meta {
+  font-size: var(--fs-small);
+  line-height: var(--lh-tight);
+  color: var(--color-text-faint);
+}
+
+.nav-overlay__meta-line + .nav-overlay__meta-line {
+  margin-block-start: var(--space-2xs);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nav-overlay__meta a:hover {
+    color: var(--color-text);
+  }
+}
+
+/* Blocca lo scroll della pagina sotto l'overlay */
+body.has-nav-open {
+  overflow: hidden;
+}
+
+
+/* --- Breakpoint nav --------------------------------------------------------
+   900px e non 768: sotto quella soglia le sei voci più il bottone
+   "PRENOTA IL TUO TATTOO" stanno solo stringendo il tracking, che è
+   proprio ciò che rende riconoscibile questa tipografia. */
+
+@media (min-width: 900px) {
+  /* Logo a sinistra, tutto il resto a destra: la stessa ripartizione del
+     mockup mobile, non una nav centrata che qui non avrebbe motivo. */
+  .site-header__inner {
+    gap: var(--space-xl);
+  }
+
+  .nav-desktop {
+    display: block;
+    margin-inline-start: auto;
+  }
+
+  .nav-toggle,
+  .nav-overlay {
+    display: none;
+  }
+}
+
+
+/* --- Sezioni ---------------------------------------------------------------
+   Unico proprietario del ritmo verticale tra una sezione e l'altra. I
+   componenti interni dichiarano solo margini che restano dentro il proprio
+   blocco: così il "molto nero vuoto" chiesto dal brief si regola da un token
+   solo e nessuna coppia di selettori si annulla a vicenda ai bordi. */
+
+.section {
+  padding-block: var(--space-section);
+}
+
+.section--tight {
+  padding-block: var(--space-section-tight);
+}
+
+
+/* --- Testata di sezione ----------------------------------------------------
+   Titolo centrato + divisore, ripetuto identico in ogni sezione della home. */
+
+.section-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.section-head__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-title);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-title);
+  line-height: var(--lh-title);
+  text-transform: uppercase;
+}
+
+.section-head__rule {
+  margin-block-start: var(--space-md);
+}
+
+
+/* --- Divisore --------------------------------------------------------------
+   Estratto dalla hero, dove è nato: lo stesso segno marca ogni titolo.
+   Non un righello ma un tratto — le hairline sfumano verso l'esterno, come
+   una linea tirata a mano — col rombo del monogramma al centro.
+
+   La misura porta la gerarchia: la hero tiene il tratto lungo, le sezioni
+   quello corto (--sm). Stessa forma, due livelli. */
+
+.rule {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  width: min(260px, 55vw);
+}
+
+.rule--sm {
+  width: min(160px, 40vw);
+  gap: var(--space-2xs);
+}
+
+.rule::before,
+.rule::after {
+  content: "";
+  flex: 1;
+  height: var(--hairline);
+}
+
+.rule::before {
+  background-image: linear-gradient(to right, transparent, var(--alpha-line-loud));
+}
+
+.rule::after {
+  background-image: linear-gradient(to left, transparent, var(--alpha-line-loud));
+}
+
+.rule__diamond {
+  flex: 0 0 6px;
+  width: 6px;
+  height: 6px;
+  border: var(--hairline) solid var(--white);
+  transform: rotate(45deg);
+}
+
+.rule--sm .rule__diamond {
+  flex-basis: 5px;
+  width: 5px;
+  height: 5px;
+}
+
+
+/* --- Placeholder immagini --------------------------------------------------
+   Tratteggio diagonale: deve leggersi come "qui manca un'immagine", non come
+   una scelta grafica. Sparisce un blocco alla volta man mano che arrivano le
+   foto del cliente — vedi le istruzioni di sostituzione in index.html. */
+
+.placeholder {
+  display: grid;
+  place-content: center;
+  padding: var(--space-md);
+  background-color: #141414;
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.035) 0 2px,
+    transparent 2px 12px
+  );
+}
+
+.placeholder__label {
+  font-family: var(--font-display);
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--weight-regular);
+  letter-spacing: var(--tracking-wide);
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--grey-mid);
+}
+
+
+/* --- Hero ------------------------------------------------------------------
+   Tre piani: .hero__media (foto) → .hero__scrim (leggibilità) → .hero__content.
+
+   LEGGIBILITÀ SU FOTO ARBITRARIE
+   La foto del cliente non è ancora arrivata e potrebbe essere molto più chiara
+   di quella del mockup. La garanzia è data da due misure che si sommano:
+
+   1. .hero__img passa per grayscale(1) brightness(0.6): coerente col brief
+      ("fotografia sempre desaturata, mai colori accesi") e soprattutto mette
+      un tetto alla luminosità massima possibile dello scatto.
+   2. --scrim-hero sopra, con il punto più chiaro a 45% di nero al 40%
+      dell'altezza — proprio dove sta il testo.
+
+   Misurato sul rendering reale, sostituendo alla foto un bianco pieno —
+   cioè lo scatto più sovraesposto che possa arrivare. Contrasto nel punto
+   peggiore della hero (dietro al titolo, dove lo scrim è più chiaro):
+
+     brightness(0.6)  7.57:1   ← valore attuale
+     brightness(0.7)  6.10:1
+     brightness(0.8)  4.95:1   ← ultimo valore che regge AA su testo normale
+     brightness(0.9)  4.06:1   solo testo grande
+     brightness(1.0)  3.36:1   solo testo grande (nessun filtro)
+
+   AA chiede 4.5:1 per il testo normale e 3:1 per quello grande. Se la foto
+   reale risultasse troppo spenta si può alzare brightness(), ma non oltre
+   0.8: da lì in su il sottotitolo e le CTA non sono più conformi. */
+
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background-color: var(--black-void);
+
+  /* svh e non vh/dvh: `vh` su iOS include la barra indirizzi e taglia il
+     contenuto, `dvh` cambia mentre si scrolla e fa saltare il layout. `svh`
+     è la misura più piccola e stabile — niente salti, niente tagli.
+     Mobile a 88svh: lascia intravedere il bordo della sezione successiva,
+     che è di per sé un invito a scorrere. */
+  min-height: 100vh;
+  min-height: 88svh;
+
+  /* L'header è fixed e trasparente: senza questo padding il titolo si
+     centrerebbe rispetto al viewport, non rispetto allo spazio realmente
+     libero, e finirebbe otticamente troppo in alto. */
+  padding-block: calc(var(--header-height) + var(--space-lg)) var(--space-2xl);
+}
+
+@media (min-width: 768px) {
+  .hero {
+    min-height: 100vh;
+    min-height: 100svh;
+    padding-block-end: var(--space-3xl);
+  }
+}
+
+
+/* Piano 1 — la foto */
+
+.hero__media {
+  position: absolute;
+  inset: 0;
+}
+
+.hero__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Vedi la nota sul contrasto in testa al blocco */
+  filter: grayscale(1) contrast(1.05) brightness(0.6);
+}
+
+/* Il tratteggio e l'etichetta stanno in .placeholder, condiviso con le altre
+   sezioni. Qui resta solo quello che è specifico della hero. */
+.hero__placeholder {
+  position: absolute;
+  inset: 0;
+  /* In basso a sinistra e non al centro: al centro finisce esattamente sotto
+     il sottotitolo e i due testi si sovrappongono. */
+  place-content: end start;
+}
+
+
+/* Piano 2 — lo scrim */
+
+.hero__scrim {
+  position: absolute;
+  inset: 0;
+  background-image: var(--scrim-hero);
+}
+
+
+/* Piano 3 — il contenuto
+   Colonna flex e non text-align:center: serve che ogni figlio sia largo
+   quanto il suo contenuto, altrimenti il trucco del margine negativo che
+   ricentra il testo tracciato (vedi .hero__subtitle) non funziona. */
+
+.hero__content {
+  position: relative;
+  z-index: var(--z-base);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.hero__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-hero);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-hero);
+  line-height: var(--lh-hero);
+  text-transform: uppercase;
+}
+
+/* Il condensed maiuscolo in grande ha già la sua compattezza: sotto il
+   titolo serve aria vera, non un margine di cortesia. */
+.hero__subtitle {
+  margin-block-start: var(--space-lg);
+  font-family: var(--font-display);
+  font-size: clamp(0.75rem, 1.6vw, 1rem);
+  font-weight: var(--weight-light);
+  letter-spacing: var(--tracking-widest);
+  line-height: var(--lh-tight);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  /* Il tracking aggiunge spazio anche DOPO l'ultima lettera: senza questa
+     compensazione il testo risulta spostato a sinistra del centro di metà
+     tracking. Stesso trucco di .logo__text. */
+  margin-inline-end: calc(var(--tracking-widest) * -1);
+}
+
+
+/* Il divisore vive in .rule (vedi primitive): qui serve solo l'aria sopra. */
+
+.hero__rule {
+  margin-block-start: var(--space-xl);
+}
+
+.hero__place {
+  margin-block-start: var(--space-md);
+  font-family: var(--font-display);
+  font-size: var(--fs-meta);
+  font-weight: var(--weight-regular);
+  letter-spacing: var(--tracking-widest);
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  margin-inline-end: calc(var(--tracking-widest) * -1);
+}
+
+
+/* Bottoni.
+   wrap e non media query: sotto i 480px le due etichette per esteso non
+   stanno affiancate e vanno a capo da sole. flex-basis 100% le porta a
+   piena larghezza invece di lasciarne una orfana e stretta a metà riga,
+   con un tetto perché su un tablet in verticale un bottone largo 700px
+   non è un bottone. */
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-xs);
+  width: 100%;
+  margin-block-start: var(--space-xl);
+}
+
+.hero__actions .btn {
+  min-height: 3rem;
+  padding-inline: var(--space-lg);
+}
+
+@media (max-width: 479px) {
+  .hero__actions .btn {
+    flex: 1 1 100%;
+    max-width: 20rem;
+  }
+}
+
+
+/* Affordance di scroll.
+   Stesso motivo del divisore, ruotato: una hairline che sfuma scendendo.
+   Nascosta sotto i 768px, dove è l'altezza ridotta a fare questo lavoro. */
+
+.hero__scroll {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .hero__scroll {
+    position: absolute;
+    inset-block-end: var(--space-lg);
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-2xs);
+    color: var(--color-text-faint);
+    transition: color var(--duration-fast) ease;
+  }
+
+  .hero__scroll-label {
+    font-family: var(--font-display);
+    font-size: var(--fs-meta);
+    letter-spacing: var(--tracking-widest);
+    line-height: 1;
+    text-transform: uppercase;
+    margin-inline-end: calc(var(--tracking-widest) * -1);
+  }
+
+  .hero__scroll-line {
+    width: var(--hairline);
+    height: 2.5rem;
+    background-image: linear-gradient(to bottom, currentColor, transparent);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hero__scroll:hover {
+    color: var(--color-text);
+  }
+}
+
+
+/* --- Our Work --------------------------------------------------------------
+   Sei scatti verticali appesi a una linea.
+
+   LA LINEA DI ALLESTIMENTO
+   Il brief chiede "da galleria d'arte": in una galleria le opere si appendono
+   su una linea di livello, non sparse. Da qui la hairline continua sotto la
+   striscia, a filo della quale i sei riquadri finiscono. È l'unico elemento
+   in più rispetto a titolo/foto/tag/bottone, e si paga da solo: sotto i
+   768px fa un secondo lavoro, quello di traccia per l'indicatore di
+   posizione dello scroll. Un carosello senza barra non dichiara quanto resta
+   da vedere, e qui la barra di sistema è nascosta apposta.
+
+   Differenza di trattamento voluta rispetto a .rule: il divisore sfuma agli
+   estremi perché è ornamento tipografico, questa no perché è struttura.
+
+   PERCHÉ SCROLL E NON GRIGLIA 2 COLONNE SU MOBILE
+   Sei immagini verticali su due colonne fanno tre righe altissime: la sezione
+   diventa più lunga della hero e ogni foto resta larga ~150px. Con lo scroll
+   orizzontale i riquadri restano grandi, la sezione resta compatta e il
+   taglio del riquadro successivo (il "peek") dichiara da solo che c'è
+   dell'altro. È anche il layout del mockup del cliente.
+
+   PROGRESSIONE DEI BREAKPOINT
+   < 768px   scroller orizzontale con snap
+   ≥ 768px   griglia 3 colonne (due righe) — a sei colonne qui le foto
+             starebbero a ~110px di larghezza, troppo poco per un tatuaggio
+   ≥ 1200px  griglia 6 colonne, la riga unica del mockup esteso a desktop */
+
+/* La striscia esce dal .container e si prende tutta la larghezza: il
+   padding-inline replica il gutter, così il primo riquadro è allineato al
+   titolo ma gli altri possono scorrere sotto il bordo dello schermo. */
+/* Selettore con il tipo, non la sola classe: il reset `ul[role="list"]`
+   azzera il padding e a parità di peso (0,1,1) vincerebbe lui, mangiandosi
+   il gutter. Qui pareggia la specificità e vince l'ordine. */
+ul.work__scroller {
+  display: flex;
+  gap: var(--space-xs);
+  margin-block-start: var(--space-2xl);
+  padding-inline: var(--gutter);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  /* Senza questo lo snap incolla i riquadri al bordo dello schermo e mangia
+     il gutter. */
+  scroll-padding-inline: var(--gutter);
+  /* A fine corsa lo swipe orizzontale non deve innescare il "torna indietro"
+     del browser. */
+  overscroll-behavior-inline: contain;
+  /* La posizione la dichiara la linea qui sotto, non la barra di sistema. */
+  scrollbar-width: none;
+}
+
+ul.work__scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.work__frame {
+  flex: 0 0 auto;
+  width: min(62vw, 17rem);
+  scroll-snap-align: start;
+}
+
+.work__media {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  background-color: var(--black-raised);
+  border: var(--hairline) solid var(--color-border-soft);
+  border-radius: var(--radius-card);
+  transition: border-color var(--duration-fast) ease;
+}
+
+/* Vale sia per il placeholder di adesso sia per l'<img> di domani. */
+.work__media > * {
+  width: 100%;
+  height: 100%;
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+/* brightness(0.82) e non 0.6 come nella hero: qui sopra non ci va testo, la
+   foto deve solo restare un gradino sotto il bianco pieno dei titoli. È
+   anche il margine che rende visibile lo schiarimento in hover. */
+.work__img {
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.05) brightness(0.82);
+  transition:
+    transform var(--duration-fast) var(--ease-out),
+    filter var(--duration-fast) ease;
+}
+
+/* Hover: la foto va alla luminosità piena e il bordo si accende di poco.
+   L'opera fa un passo avanti sotto la luce della galleria, niente di più.
+   pointer: fine: su touch :hover resta appiccicato dopo il tap. */
+@media (hover: hover) and (pointer: fine) {
+  .work__frame:hover .work__media {
+    border-color: var(--color-border);
+  }
+
+  .work__frame:hover .work__img {
+    filter: grayscale(1) contrast(1.05) brightness(1);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .work__frame:hover .work__media > * {
+    transform: scale(1.04);
+  }
+}
+
+
+/* La linea di allestimento + l'indicatore di scroll che le corre sopra. */
+
+/* La spaziatura sta sul contenitore e non sulla linea: un margin-block-start
+   sul primo figlio di un blocco senza padding collasserebbe fuori dal
+   genitore, e il ritmo della sezione smetterebbe di essere leggibile qui. */
+.work__foot {
+  margin-block-start: var(--space-lg);
+}
+
+.work__line {
+  position: relative;
+  height: var(--hairline);
+  overflow: hidden;
+  background-color: var(--color-border);
+}
+
+.work__thumb {
+  display: none;
+}
+
+/* Indicatore a scroll-driven animation: nessun listener, nessun JS, e il
+   browser lo aggiorna sul compositor invece che a ogni evento di scroll.
+   `timeline-scope` sulla sezione è quello che permette al segmento di leggere
+   una timeline dichiarata da un elemento che non è un suo antenato.
+   Dove non è supportato resta la sola linea di allestimento, che ha già senso
+   suo: non si perde niente, non si mostra un dato falso. */
+@supports (timeline-scope: --a) {
+  @media (max-width: 767px) {
+    .work {
+      timeline-scope: --work-scroll;
+    }
+
+    .work__scroller {
+      scroll-timeline: --work-scroll inline;
+    }
+
+    /* 32% è la frazione di striscia visibile a colpo d'occhio: il segmento
+       deve percorrere il restante 68% della traccia, cioè 68/32 della propria
+       larghezza. */
+    .work__thumb {
+      display: block;
+      width: 32%;
+      height: 100%;
+      background-color: var(--color-border-strong);
+      animation: work-scroll-progress linear both;
+      animation-timeline: --work-scroll;
+    }
+  }
+}
+
+@keyframes work-scroll-progress {
+  from { transform: translateX(0); }
+  to   { transform: translateX(212.5%); }
+}
+
+
+/* Riga tag e CTA */
+
+.work__tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  /* Colonne a zero: la spaziatura orizzontale la danno i separatori. Il gap
+     verticale serve solo quando la riga va a capo sugli schermi stretti. */
+  gap: var(--space-2xs) 0;
+  margin-block-start: var(--space-xl);
+  font-family: var(--font-display);
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--weight-regular);
+  letter-spacing: var(--tracking-wide);
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* Separatore in coda all'elemento e non in testa al successivo: sugli schermi
+   stretti la riga va a capo comunque, e così il punto resta appeso alla fine
+   della prima riga — dove si legge come "continua" — invece di aprire la
+   seconda riga orfano. */
+.work__tag:not(:last-child)::after {
+  content: "\2022";
+  /* Seconda dichiarazione: stesso segno, ma con alt text vuoto per gli screen
+     reader — è punteggiatura decorativa, non una parola da leggere. Dove la
+     sintassi non è supportata resta valida la riga sopra. */
+  content: "\2022" / "";
+  margin-inline: var(--space-xs);
+  color: var(--color-text-faint);
+}
+
+/* Il tracking maiuscolo aggiunge spazio anche dopo l'ultima lettera: senza
+   questo la riga risulta spostata a sinistra del centro. Stesso trucco di
+   .logo__text e .hero__subtitle. */
+.work__tag:last-child {
+  margin-inline-end: calc(var(--tracking-wide) * -1);
+}
+
+/* A 360-390px la riga per esteso non ci sta: scende di un grado e stringe la
+   spaziatura dei punti. Sotto quella soglia va a capo, ed è previsto. */
+@media (max-width: 479px) {
+  .work__tags {
+    font-size: var(--fs-meta);
+    letter-spacing: 0.14em;
+  }
+
+  .work__tag:not(:last-child)::after {
+    margin-inline: var(--space-2xs);
+  }
+}
+
+.work__cta {
+  display: flex;
+  justify-content: center;
+  margin-block-start: var(--space-xl);
+}
+
+.work__cta .btn {
+  min-height: 3rem;
+  padding-inline: var(--space-lg);
+}
+
+
+@media (min-width: 768px) {
+  ul.work__scroller {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+    /* Stessa misura di .container: la griglia si riallinea al resto della
+       pagina e smette di comportarsi da striscia. */
+    max-width: var(--container-max);
+    margin-inline: auto;
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+
+  .work__frame {
+    width: auto;
+  }
+}
+
+@media (min-width: 1200px) {
+  ul.work__scroller {
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--space-sm);
+  }
+}
+
+
+/* --- Artisti ---------------------------------------------------------------
+   Quattro cornici sulla stessa parete della sezione sopra, ma il formato
+   cambia: 3/4 invece del 2/3 dei lavori. Un ritratto e un'opera non hanno la
+   stessa proporzione, e la differenza si legge anche senza le foto vere.
+
+   IL CARTELLINO SULLA FOTO
+   Nome, specialità e link stanno dentro la cornice, in basso, su uno scrim —
+   come la targhetta di una parete di galleria, non come una didascalia
+   staccata. È quello che chiede il mockup ed è il primo uso di --scrim-card,
+   definito allo step 0 proprio per questo.
+   Il testo cade sempre sul terzo più scuro del gradiente: sotto le tre righe
+   lo scrim è a 85% di nero, quindi il bianco pieno regge anche se la foto del
+   cliente in quel punto è chiara.
+
+   PROGRESSIONE DEI BREAKPOINT
+   < 560px   una colonna — la cornice si prende tutto il gutter, come nel
+             mockup mobile del cliente
+   ≥ 560px   due colonne (2×2): sotto questa soglia una card affiancata
+             starebbe a ~150px e il cartellino andrebbe a capo su tre righe
+   ≥ 1024px  quattro colonne, la riga unica del mockup estesa a desktop
+
+   Il gap di riga è più largo di quello di colonna: a due colonne le cornici
+   sono alte e senza quell'aria le due file si leggono come un blocco unico.
+   A quattro colonne la riga è una sola e la distinzione non serve più. */
+
+.artists__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg) var(--space-md);
+  margin-block-start: var(--space-2xl);
+}
+
+@media (min-width: 560px) {
+  .artists__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .artists__grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-md);
+  }
+}
+
+/* La cornice. È l'elemento cliccabile per intero: su mobile il bersaglio è
+   tutta la card, non le due parole "Scopri i lavori".
+   Scrim e cartellino si sovrappongono alla foto per solo ordine di documento:
+   in tutta la card non c'è uno z-index. */
+.artist {
+  position: relative;
+  display: block;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background-color: var(--black-raised);
+  border: var(--hairline) solid var(--color-border-soft);
+  border-radius: var(--radius-card);
+  transition: border-color var(--duration-fast) ease;
+}
+
+/* Press solo sul link-card della home. 0.98 e non 0.97: la superficie è
+   grande, 0.97 si leggerebbe come un salto. Lo slot "coming soon" è un
+   <div class="artist"> e resta fermo. */
+a.artist {
+  transition:
+    border-color var(--duration-fast) ease,
+    transform var(--duration-fast) var(--ease-out);
+}
+
+a.artist:active {
+  transform: scale(0.98);
+}
+
+.artist__media {
+  position: absolute;
+  inset: 0;
+}
+
+/* Vale sia per il placeholder di adesso sia per l'<img> di domani. */
+.artist__media > * {
+  width: 100%;
+  height: 100%;
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+/* brightness(0.72), più basso del 0.82 dei lavori: qui sopra ci va del testo.
+   È anche il margine che rende visibile lo schiarimento in hover. */
+.artist__img {
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.05) brightness(0.72);
+  transition:
+    transform var(--duration-fast) var(--ease-out),
+    filter var(--duration-fast) ease;
+}
+
+.artist__scrim {
+  position: absolute;
+  inset: 0;
+  background-image: var(--scrim-card);
+}
+
+.artist__caption {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  padding: var(--space-md);
+}
+
+.artist__name {
+  font-family: var(--font-display);
+  font-size: var(--fs-name);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-title);
+  line-height: var(--lh-tight);
+  text-transform: uppercase;
+}
+
+.artist__craft {
+  margin-block-start: var(--space-3xs);
+  font-family: var(--font-display);
+  font-size: var(--fs-meta);
+  font-weight: var(--weight-regular);
+  letter-spacing: var(--tracking-wide);
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.artist__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  margin-block-start: var(--space-sm);
+  font-family: var(--font-display);
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wide);
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  transition: color var(--duration-fast) ease;
+}
+
+.artist__arrow {
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+/* :focus-visible sta FUORI dal blocco hover: su un telefono con tastiera
+   esterna il focus deve comunque accendere la card.
+   Selettore `a.artist` e non `.artist`: lo slot libero è un <div>. */
+a.artist:focus-visible {
+  border-color: var(--color-border);
+}
+
+a.artist:focus-visible .artist__img {
+  filter: grayscale(1) contrast(1.05) brightness(1);
+}
+
+a.artist:focus-visible .artist__link {
+  color: var(--color-text);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  a.artist:hover {
+    border-color: var(--color-border);
+  }
+
+  a.artist:hover .artist__img {
+    filter: grayscale(1) contrast(1.05) brightness(1);
+  }
+
+  a.artist:hover .artist__link {
+    color: var(--color-text);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a.artist:focus-visible .artist__media > * {
+    transform: scale(1.04);
+  }
+
+  a.artist:focus-visible .artist__arrow {
+    transform: translateX(3px);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  a.artist:hover .artist__media > * {
+    transform: scale(1.04);
+  }
+
+  a.artist:hover .artist__arrow {
+    transform: translateX(3px);
+  }
+}
+
+
+/* Lo slot libero.
+
+   Non usa .placeholder di proposito: il tratteggio diagonale di quel
+   componente significa "qui manca un'immagine", e qui non manca niente —
+   il posto è vuoto perché deve esserlo. Quindi fondo pagina (non
+   --black-raised, che è la superficie di una card piena), bordo hairline un
+   gradino più marcato delle altre cornici, e nessun'ombra: una cornice
+   appesa alla parete, ancora da riempire.
+
+   Il "+" è disegnato con due hairline, non è una glifo né un'icona: alla
+   stessa misura di tutti gli altri tratti della pagina (rombo del logo,
+   divisori, linea di allestimento). */
+
+.artist--open {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  background-color: transparent;
+  border-color: var(--color-border);
+}
+
+.artist__plus {
+  position: relative;
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.artist__plus::before,
+.artist__plus::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  background-color: var(--color-border-strong);
+  transform: translate(-50%, -50%);
+}
+
+.artist__plus::before {
+  width: 100%;
+  height: var(--hairline);
+}
+
+.artist__plus::after {
+  width: var(--hairline);
+  height: 100%;
+}
+
+.artist__open-label {
+  font-family: var(--font-display);
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--weight-regular);
+  letter-spacing: var(--tracking-wide);
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  /* Il tracking maiuscolo aggiunge spazio anche dopo l'ultima lettera: senza
+     questo la scritta risulta spostata a sinistra del "+". Stesso trucco di
+     .logo__text e .work__tag:last-child. */
+  margin-inline-end: calc(var(--tracking-wide) * -1);
+}
+
+
+/* CTA di sezione. Stessa misura del bottone sotto la gallery: sono due code
+   di sezione consecutive e devono avere lo stesso peso. */
+
+.artists__cta {
+  display: flex;
+  justify-content: center;
+  margin-block-start: var(--space-xl);
+}
+
+.artists__cta .btn {
+  min-height: 3rem;
+  padding-inline: var(--space-lg);
+}
+
+
+/* --- Studio ----------------------------------------------------------------
+   L'unico blocco a bandiera della home.
+
+   Tutto il resto della pagina è centrato: titoli, divisori, tag, bottoni.
+   Qui no, e non per varietà — è la didascalia a parete accanto alla stanza,
+   e una didascalia si legge allineata a sinistra. L'asimmetria È la sezione:
+   basta lei a distinguerla, e per questo non c'è nessun ornamento in più.
+
+   Le due colonne stanno a 1fr ciascuna, ma la colonna di testo ha un tetto
+   di misura: alla larghezza massima il testo si ferma prima del bordo e
+   l'aria che resta a destra è voluta, non un vuoto.
+
+   Il breakpoint è 900px, lo stesso della nav: sotto quella soglia la pagina
+   è già in modalità stretta e due colonne qui darebbero righe da poche
+   parole accanto a una foto francobollo. */
+
+.studio__grid {
+  display: grid;
+  gap: var(--space-xl);
+}
+
+/* Verticale su mobile, quadrata da 900px in su. Non servono due file: il
+   ritaglio lo fa object-fit da un'unica foto. Il motivo è di equilibrio —
+   accanto a un testo di poche righe una 4/5 alta 800px schiaccia la colonna
+   di destra, mentre la quadrata le sta alla pari. */
+.studio__media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background-color: var(--black-raised);
+  border: var(--hairline) solid var(--color-border-soft);
+  border-radius: var(--radius-card);
+}
+
+/* Vale sia per il placeholder di adesso sia per l'<img> di domani. */
+.studio__media > * {
+  width: 100%;
+  height: 100%;
+}
+
+/* Stesso trattamento dei lavori: b/n a un gradino sotto il bianco pieno.
+   Qui non c'è hover — l'ambiente non è un'opera da mettere a fuoco. */
+.studio__img {
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.05) brightness(0.82);
+}
+
+.studio__eyebrow {
+  font-family: var(--font-display);
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--weight-light);
+  letter-spacing: var(--tracking-widest);
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.studio__title {
+  margin-block-start: var(--space-md);
+  font-family: var(--font-display);
+  font-size: var(--fs-title);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-title);
+  line-height: var(--lh-title);
+  text-transform: uppercase;
+  /* Il titolo di sezione centrato usa text-wrap:balance (dal reset): a
+     bandiera serve l'opposto, nessuna riga vedova ma neanche un blocco
+     pareggiato a forza. */
+  text-wrap: pretty;
+}
+
+.studio__body {
+  margin-block-start: var(--space-lg);
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+  color: var(--color-text-muted);
+}
+
+/* La targhetta. La hairline attraversa tutta la colonna di testo — è quello
+   che la rende una targhetta e non una riga di meta appesa al paragrafo. */
+.studio__place {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  margin-block-start: var(--space-xl);
+  padding-block-start: var(--space-md);
+  border-block-start: var(--hairline) solid var(--color-border);
+  font-family: var(--font-display);
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--weight-regular);
+  letter-spacing: var(--tracking-widest);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.studio__pin {
+  flex: 0 0 auto;
+  color: var(--color-text-faint);
+}
+
+/* Fascia in colonna singola sopra i 600px: la foto è larga quanto la pagina
+   e una 4/5 arriverebbe a superare l'altezza del viewport, spingendo il testo
+   fuori dalla sezione — la didascalia non si vedrebbe mai insieme alla stanza.
+   Il ritaglio passa a orizzontale finché non si torna a due colonne. */
+@media (min-width: 600px) and (max-width: 899px) {
+  .studio__media {
+    aspect-ratio: 3 / 2;
+  }
+}
+
+@media (min-width: 900px) {
+  .studio__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(var(--space-2xl), 6vw, var(--space-4xl));
+  }
+
+  /* Il tetto di misura sta sulla colonna, non sul paragrafo: così titolo,
+     testo e targhetta finiscono tutti sulla stessa verticale e la hairline
+     è lunga quanto il testo che accompagna. */
+  .studio__text {
+    max-width: 34rem;
+  }
+
+  .studio__media {
+    aspect-ratio: 1 / 1;
+  }
+}
+
+
+/* --- CTA banner ------------------------------------------------------------
+   Una fascia, non una sezione: piano rialzato su --black-raised (il token
+   dichiarato allo step 0 per "card, CTA banner, superfici sollevate"), fondo
+   a piena larghezza, contenuto centrato.
+
+   Le due hairline orizzontali fanno il lavoro vero. Senza, uno stacco di due
+   punti di luminanza dal fondo pagina si legge come un difetto dello schermo;
+   con quelle, si legge come un piano diverso.
+
+   Niente classe .section qui: il ritmo verticale se lo dichiara da sé, più
+   stretto di una sezione piena. Due classi di pari specificità che si
+   contendono padding-block sono il modo più rapido per rompere la
+   spaziatura più avanti — vedi la nota su .section nelle primitive. */
+
+.cta {
+  padding-block: var(--space-section-tight);
+  background-color: var(--color-bg-raised);
+  border-block: var(--hairline) solid var(--color-border-soft);
+}
+
+.cta__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cta__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-title);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-title);
+  line-height: var(--lh-title);
+  text-transform: uppercase;
+}
+
+.cta__body {
+  margin-block-start: var(--space-md);
+  /* Misura tarata sulle due righe spezzate a mano nell'HTML: più stretta e
+     la prima andrebbe a capo da sola, mandando in vacca lo stacco. */
+  max-width: 40rem;
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+  color: var(--color-text-muted);
+}
+
+/* Le due righe sono spezzate a mano nell'HTML perché a misura piena il ritmo
+   è quello giusto. Sotto i 600px quel <br> produce righe sbilenche: sparisce
+   e il testo va a capo da solo. */
+@media (max-width: 599px) {
+  .cta__body br {
+    display: none;
+  }
+}
+
+.cta__btn {
+  min-height: 3rem;
+  margin-block-start: var(--space-xl);
+  padding-inline: var(--space-lg);
+}
+
+
+/* --- Instagram -------------------------------------------------------------
+   Un feed, non un allestimento. Le differenze da "Our Work" sono tutte
+   deliberate: formato 1/1 invece di 2/3, riquadri più piccoli, nessuna linea
+   di allestimento sotto. Quella linea significa "opere appese a una parete":
+   ripeterla qui la svuoterebbe.
+
+   PROGRESSIONE DEI BREAKPOINT
+   < 1200px   striscia che scorre, col taglio dell'ultimo riquadro a
+              dichiarare che il profilo continua
+   ≥ 1200px   riga unica di otto. Da qui in su la striscia andrebbe
+              disallineata dal resto della pagina: il .container si ferma a
+              1440px e si centra, mentre uno scroller a piena larghezza
+              resterebbe agganciato al gutter della finestra. */
+
+/* Selettore con il tipo, per lo stesso motivo di ul.work__scroller: il reset
+   `ul[role="list"]` azzera il padding e a parità di peso vincerebbe lui. */
+ul.instagram__strip {
+  display: flex;
+  gap: var(--space-2xs);
+  margin-block-start: var(--space-2xl);
+  padding-inline: var(--gutter);
+  overflow-x: auto;
+  /* proximity e non mandatory: qui i riquadri sono piccoli e uno snap rigido
+     su otto elementi si sente come un attrito. Nella gallery, dove ogni
+     riquadro è un'opera da inquadrare, la scelta è opposta. */
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: var(--gutter);
+  overscroll-behavior-inline: contain;
+  scrollbar-width: none;
+}
+
+ul.instagram__strip::-webkit-scrollbar {
+  display: none;
+}
+
+.instagram__cell {
+  flex: 0 0 auto;
+  width: min(38vw, 11rem);
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background-color: var(--black-raised);
+  border: var(--hairline) solid var(--color-border-soft);
+  border-radius: var(--radius-card);
+  scroll-snap-align: start;
+}
+
+/* Vale sia per il placeholder di adesso sia per l'<img> di domani. */
+.instagram__cell > * {
+  width: 100%;
+  height: 100%;
+}
+
+.instagram__img {
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.05) brightness(0.82);
+  transition: filter var(--duration-fast) ease;
+}
+
+/* Solo luminosità, niente zoom: i riquadri non sono cliccabili e un
+   ingrandimento in hover prometterebbe un'apertura che non c'è. */
+@media (hover: hover) and (pointer: fine) {
+  .instagram__cell:hover .instagram__img {
+    filter: grayscale(1) contrast(1.05) brightness(1);
+  }
+}
+
+.instagram__cta {
+  display: flex;
+  justify-content: center;
+  margin-block-start: var(--space-xl);
+}
+
+.instagram__handle {
+  min-height: 3rem;
+  padding-inline: var(--space-lg);
+}
+
+.instagram__ext {
+  /* La freccia diagonale è più alta della riga maiuscola: senza questo
+     scarto sembra sollevata rispetto all'handle. */
+  transform: translateY(-0.05em);
+}
+
+@media (min-width: 1200px) {
+  ul.instagram__strip {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: var(--space-xs);
+    max-width: var(--container-max);
+    margin-inline: auto;
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+
+  .instagram__cell {
+    width: auto;
+  }
+}
+
+
+/* --- Footer ----------------------------------------------------------------
+   Fondo --black-sunken: un gradino SOTTO il fondo pagina. La pagina si chiude
+   scendendo, non salendo — nessun bordo in testa, nessuna ombra: è il piano
+   che si abbassa a dire che siamo arrivati in fondo.
+
+   Le quattro colonne sono blocchi indirizzo, non liste di link: occhiello in
+   condensed tracciato (lo stesso trattamento dell'occhiello della hero) e
+   sotto il dato, in corpo testo. È il pannello informativo all'uscita della
+   galleria.
+
+   PROGRESSIONE DEI BREAKPOINT
+   < 560px    tutto in colonna
+   ≥ 560px    marchio a piena larghezza in testa, poi le quattro colonne 2×2
+   ≥ 1024px   marchio a sinistra e le quattro colonne in riga accanto */
+
+.footer {
+  padding-block: var(--space-3xl) var(--space-xl);
+  background-color: var(--color-bg-sunken);
+}
+
+.footer__top {
+  display: grid;
+  gap: var(--space-xl) var(--space-lg);
+}
+
+.footer__logo {
+  font-size: 1.75rem;
+}
+
+.footer__tagline {
+  margin-block-start: var(--space-2xs);
+  font-family: var(--font-display);
+  font-size: var(--fs-meta);
+  font-weight: var(--weight-light);
+  letter-spacing: var(--tracking-widest);
+  line-height: var(--lh-tight);
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.footer__label {
+  font-family: var(--font-display);
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--weight-regular);
+  letter-spacing: var(--tracking-wide);
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.footer__value {
+  margin-block-start: var(--space-sm);
+  font-size: var(--fs-small);
+  line-height: var(--lh-body);
+  color: var(--color-text-muted);
+  /* <address> arriva in corsivo dal browser: qui è un blocco di dati, non
+     una citazione. */
+  font-style: normal;
+}
+
+.footer__link {
+  color: var(--color-text);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: var(--hairline);
+  text-underline-offset: 0.3em;
+  transition: text-decoration-color var(--duration-fast) ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .footer__link:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+/* Il focus da tastiera non passa dalla sottolineatura: ha già il suo anello
+   (:focus-visible nelle basi) e due segnali direbbero la stessa cosa due
+   volte. */
+
+.footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm) var(--space-md);
+  margin-block-start: var(--space-2xl);
+  padding-block-start: var(--space-md);
+  border-block-start: var(--hairline) solid var(--color-border-soft);
+  font-family: var(--font-display);
+  font-size: var(--fs-meta);
+  font-weight: var(--weight-regular);
+  letter-spacing: var(--tracking-wide);
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  text-align: center;
+}
+
+.footer__top-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  transition: color var(--duration-fast) ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .footer__top-link:hover {
+    color: var(--color-text);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .footer__top-link:hover .footer__arrow {
+    transform: translateY(-2px);
+  }
+}
+
+.footer__arrow {
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+@media (min-width: 560px) {
+  .footer__top {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Il marchio non è una delle quattro colonne: sta in testa, a piena
+     larghezza, e le colonne gli si dispongono sotto. */
+  .footer__brand {
+    grid-column: 1 / -1;
+  }
+
+  .footer__bottom {
+    justify-content: space-between;
+    text-align: start;
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer__top {
+    grid-template-columns: auto repeat(4, minmax(0, 1fr));
+    gap: var(--space-2xl);
+  }
+
+  .footer__brand {
+    grid-column: auto;
+    /* Il marchio è più corto delle colonne: senza questo resta appeso al
+       centro della riga invece che alla stessa linea di partenza. */
+    align-self: start;
+  }
+}
+
+
+/* --- Modale contatti -------------------------------------------------------
+   Il pannello è una scheda di commissione, non una finestra di dialogo: la
+   stessa testata delle sezioni (titolo condensed + divisore col rombo) e
+   campi che sono righe su cui scrivere, non caselle. Da qui la scelta più
+   netta del componente — gli input a sola sottolineatura. Con dei box
+   arrotondati il modale sarebbe l'unico punto del sito a non parlare la
+   lingua delle hairline.
+
+   La textarea invece il bordo ce l'ha su tutti i lati: una riga è una riga,
+   un'area va delimitata, altrimenti il testo che va a capo esce dal campo
+   senza che niente lo contenga.
+
+   Apertura/chiusura: fade + scale con i token di motion. Il passaggio
+   form → ricevuta è un secondo gesto: uscita in opacity (--duration-fast),
+   entrata della ricevuta in opacity + scale(0.96) (--duration-base). */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--gutter);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  opacity: 0;
+  visibility: hidden;
+  /* Stessa avvertenza della nav-overlay: visibility non si interpola.
+     Commuta subito in apertura, solo a dissolvenza finita in chiusura —
+     altrimenti il primo frame è ancora `hidden` e il focus sul primo campo
+     non attecchisce. */
+  transition:
+    opacity var(--duration-base) var(--ease-out),
+    visibility 0s linear var(--duration-base);
+}
+
+.modal.is-open {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity var(--duration-base) var(--ease-out),
+    visibility 0s linear 0s;
+}
+
+/* Scrim: elemento vero e non ::before, così il click fuori si riconosce dal
+   solo target dell'evento senza risalire l'albero. Fisso, quindi resta fermo
+   se il pannello è più alto del viewport e il contenitore scorre. */
+.modal__scrim {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.82);
+}
+
+.modal__panel {
+  position: relative;
+  width: 100%;
+  max-width: 34rem;
+  /* Il pannello è un flex item, e un flex item non scende sotto la larghezza
+     minima del proprio contenuto: senza questi due, su uno schermo stretto
+     la riga email/telefono lo allarga oltre il viewport e il modale scorre
+     in orizzontale. `container-type` serve anche alla riga qui sotto, che
+     misura il pannello e non la finestra. */
+  min-width: 0;
+  container: modal / inline-size;
+  /* margin auto e non align-items sul contenitore: quando il pannello supera
+     il viewport, `align-items: center` gli taglierebbe il bordo alto fuori
+     dall'area scrollabile. Così invece resta raggiungibile. */
+  margin: auto;
+  max-height: calc(100svh - var(--gutter) * 2);
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg-raised);
+  border: var(--hairline) solid var(--color-border);
+  border-radius: var(--radius-card);
+  transform: scale(0.98);
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.modal.is-open .modal__panel {
+  transform: scale(1);
+}
+
+/* L'area che scorre è tutto il contenuto, testata compresa: su uno schermo
+   basso con la tastiera aperta una testata bloccata si mangerebbe metà dello
+   spazio utile. */
+.modal__scroll {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: clamp(1.75rem, 5vw, 2.75rem);
+}
+
+/* --- Chiusura --- */
+
+.modal__close {
+  position: absolute;
+  inset-block-start: var(--space-xs);
+  inset-inline-end: var(--space-xs);
+  z-index: var(--z-base);
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  color: var(--color-text-faint);
+  transition: color var(--duration-fast) ease;
+}
+
+/* Due tratti incrociati, come le barre dell'hamburger: è lo stesso oggetto
+   dell'header, non una glifo "×" preso da un font. */
+.modal__close-mark,
+.modal__close-mark::after {
+  display: block;
+  width: 1rem;
+  height: var(--hairline);
+  background-color: currentColor;
+}
+
+.modal__close-mark {
+  transform: rotate(45deg);
+}
+
+.modal__close-mark::after {
+  content: "";
+  transform: rotate(90deg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .modal__close:hover {
+    color: var(--color-text);
+  }
+}
+
+/* --- Testata --- */
+
+.modal__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  /* Spazio a destra per il bottone di chiusura: senza, un titolo lungo gli
+     finisce sotto. */
+  padding-inline: var(--space-lg);
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+.modal__head.is-exiting {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.modal__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-subtitle);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-title);
+  line-height: var(--lh-title);
+  text-transform: uppercase;
+}
+
+.modal__rule {
+  margin-block-start: var(--space-sm);
+}
+
+.modal__lead {
+  max-width: 34ch;
+  margin-block-start: var(--space-sm);
+  font-size: var(--fs-small);
+  line-height: var(--lh-body);
+  color: var(--color-text-muted);
+}
+
+/* --- Form --- */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  margin-block-start: var(--space-xl);
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+.form.is-exiting {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Riga a due campi. La soglia è sul pannello e non sulla finestra: è la
+   larghezza del pannello a decidere se due campi affiancati restano
+   scrivibili, e il pannello ha un massimo suo che la finestra non conosce. */
+.form__row {
+  display: grid;
+  gap: var(--space-lg);
+}
+
+@container modal (min-width: 30rem) {
+  .form__row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  /* min-width: le griglie a colonne 1fr non si stringono sotto la larghezza
+     minima intrinseca di un input, che è generosa: senza questo la riga
+     email/telefono sfonda il pannello. */
+  min-width: 0;
+}
+
+.field__label {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2xs);
+  margin-block-end: var(--space-2xs);
+  font-family: var(--font-display);
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  transition: color var(--duration-fast) ease;
+}
+
+/* Si segna il campo facoltativo, non i cinque obbligatori: l'eccezione è
+   una, e un asterisco rosso su ogni riga sarebbe l'unico colore acceso del
+   sito speso per non dire niente. */
+.field__optional {
+  font-family: var(--font-body);
+  font-size: var(--fs-meta);
+  font-weight: var(--weight-regular);
+  letter-spacing: var(--tracking-body);
+  text-transform: none;
+  color: var(--grey-dark);
+}
+
+.field__input {
+  width: 100%;
+  padding: var(--space-2xs) 0;
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  color: var(--color-text);
+  background-color: transparent;
+  border: 0;
+  border-block-end: var(--hairline) solid var(--color-border);
+  border-radius: 0;
+  transition:
+    border-color var(--duration-fast) ease,
+    color var(--duration-fast) ease;
+}
+
+.field__input::placeholder {
+  color: var(--grey-dark);
+}
+
+/* Il focus è la linea che si accende, non un anello sopra una linea. Regola
+   più specifica di :focus-visible globale, quindi va disattivato l'outline
+   qui e sostituito da un segnale che è comunque non-cromatico (spessore +
+   luminosità) — leggibile anche in scala di grigi. */
+.field__input:focus-visible {
+  outline: none;
+  border-block-end-color: var(--white);
+  box-shadow: 0 1px 0 0 var(--white);
+}
+
+.field:focus-within .field__label {
+  color: var(--color-text);
+}
+
+/* --- Select --- */
+
+.field__select-wrap {
+  position: relative;
+  display: flex;
+}
+
+.field__select {
+  appearance: none;
+  padding-inline-end: var(--space-md);
+  cursor: pointer;
+}
+
+/* :invalid = required ancora senza scelta, cioè l'option segnaposto: è così
+   che il segnaposto si distingue da una scelta vera, senza doverlo marcare
+   da JS. */
+.field__select:invalid {
+  color: var(--grey-dark);
+}
+
+.field__select option {
+  /* Firefox eredita il background trasparente del select nel menu a tendina */
+  background-color: var(--black-raised);
+  color: var(--white);
+}
+
+/* Chevron: due hairline, la stessa costruzione del rombo del logo ruotata di
+   mezzo giro. pointer-events none, il click deve arrivare al select. */
+.field__chevron {
+  position: absolute;
+  inset-inline-end: 2px;
+  inset-block-start: 50%;
+  width: 8px;
+  height: 8px;
+  margin-block-start: -6px;
+  border-inline-end: var(--hairline) solid var(--color-text-faint);
+  border-block-end: var(--hairline) solid var(--color-text-faint);
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+/* --- Textarea --- */
+
+.field__textarea {
+  padding: var(--space-xs);
+  line-height: var(--lh-body);
+  border: var(--hairline) solid var(--color-border-soft);
+  border-radius: var(--radius-button);
+  resize: vertical;
+  min-height: 6.5rem;
+}
+
+.field__textarea:focus-visible {
+  border-color: var(--white);
+  box-shadow: none;
+}
+
+/* --- Errori di campo --- */
+
+.field__error {
+  margin-block-start: var(--space-2xs);
+  font-size: var(--fs-small);
+  line-height: var(--lh-tight);
+  color: var(--color-error);
+}
+
+/* L'etichetta si tinge insieme al campo: lega il messaggio alla riga giusta
+   quando gli errori sono più di uno. Ultima delle regole su .field__label,
+   così vince sul focus-within. */
+.field:has(.field__input[aria-invalid="true"]) .field__label {
+  color: var(--color-error);
+}
+
+.field__input[aria-invalid="true"] {
+  border-color: var(--color-error);
+}
+
+.field__input[aria-invalid="true"]:focus-visible {
+  border-block-end-color: var(--color-error);
+  box-shadow: 0 1px 0 0 var(--color-error);
+}
+
+.field__textarea[aria-invalid="true"]:focus-visible {
+  box-shadow: none;
+}
+
+/* --- Trappola anti-bot ---
+   Fuori dal flusso e ritagliata via, non display:none: parecchi bot saltano
+   i campi nascosti col display, molti meno quelli semplicemente ritagliati.
+   Niente spostamento a -9999px: il pannello scorre, e un figlio così a
+   sinistra gli farebbe comparire una scrollbar orizzontale. aria-hidden sul
+   contenitore la toglie comunque agli screen reader. */
+.form__trap {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* --- Piede del form --- */
+
+.form__foot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  text-align: center;
+}
+
+.form__submit {
+  width: 100%;
+  min-height: 3rem;
+}
+
+.form__submit[disabled] {
+  cursor: progress;
+  background-color: var(--grey-dark);
+  color: var(--color-text-muted);
+  border-color: transparent;
+}
+
+.form__status {
+  font-size: var(--fs-small);
+  line-height: var(--lh-tight);
+  color: var(--color-error);
+}
+
+.form__note {
+  font-size: var(--fs-meta);
+  letter-spacing: var(--tracking-body);
+  color: var(--grey-dark);
+}
+
+/* --- Conferma ---
+   Il form non riceve un messaggio sopra: diventa la ricevuta. Il rombo qui è
+   pieno, l'unica volta in tutto il sito — è il segno che si chiude. */
+
+.modal__done {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding-block: var(--space-xl);
+  text-align: center;
+  /* Entrata da scale(0.96), mai da 0: niente appare dal nulla. Il JS toglie
+     `hidden`, forza un reflow e poi mette .is-entered — così la transizione
+     parte dal valore sotto, non da display:none. */
+  opacity: 0;
+  transform: scale(0.96);
+  transform-origin: center;
+  transition:
+    opacity var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+}
+
+.modal__done.is-entered {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.modal__done-mark {
+  width: 10px;
+  height: 10px;
+  background-color: var(--white);
+  transform: rotate(45deg);
+}
+
+.modal__done-title {
+  margin-block-start: var(--space-2xs);
+  font-family: var(--font-display);
+  font-size: var(--fs-name);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wide);
+  line-height: var(--lh-title);
+  text-transform: uppercase;
+}
+
+.modal__done-body {
+  max-width: 32ch;
+  font-size: var(--fs-small);
+  line-height: var(--lh-body);
+  color: var(--color-text-muted);
+}
+
+/* Blocca lo scroll della pagina sotto il modale. La pagina non si sposta di
+   lato: lo spazio della scrollbar è già riservato da `scrollbar-gutter` su
+   <html>, in cima al file. */
+body.has-modal-open {
+  overflow: hidden;
+}
+
+
+
+/* --- Pagina artisti (artisti.html) -----------------------------------------
+   La home appende i ritratti alla parete; questa pagina è il catalogo che sta
+   accanto alla parete. Da qui discendono tutte le scelte del blocco:
+
+   LA CORNICE NON CAMBIA
+   La card riusa .artist, .artist__media, .artist__scrim e il cartellino
+   (nome + specialità) senza una riga di override: chi arriva dalla home deve
+   riconoscere lo stesso oggetto. Quello che si aggiunge — bio e link — sta
+   FUORI dalla cornice, sotto, come la voce stampata accanto all'opera.
+   Nessuna hairline di separazione tra i due: il bordo della cornice fa già
+   quel lavoro, una seconda linea sarebbe una linea doppia.
+
+   LA CARD NON È PIÙ UN LINK
+   Sulla home il bersaglio è tutta la cornice. Qui dentro c'è un paragrafo di
+   bio, e annegarlo nel nome accessibile di un link lungo tre righe peggiora
+   la pagina per chi la ascolta. Quindi <article> + un solo <a> in fondo, e
+   l'illuminazione della foto la comanda il :has() del link. Per questo le
+   regole hover del blocco "Artisti" usano il selettore `a.artist`: qui la
+   cornice è un <div> e non se le prende.
+
+   TRE COLONNE, NON QUATTRO
+   La griglia della home ne tiene quattro perché lì la card è la sola cornice.
+   Con bio e link sotto, a quattro colonne la misura del testo scende sotto le
+   30 battute e la bio va a capo ogni due parole. */
+
+/* Testata di pagina.
+   Non è una hero: nessuna foto, nessuna altezza di viewport. È il frontespizio
+   del catalogo — fondo --black-void (un gradino sotto il fondo pagina, lo
+   stesso della hero), hairline di chiusura in basso, e sopra ci passa
+   l'header trasparente, da cui il padding superiore. */
+
+.page-hero {
+  padding-block: calc(var(--header-height) + var(--space-2xl)) var(--space-2xl);
+  background-color: var(--black-void);
+  border-block-end: var(--hairline) solid var(--color-border-soft);
+}
+
+@media (min-width: 768px) {
+  .page-hero {
+    padding-block: calc(var(--header-height) + var(--space-3xl)) var(--space-3xl);
+  }
+}
+
+.page-hero__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Scala propria, tra --fs-title e --fs-hero: questo titolo è più importante
+   di una testata di sezione e meno del nome dello studio. Non diventa un
+   token perché è l'unico posto in cui serve. */
+.page-hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 10vw, 5.5rem);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-hero);
+  line-height: var(--lh-title);
+  text-transform: uppercase;
+}
+
+.page-hero__rule {
+  margin-block-start: var(--space-lg);
+}
+
+.page-hero__lead {
+  max-width: 44ch;
+  margin-block-start: var(--space-lg);
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+  color: var(--color-text-muted);
+}
+
+
+/* La griglia.
+
+   UNO, DUE, QUATTRO — MAI TRE
+   Le voci sono quattro (tre artisti + lo slot libero) e il numero di colonne
+   deve sempre dividerle. A tre colonne lo slot libero resterebbe solo su una
+   seconda riga, con mezza pagina di nero alla sua destra: non si legge come
+   "posto ancora da riempire", si legge come una griglia rotta. Quindi si
+   passa da due colonne direttamente a quattro.
+
+   La soglia è 1200px e non i 1024px della home: lì la card è la sola cornice
+   e può stringersi quanto vuole, qui sotto c'è una bio. A 1024px diviso
+   quattro la misura del testo scende sotto le 30 battute e tre righe di bio
+   ne diventano sei.
+
+   Il gap di riga resta più largo di quello di colonna finché le righe sono
+   due: senza quell'aria le due file si leggono come un blocco unico. */
+
+.roster__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2xl) var(--space-md);
+}
+
+@media (min-width: 560px) {
+  .roster__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  .roster__grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-lg);
+  }
+}
+
+
+/* La voce di catalogo.
+   Colonna flex a piena altezza dello slot: è quello che allinea i link
+   "Vedi i lavori" sulla stessa riga anche quando una bio è più lunga
+   dell'altra (vedi il margine automatico sul link). */
+
+.roster__slot {
+  display: flex;
+}
+
+.artist-entry {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* La cornice non si comprime: l'aspect-ratio 3/4 dichiarato su .artist
+   deve reggere anche dentro un contenitore flex. */
+.artist-entry > .artist {
+  flex: 0 0 auto;
+}
+
+.artist-entry__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding-block-start: var(--space-md);
+}
+
+.artist-entry__bio {
+  max-width: 42ch;
+  font-size: var(--fs-small);
+  line-height: var(--lh-body);
+  color: var(--color-text-muted);
+}
+
+/* margin-block-start:auto spinge il link in fondo alla colonna: i link delle
+   tre voci restano allineati tra loro. align-self:flex-start lo tiene largo
+   quanto il testo — il bersaglio è la scritta, non tutta la riga. */
+.artist-entry__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  align-self: flex-start;
+  margin-block-start: auto;
+  padding-block-start: var(--space-md);
+  font-family: var(--font-display);
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wide);
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  transition: color var(--duration-fast) ease;
+}
+
+.artist-entry__link:focus-visible {
+  color: var(--color-text);
+}
+
+.artist-entry:has(.artist-entry__link:focus-visible) .artist {
+  border-color: var(--color-border);
+}
+
+.artist-entry:has(.artist-entry__link:focus-visible) .artist__img {
+  filter: grayscale(1) contrast(1.05) brightness(1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .artist-entry__link:hover {
+    color: var(--color-text);
+  }
+
+  .artist-entry:has(.artist-entry__link:hover) .artist {
+    border-color: var(--color-border);
+  }
+
+  .artist-entry:has(.artist-entry__link:hover) .artist__img {
+    filter: grayscale(1) contrast(1.05) brightness(1);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .artist-entry:has(.artist-entry__link:focus-visible) .artist__media > * {
+    transform: scale(1.04);
+  }
+
+  .artist-entry__link:focus-visible .artist__arrow {
+    transform: translateX(3px);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .artist-entry:has(.artist-entry__link:hover) .artist__media > * {
+    transform: scale(1.04);
+  }
+
+  .artist-entry__link:hover .artist__arrow {
+    transform: translateX(3px);
+  }
+}
+
+/* Arrivo dalla home: i bottoni della sezione artisti puntano a
+   artisti.html#big / #roman / #simone. La cornice di destinazione tiene il
+   bordo acceso, così si vede quale delle tre si è chiesta. Niente animazione:
+   non è un evento, è uno stato della pagina appena aperta. */
+.artist-entry:target > .artist {
+  border-color: var(--color-border-strong);
+}
+
+/* Lo slot libero, in coda alla griglia.
+   Riusa .artist--open della home. La riga sotto sta al posto della bio e non
+   porta link: non c'è ancora niente da aprire, e un link finto qui direbbe
+   una bugia. */
+.artist-entry__note {
+  font-size: var(--fs-small);
+  line-height: var(--lh-body);
+  color: var(--color-text-faint);
+}
+
+
+/* ============================================================================
+   PAGINA 404
+
+   Non è una sezione del sito: è il cartello sulla porta sbagliata.
+   Stesso alfabeto visivo (logo, occhiello tracciato, titolo condensed,
+   divisore a rombo, bottone) e niente di più. Apache la serve sotto
+   l'URL inesistente — i path li risolve <base> in 404.html.
+   ========================================================================== */
+
+.error-page {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+.error-page__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding-block: var(--space-3xl);
+}
+
+.error-page__logo {
+  margin-block-end: 0;
+}
+
+.error-page__lang {
+  margin-block-start: var(--space-md);
+  margin-block-end: var(--space-2xl);
+}
+
+.error-page__code {
+  font-family: var(--font-display);
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--weight-light);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-inline-end: calc(var(--tracking-widest) * -1);
+}
+
+.error-page__title {
+  margin-block-start: var(--space-sm);
+  font-family: var(--font-display);
+  font-size: var(--fs-title);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-title);
+  line-height: var(--lh-title);
+  text-transform: uppercase;
+}
+
+.error-page__rule {
+  margin-block: var(--space-lg);
+}
+
+.error-page__body {
+  max-width: 28rem;
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+  color: var(--color-text-muted);
+}
+
+.error-page__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-sm);
+  margin-block-start: var(--space-xl);
+}
+
+
+/* ============================================================================
+   PREFERENZE UTENTE
+   ========================================================================== */
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Gentler, not zero: opacity e colore restano (aiutano a leggere lo
+     stato). Si toglie il movimento — scale, translate, rotate interpolati. */
+
+  .btn:active,
+  a.artist:active {
+    transform: none;
+  }
+
+  .modal__panel,
+  .modal.is-open .modal__panel,
+  .modal__done,
+  .modal__done.is-entered {
+    transform: none;
+  }
+
+  .modal__done {
+    transition: opacity var(--duration-fast) ease;
+  }
+
+  .nav-toggle__bar {
+    transition: none;
+  }
+
+  .nav-desktop__link::after {
+    transition: none;
+  }
+
+  /* Eccezione. Per l'indicatore di .work la "durata" non è tempo ma la
+     lunghezza della timeline di scroll: non è un'animazione che parte da
+     sola — è la posizione del dito di chi scorre. */
+  .work__thumb {
+    animation-duration: auto;
+  }
+}

@@ -1,0 +1,7 @@
+<!-- PLACEHOLDER — da sostituire con il monogramma reale del cliente in SVG -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Big Art Gallery">
+  <rect width="64" height="64" fill="#0a0a0a"/>
+  <path d="M32 8 56 32 32 56 8 32Z" fill="none" stroke="#ffffff" stroke-width="3"/>
+  <text x="32" y="39" fill="#ffffff" font-family="Arial Narrow, Helvetica, sans-serif"
+        font-size="17" font-weight="700" letter-spacing="0.5" text-anchor="middle">BIG</text>
+</svg>
