@@ -1141,4 +1141,121 @@
     track.appendChild(clone);
   })();
 
+
+  /* --------------------------------------------------------------------------
+     REVEAL ALLO SCROLL
+
+     Blocchi e foto entrano con una dissolvenza dal basso quando arrivano nel
+     viewport. Sta in fondo al file di proposito: il clone del nastro qui
+     sopra deve già esistere, altrimenti le sue foto resterebbero fuori.
+
+     Due tipi di bersaglio:
+     - SINGLE: osservati uno per uno. Quelli che entrano nello stesso
+       callback (una riga di griglia, le colonne del footer) si sfalsano
+       in ordine di pagina.
+     - GROUPS: le strisce orizzontali. Gli elementi fuori schermo in
+       orizzontale non intersecano mai il viewport, quindi si osserva il
+       contenitore e alla sua entrata si rivelano tutti i figli, sfalsati.
+       Senza questo, una foto apparirebbe solo dopo lo swipe.
+
+     Con prefers-reduced-motion: reduce, o senza IntersectionObserver, non
+     si nasconde niente.
+     ------------------------------------------------------------------------ */
+
+  (function () {
+    if (!('IntersectionObserver' in window)) { return; }
+    if (!window.matchMedia('(prefers-reduced-motion: no-preference)').matches) { return; }
+
+    var STEP = 90;      // ms tra un elemento e il successivo
+    var MAX_STEPS = 6;  // oltre, tutti insieme: niente code da un secondo
+
+    var SINGLE = [
+      '.page-hero__inner > *',
+      '.section-head',
+      '.work__foot',
+      '.artists__foot',
+      '.studio__media',
+      '.studio__text > *',
+      '.cta__inner > *',
+      '.giftcard__stack',
+      '.giftcard__body',
+      '.giftcard__btn',
+      '.instagram__cta',
+      '.roster__slot',
+      '.profile__media',
+      '.profile__text > *',
+      '.artist-switch__inner',
+      '.footer__brand',
+      '.footer__col',
+      '.footer__bottom'
+    ];
+
+    // Il track del nastro prima dello scroller: in home lo scroller sta
+    // dentro il track, e le sue foto vanno armate una volta sola.
+    var GROUPS = [
+      { root: '.work__track', items: '.work__frame' },
+      { root: '.work__scroller', items: '.work__frame' },
+      { root: '.artists__scroller', items: '.artists__slot' },
+      { root: '.instagram__strip', items: '.instagram__cell' }
+    ];
+
+    var armed = [];
+
+    // Già nel viewport al caricamento: resta visibile e non si anima.
+    // Nasconderlo dopo il primo paint sarebbe un lampo, non un'entrata.
+    function inView(el) {
+      var r = el.getBoundingClientRect();
+      return r.top < window.innerHeight && r.bottom > 0;
+    }
+
+    function reveal(el, step) {
+      el.style.setProperty('--reveal-delay', Math.min(step, MAX_STEPS) * STEP + 'ms');
+      el.classList.add('is-revealed');
+    }
+
+    var io = new IntersectionObserver(function (entries) {
+      var batch = 0;
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) { return; }
+        var el = entry.target;
+        io.unobserve(el);
+
+        if (el._revealItems) {
+          el._revealItems.forEach(function (item, i) { reveal(item, i); });
+        } else {
+          reveal(el, batch);
+          batch += 1;
+        }
+      });
+    }, { rootMargin: '0px 0px -10% 0px' });
+
+    GROUPS.forEach(function (group) {
+      Array.prototype.forEach.call(document.querySelectorAll(group.root), function (root) {
+        if (armed.indexOf(root) !== -1 || inView(root)) { return; }
+        var items = Array.prototype.filter.call(
+          root.querySelectorAll(group.items),
+          function (item) { return armed.indexOf(item) === -1; }
+        );
+        if (!items.length) { return; }
+
+        // Lo scroller annidato nel track, al suo turno, trova tutte le foto
+        // già armate ed esce dal filtro qui sopra con una lista vuota.
+        items.forEach(function (item) {
+          item.classList.add('reveal');
+          armed.push(item);
+        });
+        armed.push(root);
+        root._revealItems = items;
+        io.observe(root);
+      });
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll(SINGLE.join(', ')), function (el) {
+      if (armed.indexOf(el) !== -1 || inView(el)) { return; }
+      el.classList.add('reveal');
+      armed.push(el);
+      io.observe(el);
+    });
+  })();
+
 })();

@@ -2327,10 +2327,26 @@ a.artist:focus-visible .artist__link {
   color: var(--color-text-faint);
 }
 
-/* Il monogramma sulla carta è più piccolo che nell'header: su una tessera
-   il marchio è stampato, non è l'insegna. */
+/* Il monogramma è il centro della carta, con la dicitura sotto: occupa lo
+   spazio sopra la banda e ci si centra dentro. */
+.giftcard__center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+}
+
+/* Larghezza in percentuale della carta, non altezza fissa: la carta scala
+   con la colonna, e il marchio con lei, senza breakpoint dedicati. */
+.giftcard__mark {
+  width: 30%;
+}
+
 .giftcard__mark .logo__img {
-  height: 1.75rem;
+  width: 100%;
+  height: auto;
 }
 
 .giftcard__kind {
@@ -2408,10 +2424,6 @@ a.artist:focus-visible .artist__link {
 @media (max-width: 419px) {
   .giftcard__card {
     padding: var(--space-sm);
-  }
-
-  .giftcard__mark .logo__img {
-    height: 1.5rem;
   }
 }
 
@@ -2528,9 +2540,10 @@ ul.instagram__strip::-webkit-scrollbar {
    galleria.
 
    PROGRESSIONE DEI BREAKPOINT
-   < 560px    tutto in colonna
-   ≥ 560px    marchio a piena larghezza in testa, poi le quattro colonne 2×2
-   ≥ 1024px   marchio a sinistra e le quattro colonne in riga accanto */
+   Il marchio è sempre in testa, centrato. Sotto:
+   < 560px    le quattro colonne una sotto l'altra
+   ≥ 560px    le quattro colonne 2×2
+   ≥ 1024px   le quattro colonne in riga */
 
 .footer {
   padding-block: var(--space-3xl) var(--space-xl);
@@ -2540,6 +2553,16 @@ ul.instagram__strip::-webkit-scrollbar {
 .footer__top {
   display: grid;
   gap: var(--space-xl) var(--space-lg);
+}
+
+/* Il marchio sta sempre in testa, centrato, con la dicitura sotto: è la
+   firma del sito, non una delle colonne di dati. */
+.footer__brand {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .footer__logo .logo__img {
@@ -2656,12 +2679,6 @@ ul.instagram__strip::-webkit-scrollbar {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  /* Il marchio non è una delle quattro colonne: sta in testa, a piena
-     larghezza, e le colonne gli si dispongono sotto. */
-  .footer__brand {
-    grid-column: 1 / -1;
-  }
-
   .footer__bottom {
     justify-content: space-between;
     text-align: start;
@@ -2670,15 +2687,8 @@ ul.instagram__strip::-webkit-scrollbar {
 
 @media (min-width: 1024px) {
   .footer__top {
-    grid-template-columns: auto repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: var(--space-2xl);
-  }
-
-  .footer__brand {
-    grid-column: auto;
-    /* Il marchio è più corto delle colonne: senza questo resta appeso al
-       centro della riga invece che alla stessa linea di partenza. */
-    align-self: start;
   }
 }
 
@@ -4033,6 +4043,37 @@ body.has-lightbox-open {
   justify-content: center;
   gap: var(--space-sm);
   margin-block-start: var(--space-xl);
+}
+
+
+/* ============================================================================
+   REVEAL ALLO SCROLL
+
+   Le classi le mette main.js, e solo con prefers-reduced-motion:
+   no-preference. Senza JS, o con movimento ridotto, non si nasconde niente.
+   Quello che è già nel viewport al caricamento non viene mai nascosto: niente
+   lampo di contenuto che sparisce e ricompare, e la hero resta subito lì.
+
+   Si anima `translate`, non `transform`: è una proprietà separata, quindi non
+   sovrascrive gli scale di hover e press già definiti sugli stessi elementi.
+   Animation e non transition per lo stesso motivo: le transition esistenti
+   (bottoni, card) restano intatte. Il fill è `backwards`: durante il ritardo
+   dello stagger vale il primo fotogramma, a fine corsa torna lo stile normale.
+   ========================================================================== */
+
+.reveal:not(.is-revealed) {
+  opacity: 0;
+}
+
+.reveal.is-revealed {
+  animation: reveal-in 800ms var(--ease-out) var(--reveal-delay, 0ms) backwards;
+}
+
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    translate: 0 1.75rem;
+  }
 }
 
 
