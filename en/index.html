@@ -10,10 +10,9 @@
   <!-- Colore della barra browser su mobile: allineato al fondo pagina -->
   <meta name="theme-color" content="#0a0a0a">
 
-  <!-- PLACEHOLDER — sostituire con il logo reale del cliente.
-       Serve anche un favicon.ico in root per i browser più vecchi. -->
-  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="../assets/favicon.svg">
+  <link rel="icon" href="../assets/favicon.ico" sizes="any">
+  <link rel="icon" href="../assets/favicon.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 
   <!-- Open Graph: da completare con og:image quando arrivano le foto reali -->
   <meta property="og:type" content="website">
@@ -71,11 +70,8 @@
   <header class="site-header" id="site-header">
     <div class="site-header__inner container">
 
-      <!-- PLACEHOLDER — sostituire tutto il contenuto di <a> con l'SVG del
-           logo reale, mantenendo l'aria-label. -->
       <a class="logo" href="#top" aria-label="Big Art Gallery, back to the top">
-        <span class="logo__diamond" aria-hidden="true"></span>
-        <span class="logo__text">BIG</span>
+        <img class="logo__img" src="../assets/logo.png" alt="" width="303" height="265">
       </a>
 
       <!-- Nav orizzontale: solo da 900px in su (vedi .nav-desktop nel CSS) -->
@@ -156,17 +152,37 @@
         </li>
       </ul>
 
-      <!-- Dati placeholder dal mockup del cliente: da confermare. -->
-      <div class="nav-overlay__meta">
-        <p class="nav-overlay__meta-line">Via Nomentana 1111, 00100 Roma RM</p>
-        <p class="nav-overlay__meta-line">
-          <a href="tel:+393511234567">351 1234567</a>
-        </p>
-        <p class="nav-overlay__meta-line">
-          <a href="https://instagram.com/bigartgallerystudio" target="_blank" rel="noopener">
-            &#64;bigartgallerystudio
-          </a>
-        </p>
+      <div class="nav-overlay__foot">
+
+        <!-- Il selettore lingua vive qui sotto i 900px: nell'header, accanto
+             a logo, bottone e hamburger, toglieva aria alla CTA su schermi
+             stretti. Sta sopra i recapiti perché è informazione
+             di servizio come loro. Da 900px in su torna nell'header — vedi il
+             blocco "Lingua" nel CSS. -->
+        <nav class="lang-switch" aria-label="Language">
+          <a class="lang-switch__link" href="../index.html" lang="it" hreflang="it" data-set-lang="it">IT</a>
+          <span class="lang-switch__sep" aria-hidden="true"></span>
+          <span class="lang-switch__current" lang="en" aria-current="true">EN</span>
+        </nav>
+
+        <!-- Indirizzo e telefono da Google Maps. -->
+        <div class="nav-overlay__meta">
+          <p class="nav-overlay__meta-line">
+            <a href="https://www.google.com/maps/search/?api=1&amp;query=Big%20Art%20Gallery%2C%20Via%20delle%20Passiflore%2C%2031%2C%2000172%20Roma" target="_blank" rel="noopener">
+              Via delle Passiflore, 31, 00172 Roma RM
+              <span class="visually-hidden">(opens in a new tab)</span>
+            </a>
+          </p>
+          <p class="nav-overlay__meta-line">
+            <a href="tel:+39065434834">06 543 4834</a>
+          </p>
+          <p class="nav-overlay__meta-line">
+            <a href="https://instagram.com/bigartgallerystudio" target="_blank" rel="noopener">
+              &#64;bigartgallerystudio
+            </a>
+          </p>
+        </div>
+
       </div>
 
     </nav>
@@ -185,21 +201,16 @@
 
     <section class="hero">
 
-      <!-- PLACEHOLDER — sostituire il <div class="hero__placeholder"> con:
-           <img class="hero__img"
-                src="../images/hero.jpg"
-                alt=""
-                width="2400" height="1600"
-                fetchpriority="high"
-                loading="eager"
-                decoding="async">
-           L'alt resta vuoto: è immagine decorativa, il contenuto è il testo sopra.
-           Il trattamento b/n e la riduzione di luminosità sono in CSS su
-           .hero__img, così la foto originale resta intatta sul disco. -->
       <div class="hero__media" aria-hidden="true">
-        <div class="placeholder hero__placeholder">
-          <span class="placeholder__label">Hero image placeholder</span>
-        </div>
+        <img class="hero__img"
+             src="../images/hero.webp"
+             srcset="../images/hero-1280.webp 1280w, ../images/hero.webp 1920w"
+             sizes="100vw"
+             alt=""
+             width="1920" height="1280"
+             fetchpriority="high"
+             loading="eager"
+             decoding="async">
       </div>
 
       <div class="hero__scrim" aria-hidden="true"></div>
@@ -241,14 +252,12 @@
     <!-- ==========================================================================
          OUR WORK — step 3
 
-         La striscia di riquadri esce volutamente dal .container: sotto i 768px
-         deve poter scorrere fino a filo schermo. Per questo la sezione ha due
-         blocchi allineati al gutter (testata e coda) con in mezzo un elemento
-         a piena larghezza. Vedi il blocco "Our Work" in css/style.css per la
-         scelta scroller-vs-griglia e per la linea di allestimento.
+         Nine frames at 100vw. On mouse it's a looping strip (the second copy
+         is cloned in main.js); on touch, or with reduced-motion, it stays a
+         scroller. Artist pages do not get work--marquee. See css/style.css.
          ========================================================================== -->
 
-    <section class="section work" id="our-work" aria-labelledby="our-work-title">
+    <section class="section work work--marquee" id="our-work" aria-labelledby="our-work-title">
 
       <div class="container">
         <div class="section-head">
@@ -259,83 +268,156 @@
         </div>
       </div>
 
-      <!-- tabindex: sotto i 768px questo è un contenitore che scorre e senza
-           un tab stop non sarebbe raggiungibile da tastiera. I riquadri non
-           sono link — non esiste ancora una destinazione — quindi il tab stop
-           deve stare qui.
-           TODO: quando ci sarà la pagina lavori, ogni .work__frame diventa un
-           <a> e questo tabindex va tolto. -->
+      <!-- Frames are lightbox links. JS adds the second copy of the strip:
+           without it these nine stay as a scroller. -->
+      <div class="work__viewport">
+        <div class="work__track">
       <ul class="work__scroller"
           role="list"
-          tabindex="0"
           aria-label="Studio work">
 
-        <!-- PLACEHOLDER — sostituire ogni <div class="placeholder"> con:
-
-             <img class="work__img"
-                  src="../images/work-01.jpg"
-                  alt="Descrizione del soggetto del tatuaggio"
-                  width="800" height="1200"
-                  loading="lazy" decoding="async">
-
-             Qui l'alt va scritto davvero: a differenza della hero l'immagine
-             È il contenuto della sezione, non uno sfondo decorativo.
-             Formato verticale 2:3 (il ritaglio lo fa comunque object-fit) e
-             trattamento b/n applicato in CSS, così i file restano intatti. -->
-
         <li class="work__frame">
-          <div class="work__media">
-            <div class="placeholder">
-              <span class="placeholder__label">Work 01</span>
+          <a class="work__trigger"
+             href="../images/lavori/simone-04.webp"
+             data-gallery
+             aria-label="Tattoo by Simone">
+            <div class="work__media">
+              <img class="work__img"
+                   src="../images/lavori/simone-04.webp"
+                   alt="Tattoo by Simone"
+                   width="1200" height="1600"
+                   decoding="async">
             </div>
-          </div>
+          </a>
         </li>
 
         <li class="work__frame">
-          <div class="work__media">
-            <div class="placeholder">
-              <span class="placeholder__label">Work 02</span>
+          <a class="work__trigger"
+             href="../images/lavori/blessed-02.webp"
+             data-gallery
+             aria-label="Tattoo by Blessed">
+            <div class="work__media">
+              <img class="work__img"
+                   src="../images/lavori/blessed-02.webp"
+                   alt="Tattoo by Blessed"
+                   width="1200" height="1600"
+                   decoding="async">
             </div>
-          </div>
+          </a>
         </li>
 
         <li class="work__frame">
-          <div class="work__media">
-            <div class="placeholder">
-              <span class="placeholder__label">Work 03</span>
+          <a class="work__trigger"
+             href="../images/lavori/alessandro-03.webp"
+             data-gallery
+             aria-label="Tattoo by Alessandro">
+            <div class="work__media">
+              <img class="work__img"
+                   src="../images/lavori/alessandro-03.webp"
+                   alt="Tattoo by Alessandro"
+                   width="1200" height="1600"
+                   decoding="async">
             </div>
-          </div>
+          </a>
         </li>
 
         <li class="work__frame">
-          <div class="work__media">
-            <div class="placeholder">
-              <span class="placeholder__label">Work 04</span>
+          <a class="work__trigger"
+             href="../images/lavori/lobo-05.webp"
+             data-gallery
+             aria-label="Tattoo by Lobo">
+            <div class="work__media">
+              <img class="work__img"
+                   src="../images/lavori/lobo-05.webp"
+                   alt="Tattoo by Lobo"
+                   width="1179" height="1572"
+                   decoding="async">
             </div>
-          </div>
+          </a>
         </li>
 
         <li class="work__frame">
-          <div class="work__media">
-            <div class="placeholder">
-              <span class="placeholder__label">Work 05</span>
+          <a class="work__trigger"
+             href="../images/lavori/giuseppe-02.webp"
+             data-gallery
+             aria-label="Tattoo by Giuseppe">
+            <div class="work__media">
+              <img class="work__img"
+                   src="../images/lavori/giuseppe-02.webp"
+                   alt="Tattoo by Giuseppe"
+                   width="1200" height="1800"
+                   decoding="async">
             </div>
-          </div>
+          </a>
         </li>
 
         <li class="work__frame">
-          <div class="work__media">
-            <div class="placeholder">
-              <span class="placeholder__label">Work 06</span>
+          <a class="work__trigger"
+             href="../images/lavori/christian-06.webp"
+             data-gallery
+             aria-label="Tattoo by Christian">
+            <div class="work__media">
+              <img class="work__img"
+                   src="../images/lavori/christian-06.webp"
+                   alt="Tattoo by Christian"
+                   width="1200" height="1594"
+                   decoding="async">
             </div>
-          </div>
+          </a>
+        </li>
+
+        <li class="work__frame">
+          <a class="work__trigger"
+             href="../images/lavori/alessandro-05.webp"
+             data-gallery
+             aria-label="Tattoo by Alessandro">
+            <div class="work__media">
+              <img class="work__img"
+                   src="../images/lavori/alessandro-05.webp"
+                   alt="Tattoo by Alessandro"
+                   width="1200" height="1600"
+                   decoding="async">
+            </div>
+          </a>
+        </li>
+
+        <li class="work__frame">
+          <a class="work__trigger"
+             href="../images/lavori/simone-02.webp"
+             data-gallery
+             aria-label="Tattoo by Simone">
+            <div class="work__media">
+              <img class="work__img"
+                   src="../images/lavori/simone-02.webp"
+                   alt="Tattoo by Simone"
+                   width="1200" height="1600"
+                   decoding="async">
+            </div>
+          </a>
+        </li>
+
+        <li class="work__frame">
+          <a class="work__trigger"
+             href="../images/lavori/lobo-01.webp"
+             data-gallery
+             aria-label="Tattoo by Lobo">
+            <div class="work__media">
+              <img class="work__img"
+                   src="../images/lavori/lobo-01.webp"
+                   alt="Tattoo by Lobo"
+                   width="1179" height="1572"
+                   decoding="async">
+            </div>
+          </a>
         </li>
 
       </ul>
+        </div>
+      </div>
 
       <div class="container work__foot">
 
-        <!-- La linea di allestimento: i sei riquadri le poggiano sopra.
+        <!-- La linea di allestimento: i riquadri le poggiano sopra.
              Sotto i 768px il segmento interno segna la posizione nello
              scroll orizzontale. Vedi il blocco "Our Work" nel CSS. -->
         <div class="work__line" aria-hidden="true">
@@ -361,18 +443,15 @@
     <!-- ==========================================================================
          I NOSTRI ARTISTI — step 4
 
-         Quattro cornici appese alla stessa parete della sezione sopra, ma il
-         formato cambia: 3/4 invece del 2/3 dei lavori. È la differenza tra un
-         ritratto e un'opera, e si legge a colpo d'occhio anche a griglia mista.
+         Stessa parete di Our Work: ritratti 3/4 in una striscia sola, non una
+         griglia. Nove voci non stanno in una riga, e impilarle allungherebbe
+         la home di tre schermate. Lo scroller tiene i ritratti grandi, la
+         sezione compatta, e il taglio del prossimo dichiara da solo che la
+         parete continua. La pagina artisti.html resta la griglia col catalogo.
 
          Il cartellino (nome, specialità, link) sta SOPRA la foto, non sotto:
          è quello che chiede il mockup del cliente, ed è il motivo per cui allo
-         step 0 esiste il token --scrim-card. Qui viene usato per la prima volta.
-
-         La quarta card non è una card rotta né una foto mancante: è uno slot
-         libero. Per questo NON usa .placeholder — il tratteggio diagonale di
-         quel componente significa "qui manca un'immagine", e direbbe la cosa
-         sbagliata. Vedi il blocco "Artisti" in css/style.css.
+         step 0 esiste il token --scrim-card.
          ========================================================================== -->
 
     <section class="section artists" id="artisti" aria-labelledby="artisti-title">
@@ -385,12 +464,24 @@
           </div>
         </div>
 
+      </div>
+
         <!-- Il link sta sulla card intera, non sulla scritta "SCOPRI I LAVORI":
              il bersaglio da toccare è tutta la cornice, e "Scopri i lavori" resta
              uno <span>, non un <a> annidato dentro un altro <a>.
-             Gli anchor #big / #roman / #simone puntano alle voci di
-             artisti.html: rinominarli lì significa rinominarli anche qui. -->
-        <ul class="artists__grid" role="list">
+             Ogni card porta alla pagina del suo artista (artista-big.html,
+             artista-simone.html…). Rinominare quei file significa rinominarli
+             anche qui, in artisti.html e nella fascia precedente/successivo
+             in fondo a ogni pagina artista.
+
+             tabindex: è un contenitore che scorre a ogni larghezza, e senza un
+             tab stop non sarebbe raggiungibile da tastiera. I ritratti SONO
+             link, ma il tab stop sullo scroller è quello che fa scorrere la
+             striscia con le frecce, non aprire una scheda. -->
+        <ul class="artists__scroller"
+            role="list"
+            tabindex="0"
+            aria-label="Studio artists">
 
           <!-- PLACEHOLDER — sostituire ogni <div class="placeholder"> con:
 
@@ -408,11 +499,13 @@
                al posto della foto c'è un'etichetta di servizio. -->
 
           <li class="artists__slot">
-            <a class="artist" href="artisti.html#big">
+            <a class="artist" href="artista-big.html">
               <div class="artist__media">
-                <div class="placeholder" aria-hidden="true">
-                  <span class="placeholder__label">Photo Big</span>
-                </div>
+                <img class="artist__img"
+                     src="../images/artista-big.webp"
+                     alt="Portrait of Big, tattoo artist"
+                     width="402" height="509"
+                     loading="lazy" decoding="async">
               </div>
               <div class="artist__scrim" aria-hidden="true"></div>
               <div class="artist__caption">
@@ -427,30 +520,13 @@
           </li>
 
           <li class="artists__slot">
-            <a class="artist" href="artisti.html#roman">
+            <a class="artist" href="artista-simone.html">
               <div class="artist__media">
-                <div class="placeholder" aria-hidden="true">
-                  <span class="placeholder__label">Photo Roman</span>
-                </div>
-              </div>
-              <div class="artist__scrim" aria-hidden="true"></div>
-              <div class="artist__caption">
-                <h3 class="artist__name">Roman</h3>
-                <p class="artist__craft">Realism / Portrait</p>
-                <span class="artist__link">
-                  See their work
-                  <span class="artist__arrow" aria-hidden="true">&#8594;</span>
-                </span>
-              </div>
-            </a>
-          </li>
-
-          <li class="artists__slot">
-            <a class="artist" href="artisti.html#simone">
-              <div class="artist__media">
-                <div class="placeholder" aria-hidden="true">
-                  <span class="placeholder__label">Photo Simone</span>
-                </div>
+                <img class="artist__img"
+                     src="../images/artista-simone.webp"
+                     alt="Portrait of Simone, tattoo artist"
+                     width="397" height="509"
+                     loading="lazy" decoding="async">
               </div>
               <div class="artist__scrim" aria-hidden="true"></div>
               <div class="artist__caption">
@@ -464,17 +540,148 @@
             </a>
           </li>
 
-          <!-- Slot libero: non è un link e non deve fingersi tale — non c'è
-               niente da aprire. Il "+" è disegnato con due hairline (vedi CSS),
-               non è una glifo di un font né un'icona di sistema. -->
           <li class="artists__slot">
-            <div class="artist artist--open">
-              <span class="artist__plus" aria-hidden="true"></span>
-              <p class="artist__open-label">Coming soon</p>
-            </div>
+            <a class="artist" href="artista-valerio.html">
+              <div class="artist__media">
+                <img class="artist__img"
+                     src="../images/artista-valerio.webp"
+                     alt="Portrait of Valerio, tattoo artist"
+                     width="382" height="509"
+                     loading="lazy" decoding="async">
+              </div>
+              <div class="artist__scrim" aria-hidden="true"></div>
+              <div class="artist__caption">
+                <h3 class="artist__name">Valerio</h3>
+                <p class="artist__craft">Black &amp; Grey</p>
+                <span class="artist__link">
+                  See their work
+                  <span class="artist__arrow" aria-hidden="true">&#8594;</span>
+                </span>
+              </div>
+            </a>
+          </li>
+
+          <li class="artists__slot">
+            <a class="artist" href="artista-blessed.html">
+              <div class="artist__media">
+                <div class="placeholder" aria-hidden="true">
+                  <span class="placeholder__label">Photo Blessed</span>
+                </div>
+              </div>
+              <div class="artist__scrim" aria-hidden="true"></div>
+              <div class="artist__caption">
+                <h3 class="artist__name">Blessed</h3>
+                <p class="artist__craft">Black &amp; Grey</p>
+                <span class="artist__link">
+                  See their work
+                  <span class="artist__arrow" aria-hidden="true">&#8594;</span>
+                </span>
+              </div>
+            </a>
+          </li>
+
+          <li class="artists__slot">
+            <a class="artist" href="artista-alessandro.html">
+              <div class="artist__media">
+                <div class="placeholder" aria-hidden="true">
+                  <span class="placeholder__label">Photo Alessandro</span>
+                </div>
+              </div>
+              <div class="artist__scrim" aria-hidden="true"></div>
+              <div class="artist__caption">
+                <h3 class="artist__name">Alessandro</h3>
+                <p class="artist__craft">Black &amp; Grey</p>
+                <span class="artist__link">
+                  See their work
+                  <span class="artist__arrow" aria-hidden="true">&#8594;</span>
+                </span>
+              </div>
+            </a>
+          </li>
+
+          <li class="artists__slot">
+            <a class="artist" href="artista-angela.html">
+              <div class="artist__media">
+                <div class="placeholder" aria-hidden="true">
+                  <span class="placeholder__label">Photo Angela</span>
+                </div>
+              </div>
+              <div class="artist__scrim" aria-hidden="true"></div>
+              <div class="artist__caption">
+                <h3 class="artist__name">Angela</h3>
+                <p class="artist__craft">Black &amp; Grey</p>
+                <span class="artist__link">
+                  See their work
+                  <span class="artist__arrow" aria-hidden="true">&#8594;</span>
+                </span>
+              </div>
+            </a>
+          </li>
+
+          <li class="artists__slot">
+            <a class="artist" href="artista-lobo.html">
+              <div class="artist__media">
+                <div class="placeholder" aria-hidden="true">
+                  <span class="placeholder__label">Photo Lobo</span>
+                </div>
+              </div>
+              <div class="artist__scrim" aria-hidden="true"></div>
+              <div class="artist__caption">
+                <h3 class="artist__name">Lobo</h3>
+                <p class="artist__craft">Black &amp; Grey</p>
+                <span class="artist__link">
+                  See their work
+                  <span class="artist__arrow" aria-hidden="true">&#8594;</span>
+                </span>
+              </div>
+            </a>
+          </li>
+
+          <li class="artists__slot">
+            <a class="artist" href="artista-giuseppe.html">
+              <div class="artist__media">
+                <div class="placeholder" aria-hidden="true">
+                  <span class="placeholder__label">Photo Giuseppe</span>
+                </div>
+              </div>
+              <div class="artist__scrim" aria-hidden="true"></div>
+              <div class="artist__caption">
+                <h3 class="artist__name">Giuseppe</h3>
+                <p class="artist__craft">Black &amp; Grey</p>
+                <span class="artist__link">
+                  See their work
+                  <span class="artist__arrow" aria-hidden="true">&#8594;</span>
+                </span>
+              </div>
+            </a>
+          </li>
+
+          <li class="artists__slot">
+            <a class="artist" href="artista-christian.html">
+              <div class="artist__media">
+                <div class="placeholder" aria-hidden="true">
+                  <span class="placeholder__label">Photo Christian</span>
+                </div>
+              </div>
+              <div class="artist__scrim" aria-hidden="true"></div>
+              <div class="artist__caption">
+                <h3 class="artist__name">Christian</h3>
+                <p class="artist__craft">Black &amp; Grey</p>
+                <span class="artist__link">
+                  See their work
+                  <span class="artist__arrow" aria-hidden="true">&#8594;</span>
+                </span>
+              </div>
+            </a>
           </li>
 
         </ul>
+
+      <div class="container artists__foot">
+
+        <div class="artists__line" aria-hidden="true">
+          <span class="artists__thumb"></span>
+        </div>
 
         <div class="artists__cta">
           <a class="btn btn--outline" href="artisti.html">See all artists</a>
@@ -499,20 +706,14 @@
     <section class="section studio" id="studio" aria-labelledby="studio-title">
       <div class="container studio__grid">
 
-        <!-- PLACEHOLDER — sostituire il <div class="placeholder"> con:
-
-             <img class="studio__img"
-                  src="../images/studio.jpg"
-                  alt="La sala principale dello studio Big Art Gallery"
-                  width="1200" height="1500"
-                  loading="lazy" decoding="async">
-
-             Formato verticale 4/5 (il ritaglio lo fa object-fit), trattamento
-             b/n in CSS. L'alt descrive l'ambiente: è contenuto, non sfondo. -->
         <div class="studio__media">
-          <div class="placeholder">
-            <span class="placeholder__label">Studio photo</span>
-          </div>
+          <img class="studio__img"
+               src="../images/studio.webp"
+               srcset="../images/studio-720.webp 720w, ../images/studio.webp 1200w"
+               sizes="(min-width: 900px) 50vw, 100vw"
+               alt="The Big Art Gallery metal logo on the studio's marble wall"
+               width="1200" height="1500"
+               loading="lazy" decoding="async">
         </div>
 
         <div class="studio__text">
@@ -588,6 +789,87 @@
       </div>
     </section>
 
+
+    <!-- ==========================================================================
+         GIFT CARD
+
+         Sta dopo il banner CTA e non prima. Quello chiede "hai un progetto in
+         mente?", questo risponde "e se il progetto è di qualcun altro?": due
+         richieste di fila, ma a due persone diverse — chi si tatua e chi
+         regala — e in quest'ordine la seconda non toglie niente alla prima.
+
+         Fondo --black-base, non --black-raised: il piano sollevato è del
+         banner qui sopra e deve restare l'unico. Due fasce sollevate
+         attaccate si leggerebbero come una sola, lunga il doppio.
+
+         L'oggetto al centro è costruito in CSS con la materia del sito —
+         fondo sollevato, hairline, rombo del monogramma — e non è una foto:
+         la card vera non esiste ancora, e un mockup finto stonerebbe accanto
+         agli scatti b/n del cliente. Il formato è 1.586:1, quello delle
+         tessere: si riconosce come carta prima ancora di leggerci sopra.
+
+         Il bottone è .btn--outline e non .btn--primary di proposito. In questa
+         pagina il pieno bianco è della prenotazione; la gift card è la seconda
+         strada, e la gerarchia si deve vedere prima di leggere.
+
+         ⚠️ PLACEHOLDER — href="#": manca l'URL dello shop dove si acquista la
+         card. Se lo shop sta su un dominio esterno, il link va completato con
+         target="_blank" rel="noopener" e con lo <span class="visually-hidden">
+         "(si apre in una nuova scheda)", come sul link Instagram qui sotto.
+         ========================================================================== -->
+
+    <section class="section giftcard" id="gift-card" aria-labelledby="giftcard-title">
+      <div class="container container--narrow giftcard__inner">
+
+        <div class="section-head">
+          <h2 class="section-head__title" id="giftcard-title">Give a tattoo</h2>
+          <div class="rule rule--sm section-head__rule" aria-hidden="true">
+            <span class="rule__diamond"></span>
+          </div>
+        </div>
+
+        <!-- aria-hidden: sulla carta c'è scritto parola per parola quello che
+             dicono il titolo qui sopra e il testo qui sotto. Senza, uno screen
+             reader lo leggerebbe tre volte.
+             Due piani sfalsati: due carte sul tavolo, non un'ombra. Il mazzo
+             si raddrizza quando il puntatore (o il focus) arriva sul bottone
+             — vedi il blocco "Gift card" nel CSS. -->
+        <div class="giftcard__stack" aria-hidden="true">
+
+          <span class="giftcard__card giftcard__card--back"></span>
+
+          <span class="giftcard__card giftcard__card--front">
+            <span class="giftcard__row">
+              <span class="logo giftcard__mark">
+                <img class="logo__img" src="../assets/logo.png" alt="" width="303" height="265">
+              </span>
+              <span class="giftcard__kind">Gift card</span>
+            </span>
+
+            <!-- ⚠️ PLACEHOLDER — taglio e scadenza vanno confermati col
+                 cliente. Finché non sono certi la carta non dichiara né
+                 importi né mesi di validità: meglio muta che sbagliata. -->
+            <span class="giftcard__row giftcard__row--foot">
+              <span>Amount of your choice</span>
+              <span>Roma</span>
+            </span>
+          </span>
+
+        </div>
+
+        <p class="giftcard__body">
+          You pick the amount. The design, the artist and the date
+          are picked by whoever gets it.
+        </p>
+
+        <a class="btn btn--outline giftcard__btn" href="#">
+          Buy the gift card
+          <span class="giftcard__ext" aria-hidden="true">&#8599;</span>
+        </a>
+
+      </div>
+    </section>
+
     <!-- ==========================================================================
          INSTAGRAM — step 5
 
@@ -617,48 +899,21 @@
       <!-- tabindex: come per la gallery, è un contenitore che scorre e senza un
            tab stop non sarebbe raggiungibile da tastiera. I riquadri non sono
            link — il collegamento al profilo è il bottone qui sotto, uno solo.
-           TODO: se in futuro si aggancia il feed reale (o un embed), ogni
-           riquadro diventa un <a> al post e questo tabindex va tolto. -->
+           Le foto le inserisce main.js: otto lavori a caso, diversi a ogni
+           caricamento. Il formato resta 1/1 e il bianco e nero è in CSS. -->
       <ul class="instagram__strip"
           role="list"
           tabindex="0"
-          aria-label="Latest posts on Instagram">
+          aria-label="A selection of work from the studio">
 
-        <!-- PLACEHOLDER — sostituire ogni <div class="placeholder"> con:
-
-             <img class="instagram__img"
-                  src="../images/ig-01.jpg"
-                  alt="Descrizione del post"
-                  width="600" height="600"
-                  loading="lazy" decoding="async">
-
-             Formato quadrato 1/1. Il trattamento b/n è in CSS: gli scatti
-             presi dal profilo restano intatti sul disco. -->
-
-        <li class="instagram__cell">
-          <div class="placeholder"><span class="placeholder__label">IG 01</span></div>
-        </li>
-        <li class="instagram__cell">
-          <div class="placeholder"><span class="placeholder__label">IG 02</span></div>
-        </li>
-        <li class="instagram__cell">
-          <div class="placeholder"><span class="placeholder__label">IG 03</span></div>
-        </li>
-        <li class="instagram__cell">
-          <div class="placeholder"><span class="placeholder__label">IG 04</span></div>
-        </li>
-        <li class="instagram__cell">
-          <div class="placeholder"><span class="placeholder__label">IG 05</span></div>
-        </li>
-        <li class="instagram__cell">
-          <div class="placeholder"><span class="placeholder__label">IG 06</span></div>
-        </li>
-        <li class="instagram__cell">
-          <div class="placeholder"><span class="placeholder__label">IG 07</span></div>
-        </li>
-        <li class="instagram__cell">
-          <div class="placeholder"><span class="placeholder__label">IG 08</span></div>
-        </li>
+        <li class="instagram__cell"></li>
+        <li class="instagram__cell"></li>
+        <li class="instagram__cell"></li>
+        <li class="instagram__cell"></li>
+        <li class="instagram__cell"></li>
+        <li class="instagram__cell"></li>
+        <li class="instagram__cell"></li>
+        <li class="instagram__cell"></li>
 
       </ul>
 
@@ -687,10 +942,9 @@
        bottoni "Prenota / Richiedi il tuo tattoo" finché il modale dello
        step 6 non esiste.
 
-       ⚠️ PLACEHOLDER — indirizzo, telefono, handle e orari vengono dal mockup
-       del cliente. Vanno confermati o sostituiti con i dati reali PRIMA della
-       pubblicazione. Gli stessi dati compaiono anche nel menu overlay in
-       testa a questo file: vanno aggiornati in entrambi i punti.
+       Indirizzo e telefono da Google Maps. Handle Instagram e fascia
+       oraria settimanale vanno ancora confermati. Gli stessi recapiti
+       sono nel menu overlay: vanno aggiornati insieme.
        ========================================================================== -->
 
   <footer class="footer" id="contatti">
@@ -698,11 +952,9 @@
 
       <div class="footer__top">
 
-        <!-- PLACEHOLDER — sostituire con l'SVG del logo reale, come in header. -->
         <div class="footer__brand">
           <a class="logo footer__logo" href="#top" aria-label="Big Art Gallery, back to the top">
-            <span class="logo__diamond" aria-hidden="true"></span>
-            <span class="logo__text">BIG</span>
+            <img class="logo__img" src="../assets/logo.png" alt="" width="303" height="265">
           </a>
           <p class="footer__tagline">Black &amp; Grey Tattoo Studio</p>
         </div>
@@ -712,15 +964,20 @@
         <div class="footer__col">
           <h2 class="footer__label">Find us</h2>
           <address class="footer__value">
-            Via Nomentana 1111<br>
-            00100 Roma RM
+            <a class="footer__link"
+               href="https://www.google.com/maps/search/?api=1&amp;query=Big%20Art%20Gallery%2C%20Via%20delle%20Passiflore%2C%2031%2C%2000172%20Roma"
+               target="_blank" rel="noopener">
+              Via delle Passiflore, 31<br>
+              00172 Roma RM
+              <span class="visually-hidden">(opens in a new tab)</span>
+            </a>
           </address>
         </div>
 
         <div class="footer__col">
           <h2 class="footer__label">Bookings</h2>
           <p class="footer__value">
-            <a class="footer__link" href="tel:+393511234567">351 1234567</a>
+            <a class="footer__link" href="tel:+39065434834">06 543 4834</a>
           </p>
         </div>
 

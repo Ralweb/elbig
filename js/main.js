@@ -20,7 +20,11 @@
     openMenu: 'Open menu',
     closeMenu: 'Close menu',
     sending: 'Sending…',
-    sendFail: 'We couldn’t send the request. Try again, or call us on 351 1234567.',
+    sendFail: 'We couldn’t send the request. Try again, or call us on 06 543 4834.',
+    gallery: 'Work gallery',
+    prevWork: 'Previous work',
+    nextWork: 'Next work',
+    closeGallery: 'Close',
     fields: {
       'cf-nome': { empty: 'Tell us what to call you.' },
       'cf-email': {
@@ -35,7 +39,11 @@
     openMenu: 'Apri il menu',
     closeMenu: 'Chiudi il menu',
     sending: 'Invio in corso…',
-    sendFail: 'Non siamo riusciti a inviare la richiesta. Riprova, oppure chiamaci al 351 1234567.',
+    sendFail: 'Non siamo riusciti a inviare la richiesta. Riprova, oppure chiamaci al 06 543 4834.',
+    gallery: 'Galleria lavori',
+    prevWork: 'Lavoro precedente',
+    nextWork: 'Lavoro successivo',
+    closeGallery: 'Chiudi',
     fields: {
       'cf-nome': { empty: 'Dicci come chiamarti.' },
       'cf-email': {
@@ -77,6 +85,8 @@
   // popup contatti, ma closeNav vive dentro il blocco qui sotto. Resta una
   // funzione vuota se la nav non è in pagina.
   var closeNavOverlay = function () {};
+  var closeContactModal = function () {};
+  var closeLightboxViewer = function () {};
 
   if (toggle && overlay) {
     var desktopQuery = window.matchMedia('(min-width: 900px)');
@@ -269,9 +279,9 @@
       isModalOpen = true;
       lastTrigger = trigger || null;
 
-      // Il menu mobile e il modale non convivono: due strati aperti
-      // insieme lascerebbero lo scroll bloccato da due parti.
+      // Il menu mobile e il lightbox non convivono con il modale.
       closeNavOverlay();
+      closeLightboxViewer();
 
       // Si riapre sempre dal form vuoto, anche dopo un invio andato a buon
       // fine. Farlo qui e non in chiusura evita di vedere la ricevuta
@@ -327,6 +337,10 @@
       modal.setAttribute('inert', '');
       lastTrigger = null;
     }
+
+    closeContactModal = function () {
+      if (isModalOpen) { closeModal(false); }
+    };
 
     document.addEventListener('click', function (event) {
       var trigger = event.target.closest('[data-open-modal]');
@@ -573,12 +587,18 @@
         return;
       }
 
+      // Campo nascosto presente solo sulle pagine artista-*.html: dice a
+      // chi è indirizzata la richiesta. Sulla home e sul catalogo non
+      // esiste, e la mail non porta la riga.
+      var artistaEl = document.getElementById('cf-artista');
+
       var payload = {
         nome: document.getElementById('cf-nome').value.trim(),
         email: document.getElementById('cf-email').value.trim(),
         telefono: document.getElementById('cf-telefono').value.trim(),
         stile: document.getElementById('cf-stile').value,
         messaggio: document.getElementById('cf-messaggio').value.trim(),
+        artista: artistaEl ? artistaEl.value : '',
         lang: LANG
       };
 
@@ -618,6 +638,252 @@
 
 
   /* --------------------------------------------------------------------------
+     LIGHTBOX LAVORI
+
+     Ogni <a data-gallery> in un .work__scroller apre un viewer a pagina
+     intera. Senza JS il link apre il file. Le frecce restano nella stessa
+     striscia: la galleria di Alessandro non include i lavori di Lobo.
+     ------------------------------------------------------------------------ */
+
+  (function () {
+    var triggers = document.querySelectorAll('a[data-gallery]');
+    if (!triggers.length) { return; }
+
+    var root = document.createElement('div');
+    root.className = 'lightbox';
+    root.id = 'lightbox';
+    root.setAttribute('inert', '');
+    root.innerHTML =
+      '<div class="lightbox__scrim" data-lightbox-scrim aria-hidden="true"></div>' +
+      '<div class="lightbox__dialog" role="dialog" aria-modal="true" aria-label="' + COPY.gallery + '">' +
+        '<button class="lightbox__close" type="button" aria-label="' + COPY.closeGallery + '">' +
+          '<span class="modal__close-mark" aria-hidden="true"></span>' +
+        '</button>' +
+        '<button class="lightbox__prev" type="button" aria-label="' + COPY.prevWork + '">' +
+          '<span aria-hidden="true">&#8592;</span>' +
+        '</button>' +
+        '<button class="lightbox__next" type="button" aria-label="' + COPY.nextWork + '">' +
+          '<span aria-hidden="true">&#8594;</span>' +
+        '</button>' +
+        '<figure class="lightbox__figure">' +
+          '<img class="lightbox__img" alt="">' +
+          '<figcaption class="lightbox__counter"></figcaption>' +
+        '</figure>' +
+      '</div>';
+    document.body.appendChild(root);
+
+    var scrim = root.querySelector('[data-lightbox-scrim]');
+    var btnClose = root.querySelector('.lightbox__close');
+    var btnPrev = root.querySelector('.lightbox__prev');
+    var btnNext = root.querySelector('.lightbox__next');
+    var img = root.querySelector('.lightbox__img');
+    var counter = root.querySelector('.lightbox__counter');
+
+    var isOpen = false;
+    var lastTrigger = null;
+    var items = [];
+    var current = 0;
+    var inerted = [];
+    var pressTarget = null;
+    var swapTimer = null;
+    var swipeX = 0;
+    var swipeY = 0;
+    var swipeFrom = false;
+
+    function prefersReducedMotion() {
+      return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+
+    function focusables() {
+      return Array.prototype.filter.call(
+        [btnClose, btnPrev, btnNext],
+        function (el) { return el.getClientRects().length > 0; }
+      );
+    }
+
+    function applySlide() {
+      var item = items[current];
+      var thumb = item.querySelector('.work__img');
+      img.src = item.getAttribute('href');
+      img.alt = thumb ? (thumb.getAttribute('alt') || '') : '';
+      if (thumb) {
+        img.setAttribute('width', thumb.getAttribute('width') || '');
+        img.setAttribute('height', thumb.getAttribute('height') || '');
+      }
+      counter.textContent = (current + 1) + ' / ' + items.length;
+    }
+
+    function showSlide(index, animate) {
+      current = (index + items.length) % items.length;
+
+      if (swapTimer) {
+        window.clearTimeout(swapTimer);
+        swapTimer = null;
+      }
+
+      if (!animate || prefersReducedMotion()) {
+        img.classList.remove('is-changing');
+        applySlide();
+        return;
+      }
+
+      img.classList.add('is-changing');
+      swapTimer = window.setTimeout(function () {
+        applySlide();
+        swapTimer = null;
+        void img.offsetHeight;
+        img.classList.remove('is-changing');
+      }, 150);
+    }
+
+    function openLightbox(group, index, trigger) {
+      if (isOpen) {
+        items = group;
+        lastTrigger = trigger || lastTrigger;
+        root.classList.toggle('is-single', items.length < 2);
+        btnPrev.hidden = items.length < 2;
+        btnNext.hidden = items.length < 2;
+        showSlide(index, true);
+        return;
+      }
+
+      isOpen = true;
+      items = group;
+      current = index;
+      lastTrigger = trigger || null;
+
+      closeNavOverlay();
+      closeContactModal();
+
+      root.classList.toggle('is-single', items.length < 2);
+      btnPrev.hidden = items.length < 2;
+      btnNext.hidden = items.length < 2;
+
+      img.classList.remove('is-changing');
+      applySlide();
+
+      document.body.classList.add('has-lightbox-open');
+
+      inerted = Array.prototype.filter.call(
+        document.body.children,
+        function (el) { return el !== root && !el.hasAttribute('inert'); }
+      );
+      inerted.forEach(function (el) { el.setAttribute('inert', ''); });
+
+      root.removeAttribute('inert');
+      root.classList.add('is-open');
+      void root.offsetHeight;
+      btnClose.focus();
+    }
+
+    function closeLightbox(restoreFocus) {
+      if (!isOpen) { return; }
+      isOpen = false;
+
+      if (swapTimer) {
+        window.clearTimeout(swapTimer);
+        swapTimer = null;
+      }
+      img.classList.remove('is-changing');
+
+      root.classList.remove('is-open');
+
+      inerted.forEach(function (el) { el.removeAttribute('inert'); });
+      inerted = [];
+
+      document.body.classList.remove('has-lightbox-open');
+
+      if (restoreFocus && lastTrigger) { lastTrigger.focus(); }
+      root.setAttribute('inert', '');
+      lastTrigger = null;
+      items = [];
+    }
+
+    closeLightboxViewer = function () {
+      if (isOpen) { closeLightbox(false); }
+    };
+
+    document.addEventListener('click', function (event) {
+      var trigger = event.target.closest('a[data-gallery]');
+      if (!trigger) { return; }
+      var scroller = trigger.closest('.work__scroller');
+      if (!scroller) { return; }
+      event.preventDefault();
+      var group = Array.prototype.slice.call(
+        scroller.querySelectorAll('a[data-gallery]')
+      );
+      openLightbox(group, group.indexOf(trigger), trigger);
+    });
+
+    btnClose.addEventListener('click', function () { closeLightbox(true); });
+    btnPrev.addEventListener('click', function () { showSlide(current - 1, true); });
+    btnNext.addEventListener('click', function () { showSlide(current + 1, true); });
+
+    root.addEventListener('pointerdown', function (event) {
+      pressTarget = event.target;
+      if (event.target === img || event.target === counter) {
+        swipeFrom = true;
+        swipeX = event.clientX;
+        swipeY = event.clientY;
+      } else {
+        swipeFrom = false;
+      }
+    });
+
+    root.addEventListener('click', function (event) {
+      var onScrim = event.target === scrim || event.target === root;
+      var pressedScrim = pressTarget === scrim || pressTarget === root;
+      if (onScrim && pressedScrim) { closeLightbox(true); }
+    });
+
+    root.addEventListener('pointerup', function (event) {
+      if (!isOpen || !swipeFrom) { return; }
+      swipeFrom = false;
+      var dx = event.clientX - swipeX;
+      var dy = event.clientY - swipeY;
+      if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) { return; }
+      if (items.length < 2) { return; }
+      showSlide(current + (dx < 0 ? 1 : -1), true);
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (!isOpen) { return; }
+
+      if (event.key === 'Escape') {
+        closeLightbox(true);
+        return;
+      }
+
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        showSlide(current - 1, true);
+        return;
+      }
+
+      if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        showSlide(current + 1, true);
+        return;
+      }
+
+      if (event.key === 'Tab') {
+        var list = focusables();
+        if (!list.length) { return; }
+        var first = list[0];
+        var last = list[list.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    });
+  })();
+
+
+  /* --------------------------------------------------------------------------
      SCROLLERS ORIZZONTALI — tabindex solo mentre scorrono
 
      Sotto i 768px (work) e i 1200px (instagram) i contenitori scorrono e
@@ -628,6 +894,14 @@
   function bindScrollerTabindex(selector, query) {
     var el = document.querySelector(selector);
     if (!el) { return; }
+
+    // I riquadri lavori diventano link al lightbox: il tab stop sullo
+    // scroller sarebbe un salto vuoto. Resta solo se i frame sono ancora
+    // placeholder senza destinazione.
+    if (selector === '.work__scroller' && el.querySelector('[data-gallery]')) {
+      el.removeAttribute('tabindex');
+      return;
+    }
 
     var mq = window.matchMedia(query);
 
@@ -646,5 +920,225 @@
 
   bindScrollerTabindex('.work__scroller', '(min-width: 768px)');
   bindScrollerTabindex('.instagram__strip', '(min-width: 1200px)');
+
+
+  /* --------------------------------------------------------------------------
+     INSTAGRAM — otto lavori a caso
+
+     I riquadri restano quelli della striscia. A ogni caricamento si pescano
+     otto scatti diversi tra images/lavori, senza ripetizioni. Il bianco e
+     nero e il formato quadrato stanno nel CSS, sui file non si tocca nulla.
+     ------------------------------------------------------------------------ */
+
+  (function () {
+    var strip = document.querySelector('.instagram__strip');
+    if (!strip) { return; }
+
+    var cells = strip.querySelectorAll('.instagram__cell');
+    if (!cells.length) { return; }
+
+    var files = [
+      'alessandro-01.webp', 'alessandro-02.webp', 'alessandro-03.webp',
+      'alessandro-04.webp', 'alessandro-05.webp', 'alessandro-06.webp',
+      'angela-01.webp', 'angela-02.webp', 'angela-03.webp',
+      'angela-04.webp', 'angela-05.webp', 'angela-06.webp',
+      'big-01.webp', 'big-02.webp', 'big-03.webp', 'big-04.webp', 'big-05.webp',
+      'blessed-01.webp', 'blessed-02.webp', 'blessed-03.webp',
+      'christian-01.webp', 'christian-02.webp', 'christian-03.webp',
+      'christian-04.webp', 'christian-05.webp', 'christian-06.webp',
+      'giuseppe-01.webp', 'giuseppe-02.webp', 'giuseppe-03.webp',
+      'giuseppe-04.webp', 'giuseppe-05.webp', 'giuseppe-06.webp',
+      'lobo-01.webp', 'lobo-02.webp', 'lobo-03.webp',
+      'lobo-04.webp', 'lobo-05.webp', 'lobo-06.webp',
+      'simone-01.webp', 'simone-02.webp', 'simone-03.webp',
+      'simone-04.webp', 'simone-05.webp', 'simone-06.webp',
+      'valerio-01.webp', 'valerio-02.webp', 'valerio-03.webp',
+      'valerio-04.webp', 'valerio-05.webp'
+    ];
+
+    var names = {
+      alessandro: 'Alessandro',
+      angela: 'Angela',
+      big: 'Big',
+      blessed: 'Blessed',
+      christian: 'Christian',
+      giuseppe: 'Giuseppe',
+      lobo: 'Lobo',
+      simone: 'Simone',
+      valerio: 'Valerio'
+    };
+
+    var pool = files.slice();
+    var i;
+    for (i = pool.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var swap = pool[i];
+      pool[i] = pool[j];
+      pool[j] = swap;
+    }
+
+    var root = LANG === 'en' ? '../images/lavori/' : 'images/lavori/';
+    var altPrefix = LANG === 'en' ? 'Tattoo by ' : 'Tatuaggio di ';
+
+    Array.prototype.forEach.call(cells, function (cell, index) {
+      var file = pool[index];
+      if (!file) { return; }
+      var artist = file.slice(0, file.indexOf('-'));
+      var img = document.createElement('img');
+      img.className = 'instagram__img';
+      img.src = root + file;
+      img.alt = altPrefix + (names[artist] || artist);
+      img.width = 600;
+      img.height = 600;
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      cell.textContent = '';
+      cell.appendChild(img);
+    });
+  })();
+
+
+  /* --------------------------------------------------------------------------
+     SCROLLERS ORIZZONTALI — drag del mouse e rotella
+
+     Overflow-x nativo copre il dito (momentum iOS compreso) e il trackpad
+     orizzontale. Non copre il trascinamento col mouse, né la rotella
+     verticale che di default scorre la pagina. Qui si aggiungono solo quelli,
+     e solo su pointer mouse/pen: un drag custom su touch ruberebbe lo
+     scroll nativo e lo peggiorerebbe.
+
+     1:1 col pointer, soglia 10px prima di impegnarsi (così un click sulla
+     card resta un click). La pointer capture parte solo dopo quella soglia:
+     catturarla al down ritargetta il click sulla lista e il link non apre.
+     Snap CSS spento durante il gesto. A fine corsa della rotella la pagina
+     riprende — non si resta prigionieri della striscia.
+     ------------------------------------------------------------------------ */
+
+  function bindHScroll(selector) {
+    var el = document.querySelector(selector);
+    if (!el) { return; }
+
+    var THRESHOLD = 10;
+    var EDGE = 1;
+    var dragging = false;
+    var dragged = false;
+    var pointerId = 0;
+    var startX = 0;
+    var startScroll = 0;
+
+    function endDrag(event) {
+      if (!dragging) { return; }
+      if (event && event.pointerId !== pointerId) { return; }
+      if (el.hasPointerCapture(pointerId)) {
+        el.releasePointerCapture(pointerId);
+      }
+      dragging = false;
+      pointerId = 0;
+      el.classList.remove('is-dragging');
+      window.removeEventListener('pointerup', onWindowUp);
+      window.removeEventListener('pointercancel', onWindowCancel);
+    }
+
+    function onWindowUp(event) {
+      if (event.pointerId !== pointerId) { return; }
+      endDrag(event);
+      // Il click arriva dopo il pointerup. Teniamo `dragged` per quel
+      // tick, poi lo abbassiamo: se il click non parte (pointercancel,
+      // gesture persa) il prossimo tap sulla card non deve essere mangiato.
+      if (dragged) {
+        window.setTimeout(function () { dragged = false; }, 0);
+      }
+    }
+
+    function onWindowCancel(event) {
+      if (event.pointerId !== pointerId) { return; }
+      dragged = false;
+      endDrag(event);
+    }
+
+    el.addEventListener('pointerdown', function (event) {
+      if (event.pointerType !== 'mouse' && event.pointerType !== 'pen') { return; }
+      if (event.button !== 0) { return; }
+      dragging = true;
+      dragged = false;
+      pointerId = event.pointerId;
+      startX = event.clientX;
+      startScroll = el.scrollLeft;
+      window.addEventListener('pointerup', onWindowUp);
+      window.addEventListener('pointercancel', onWindowCancel);
+    });
+
+    el.addEventListener('pointermove', function (event) {
+      if (!dragging || event.pointerId !== pointerId) { return; }
+      var dx = event.clientX - startX;
+      if (!dragged) {
+        if (Math.abs(dx) < THRESHOLD) { return; }
+        dragged = true;
+        el.classList.add('is-dragging');
+        el.setPointerCapture(event.pointerId);
+      }
+      el.scrollLeft = startScroll - dx;
+    });
+
+    el.addEventListener('dragstart', function (event) {
+      event.preventDefault();
+    });
+
+    // Cattura: il click parte sul link della card. Se è stato un drag,
+    // va fermato prima che apra artisti.html.
+    el.addEventListener('click', function (event) {
+      if (!dragged) { return; }
+      event.preventDefault();
+      event.stopPropagation();
+      dragged = false;
+    }, true);
+
+    el.addEventListener('wheel', function (event) {
+      // Il trackpad orizzontale è già nativo: non interferire.
+      if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) { return; }
+      if (event.deltaY === 0) { return; }
+
+      var max = el.scrollWidth - el.clientWidth;
+      if (max <= 0) { return; }
+
+      var atStart = el.scrollLeft <= EDGE;
+      var atEnd = el.scrollLeft >= max - EDGE;
+      if ((event.deltaY < 0 && atStart) || (event.deltaY > 0 && atEnd)) { return; }
+
+      event.preventDefault();
+      el.scrollLeft += event.deltaY;
+    }, { passive: false });
+  }
+
+  bindHScroll('.artists__scroller');
+
+
+  /* --------------------------------------------------------------------------
+     OUR WORK — nastro circolare in home
+
+     Due copie della stessa striscia, translateX(-50%) in CSS. Senza JS
+     restano le nove originali in scroller. Il clone è aria-hidden e fuori
+     dal tab order: tastiera e screen reader vedono un set solo. Il click
+     sul clone apre comunque il lightbox (stesso href, stesso gruppo).
+     ------------------------------------------------------------------------ */
+
+  (function () {
+    var root = document.querySelector('.work--marquee');
+    if (!root) { return; }
+
+    var track = root.querySelector('.work__track');
+    var scroller = root.querySelector('.work__scroller');
+    if (!track || !scroller) { return; }
+
+    var clone = scroller.cloneNode(true);
+    clone.classList.add('work__set--clone');
+    clone.removeAttribute('aria-label');
+    clone.setAttribute('aria-hidden', 'true');
+    clone.setAttribute('role', 'presentation');
+    Array.prototype.forEach.call(clone.querySelectorAll('a'), function (a) {
+      a.setAttribute('tabindex', '-1');
+    });
+    track.appendChild(clone);
+  })();
 
 })();

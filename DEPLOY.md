@@ -17,11 +17,13 @@ Carica **il contenuto** della cartella di progetto, non la cartella stessa, cos�
 ```
 index.html
 artisti.html
+artista-*.html (nove pagine: big, simone, valerio, blessed, alessandro,
+                angela, lobo, giuseppe, christian)
 404.html
 .htaccess
 css/           (style.css)
 js/            (main.js, lang.js)
-en/            (index.html, artisti.html, 404.html — versione inglese)
+en/            (index.html, artisti.html, artista-*.html, 404.html — versione inglese)
 images/        (foto del cliente, quando ci sono)
 assets/        (favicon.svg, poi logo/favicon.ico)
 api/           (contact.php)
@@ -78,8 +80,8 @@ Tutti i riferimenti a css, js, pagine e (quando ci saranno) immagini sono **rela
 | Cosa | Esempio | Perché |
 | --- | --- | --- |
 | CSS / JS / favicon | `css/style.css`, `js/main.js`, `js/lang.js`, `assets/favicon.svg` | Funzionano in `/` e in `/sito/` |
-| Pagine interne (IT) | `artisti.html`, `index.html#studio` | Idem |
-| Pagine inglesi | `en/index.html`, `en/artisti.html` | Cartella `en/`, CSS/JS con `../` |
+| Pagine interne (IT) | `artisti.html`, `artista-big.html`, `index.html#studio` | Idem |
+| Pagine inglesi | `en/index.html`, `en/artisti.html`, `en/artista-big.html` | Cartella `en/`, CSS/JS con `../` |
 | Foto (da inserire) | `images/hero.jpg` (da root) / `../images/hero.jpg` (da `en/`) | Relativo all’HTML |
 | Form | risolto da `js/main.js` → `api/contact.php` | Stesso endpoint da IT e da EN |
 
@@ -143,16 +145,18 @@ Spunta tutto prima di considerare il sito pubblico. I dati oggi in pagina sono q
 
 - [ ] Logo SVG reale al posto del monogramma testuale “BIG” (header, footer, overlay, 404)
 - [ ] `assets/favicon.svg` sostituito; aggiunto `favicon.ico` in root per i browser vecchi
-- [ ] Meta `og:image` su `index.html` e `artisti.html` (foto reale, URL assoluto `https://…`)
+- [ ] Meta `og:image` su `index.html`, `artisti.html` e su ogni `artista-*.html` (foto reale, URL assoluto `https://…`)
 - [ ] Testo about dello studio riletto col cliente (`index.html`, sezione Studio)
-- [ ] Bio artisti sostituite (`artisti.html`)
+- [ ] Bio artisti sostituite: quella corta in `artisti.html` e quella lunga in `artista-*.html` (IT **e** EN)
+- [ ] Nomi degli artisti confermati. Se cambiano: rinominare i file `artista-*.html`, i link in `index.html` e `artisti.html`, la fascia precedente/successivo in fondo a ogni pagina artista, il campo `cf-artista` di ciascuna e la lista `$artisti_ammessi` in `api/contact.php`
 - [ ] P. IVA e link privacy / cookie nel footer (obbligatori per un’attività italiana)
 
 ### Immagini (oggi sono placeholder)
 
 - [ ] Hero: `images/hero.jpg` (eager, non lazy) al posto di `.hero__placeholder`
 - [ ] Our Work: sei scatti verticali `images/work-01.jpg` … `work-06.jpg`, alt veri
-- [ ] Artisti: `images/artista-big.jpg`, `artista-roman.jpg`, `artista-simone.jpg` (home **e** `artisti.html`)
+- [ ] Artisti: un ritratto per ciascuno, `images/artista-big.jpg` … (serve in home, in `artisti.html` **e** nella pagina dell'artista)
+- [ ] Lavori per artista: `images/lavori/big-01.jpg` … sei per pagina, alt veri
 - [ ] Studio: `images/studio.jpg`
 - [ ] Instagram: otto thumbnail `images/ig-01.jpg` …, oppure feed reale
 - [ ] Foto in bianco e nero / desaturate; peso contenuto (webp o jpeg compressi)
@@ -175,6 +179,7 @@ Sostituire indirizzo, telefono, orari e Instagram **ovunque** compaiono:
 - [ ] Costanti in `api/contact.php` non sono più i segnaposto
 - [ ] Casella `MAIL_FROM` creata su Aruba
 - [ ] Invio di prova da home e da `artisti.html` (stesso JS), e dalla home inglese
+- [ ] Invio da una pagina artista: la mail deve riportare la riga `Artista:` col nome giusto
 - [ ] Mail arrivata nella lingua del form (IT o EN), Reply-To = email di chi ha scritto
 - [ ] Trappola anti-bot: il campo nascosto “sito” non compare in pagina
 - [ ] Validazione: submit vuoto, email rotta, poi un invio buono
@@ -182,8 +187,11 @@ Sostituire indirizzo, telefono, orari e Instagram **ovunque** compaiono:
 
 ### Link e pagine
 
-- [ ] Home → `artisti.html` (bottone, card, nav) e Home EN → `en/artisti.html`
-- [ ] `artisti.html` → home (logo, nav); idem in `en/`
+- [ ] Home → `artisti.html` (bottone “Scopri tutti gli artisti”, nav) e Home EN → `en/artisti.html`
+- [ ] Home → pagina del singolo artista: ogni card della striscia porta a `artista-*.html`
+- [ ] `artisti.html` → pagina del singolo artista: “Vedi i lavori” di ogni voce
+- [ ] Da una pagina artista: precedente / successivo / “Tutti gli artisti”, e il giro si chiude (dall'ultimo si torna al primo)
+- [ ] `artisti.html` e `artista-*.html` → home (logo, nav); idem in `en/`
 - [ ] Ancore `#our-work`, `#artisti`, `#studio`, `#contatti` (stessi id in IT e EN)
 - [ ] Selettore IT | EN: header e footer, mantiene l’ancora (`#studio` resta `#studio`)
 - [ ] Browser in inglese al primo accesso: da `/` si arriva su `/en/`

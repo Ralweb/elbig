@@ -10,10 +10,9 @@
   <!-- Colore della barra browser su mobile: allineato al fondo pagina -->
   <meta name="theme-color" content="#0a0a0a">
 
-  <!-- PLACEHOLDER — sostituire con il logo reale del cliente.
-       Serve anche un favicon.ico in root per i browser più vecchi. -->
-  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="assets/favicon.svg">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" href="assets/favicon.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 
   <!-- Open Graph: da completare con og:image quando arrivano le foto reali -->
   <meta property="og:type" content="website">
@@ -61,11 +60,8 @@
   <header class="site-header" id="site-header">
     <div class="site-header__inner container">
 
-      <!-- PLACEHOLDER — sostituire tutto il contenuto di <a> con l'SVG del
-           logo reale, mantenendo l'aria-label. -->
       <a class="logo" href="index.html" aria-label="Big Art Gallery, torna alla home">
-        <span class="logo__diamond" aria-hidden="true"></span>
-        <span class="logo__text">BIG</span>
+        <img class="logo__img" src="assets/logo.png" alt="" width="303" height="265">
       </a>
 
       <nav class="nav-desktop" aria-label="Principale">
@@ -128,18 +124,37 @@
         </li>
       </ul>
 
-      <!-- ⚠️ Stessi dati placeholder del footer e del menu della home:
-           vanno aggiornati in tutti e tre i punti insieme. -->
-      <div class="nav-overlay__meta">
-        <p class="nav-overlay__meta-line">Via Nomentana 1111, 00100 Roma RM</p>
-        <p class="nav-overlay__meta-line">
-          <a href="tel:+393511234567">351 1234567</a>
-        </p>
-        <p class="nav-overlay__meta-line">
-          <a href="https://instagram.com/bigartgallerystudio" target="_blank" rel="noopener">
-            &#64;bigartgallerystudio
-          </a>
-        </p>
+      <div class="nav-overlay__foot">
+
+        <!-- Il selettore lingua vive qui sotto i 900px: nell'header, accanto
+             a logo, bottone e hamburger, toglieva aria alla CTA su schermi
+             stretti. Sta sopra i recapiti perché è informazione
+             di servizio come loro. Da 900px in su torna nell'header — vedi il
+             blocco "Lingua" nel CSS. -->
+        <nav class="lang-switch" aria-label="Lingua">
+          <span class="lang-switch__current" lang="it" aria-current="true">IT</span>
+          <span class="lang-switch__sep" aria-hidden="true"></span>
+          <a class="lang-switch__link" href="en/artisti.html" lang="en" hreflang="en" data-set-lang="en">EN</a>
+        </nav>
+
+        <!-- Indirizzo e telefono da Google Maps. -->
+        <div class="nav-overlay__meta">
+          <p class="nav-overlay__meta-line">
+            <a href="https://www.google.com/maps/search/?api=1&amp;query=Big%20Art%20Gallery%2C%20Via%20delle%20Passiflore%2C%2031%2C%2000172%20Roma" target="_blank" rel="noopener">
+              Via delle Passiflore, 31, 00172 Roma RM
+              <span class="visually-hidden">(si apre in una nuova scheda)</span>
+            </a>
+          </p>
+          <p class="nav-overlay__meta-line">
+            <a href="tel:+39065434834">06 543 4834</a>
+          </p>
+          <p class="nav-overlay__meta-line">
+            <a href="https://instagram.com/bigartgallerystudio" target="_blank" rel="noopener">
+              &#64;bigartgallerystudio
+            </a>
+          </p>
+        </div>
+
       </div>
 
     </nav>
@@ -166,7 +181,7 @@
         </div>
 
         <p class="page-hero__lead">
-          Tre mani diverse, una sola gamma: nero e grigio. Scegli l&rsquo;artista
+          Mani diverse, una sola gamma: nero e grigio. Scegli l&rsquo;artista
           pi&ugrave; vicino all&rsquo;idea che hai in testa.
         </p>
 
@@ -185,13 +200,14 @@
          chi la ascolta. Un solo <a> per voce, in fondo. Vedi la nota nel blocco
          "Pagina artisti" di css/style.css.
 
-         Gli id big / roman / simone sono i bersagli delle card della home
-         (artisti.html#big …): non rinominarli senza aggiornare index.html.
+         Gli id (big, simone, valerio…) restano come ancore profonde verso la
+         singola voce del catalogo. La home non li usa più: le sue card portano
+         direttamente a artista-*.html, come "Vedi i lavori" qui sotto.
 
          ⚠️ PLACEHOLDER — le bio sono testi di prova, plausibili ma inventati.
          Vanno sostituite con quelle reali prima della pubblicazione, insieme
-         alle foto. L'href="#" di "Vedi i lavori" resta finché non esistono le
-         gallery per artista.
+         alle foto. "Vedi i lavori" porta alla pagina dell'artista
+         (artista-big.html …), dove vivono la bio lunga e la sua gallery.
 
          .section--tight e non .section: la testata qui sopra e questa griglia
          non sono due sezioni diverse, sono un titolo e la sua lista. Il ritmo
@@ -221,9 +237,11 @@
 
               <div class="artist">
                 <div class="artist__media">
-                  <div class="placeholder" aria-hidden="true">
-                    <span class="placeholder__label">Foto Big</span>
-                  </div>
+                  <img class="artist__img"
+                       src="images/artista-big.webp"
+                       alt="Ritratto di Big, tatuatore"
+                       width="402" height="509"
+                       loading="lazy" decoding="async">
                 </div>
                 <div class="artist__scrim" aria-hidden="true"></div>
                 <div class="artist__caption">
@@ -238,41 +256,9 @@
                   grande: schiene, maniche, costole. Costruisce il volume con
                   il grigio, non con il contorno.
                 </p>
-                <a class="artist-entry__link" href="#">
+                <a class="artist-entry__link" href="artista-big.html">
                   Vedi i lavori
                   <span class="visually-hidden">di Big</span>
-                  <span class="artist__arrow" aria-hidden="true">&#8594;</span>
-                </a>
-              </div>
-
-            </article>
-          </li>
-
-          <li class="roster__slot">
-            <article class="artist-entry" id="roman">
-
-              <div class="artist">
-                <div class="artist__media">
-                  <div class="placeholder" aria-hidden="true">
-                    <span class="placeholder__label">Foto Roman</span>
-                  </div>
-                </div>
-                <div class="artist__scrim" aria-hidden="true"></div>
-                <div class="artist__caption">
-                  <h2 class="artist__name">Roman</h2>
-                  <p class="artist__craft">Realism / Portrait</p>
-                </div>
-              </div>
-
-              <div class="artist-entry__body">
-                <p class="artist-entry__bio">
-                  Ritratti e figura umana. Parte sempre da una fotografia e
-                  passa pi&ugrave; tempo sul disegno che sulla macchinetta:
-                  quando si comincia, la somiglianza &egrave; gi&agrave; decisa.
-                </p>
-                <a class="artist-entry__link" href="#">
-                  Vedi i lavori
-                  <span class="visually-hidden">di Roman</span>
                   <span class="artist__arrow" aria-hidden="true">&#8594;</span>
                 </a>
               </div>
@@ -285,9 +271,11 @@
 
               <div class="artist">
                 <div class="artist__media">
-                  <div class="placeholder" aria-hidden="true">
-                    <span class="placeholder__label">Foto Simone</span>
-                  </div>
+                  <img class="artist__img"
+                       src="images/artista-simone.webp"
+                       alt="Ritratto di Simone, tatuatore"
+                       width="397" height="509"
+                       loading="lazy" decoding="async">
                 </div>
                 <div class="artist__scrim" aria-hidden="true"></div>
                 <div class="artist__caption">
@@ -302,7 +290,7 @@
                   ornamentali. &Egrave; l&rsquo;artista a cui lo studio affida
                   i primi tatuaggi e le coperture delicate.
                 </p>
-                <a class="artist-entry__link" href="#">
+                <a class="artist-entry__link" href="artista-simone.html">
                   Vedi i lavori
                   <span class="visually-hidden">di Simone</span>
                   <span class="artist__arrow" aria-hidden="true">&#8594;</span>
@@ -312,22 +300,213 @@
             </article>
           </li>
 
-          <!-- Slot libero, come sulla home: non è un link e non deve fingersi
-               tale. Al posto della bio una riga sola, senza link — non c'è
-               ancora niente da aprire. Il "+" è disegnato con due hairline
-               (vedi CSS), non è un glifo né un'icona di sistema. -->
           <li class="roster__slot">
-            <article class="artist-entry">
+            <article class="artist-entry" id="valerio">
 
-              <div class="artist artist--open">
-                <span class="artist__plus" aria-hidden="true"></span>
-                <p class="artist__open-label">Coming soon</p>
+              <div class="artist">
+                <div class="artist__media">
+                  <img class="artist__img"
+                       src="images/artista-valerio.webp"
+                       alt="Ritratto di Valerio, tatuatore"
+                       width="382" height="509"
+                       loading="lazy" decoding="async">
+                </div>
+                <div class="artist__scrim" aria-hidden="true"></div>
+                <div class="artist__caption">
+                  <h2 class="artist__name">Valerio</h2>
+                  <p class="artist__craft">Black &amp; Grey</p>
+                </div>
               </div>
 
               <div class="artist-entry__body">
-                <p class="artist-entry__note">
-                  Lo spazio del prossimo artista dello studio.
+                <p class="artist-entry__bio">
+                  Lavora in black &amp; grey nello studio di Roma.
                 </p>
+                <a class="artist-entry__link" href="artista-valerio.html">
+                  Vedi i lavori
+                  <span class="visually-hidden">di Valerio</span>
+                  <span class="artist__arrow" aria-hidden="true">&#8594;</span>
+                </a>
+              </div>
+
+            </article>
+          </li>
+
+          <li class="roster__slot">
+            <article class="artist-entry" id="blessed">
+
+              <div class="artist">
+                <div class="artist__media">
+                  <div class="placeholder" aria-hidden="true">
+                    <span class="placeholder__label">Foto Blessed</span>
+                  </div>
+                </div>
+                <div class="artist__scrim" aria-hidden="true"></div>
+                <div class="artist__caption">
+                  <h2 class="artist__name">Blessed</h2>
+                  <p class="artist__craft">Black &amp; Grey</p>
+                </div>
+              </div>
+
+              <div class="artist-entry__body">
+                <p class="artist-entry__bio">
+                  Lavora in black &amp; grey nello studio di Roma.
+                </p>
+                <a class="artist-entry__link" href="artista-blessed.html">
+                  Vedi i lavori
+                  <span class="visually-hidden">di Blessed</span>
+                  <span class="artist__arrow" aria-hidden="true">&#8594;</span>
+                </a>
+              </div>
+
+            </article>
+          </li>
+
+          <li class="roster__slot">
+            <article class="artist-entry" id="alessandro">
+
+              <div class="artist">
+                <div class="artist__media">
+                  <div class="placeholder" aria-hidden="true">
+                    <span class="placeholder__label">Foto Alessandro</span>
+                  </div>
+                </div>
+                <div class="artist__scrim" aria-hidden="true"></div>
+                <div class="artist__caption">
+                  <h2 class="artist__name">Alessandro</h2>
+                  <p class="artist__craft">Black &amp; Grey</p>
+                </div>
+              </div>
+
+              <div class="artist-entry__body">
+                <p class="artist-entry__bio">
+                  Lavora in black &amp; grey nello studio di Roma.
+                </p>
+                <a class="artist-entry__link" href="artista-alessandro.html">
+                  Vedi i lavori
+                  <span class="visually-hidden">di Alessandro</span>
+                  <span class="artist__arrow" aria-hidden="true">&#8594;</span>
+                </a>
+              </div>
+
+            </article>
+          </li>
+
+          <li class="roster__slot">
+            <article class="artist-entry" id="angela">
+
+              <div class="artist">
+                <div class="artist__media">
+                  <div class="placeholder" aria-hidden="true">
+                    <span class="placeholder__label">Foto Angela</span>
+                  </div>
+                </div>
+                <div class="artist__scrim" aria-hidden="true"></div>
+                <div class="artist__caption">
+                  <h2 class="artist__name">Angela</h2>
+                  <p class="artist__craft">Black &amp; Grey</p>
+                </div>
+              </div>
+
+              <div class="artist-entry__body">
+                <p class="artist-entry__bio">
+                  Lavora in black &amp; grey nello studio di Roma.
+                </p>
+                <a class="artist-entry__link" href="artista-angela.html">
+                  Vedi i lavori
+                  <span class="visually-hidden">di Angela</span>
+                  <span class="artist__arrow" aria-hidden="true">&#8594;</span>
+                </a>
+              </div>
+
+            </article>
+          </li>
+
+          <li class="roster__slot">
+            <article class="artist-entry" id="lobo">
+
+              <div class="artist">
+                <div class="artist__media">
+                  <div class="placeholder" aria-hidden="true">
+                    <span class="placeholder__label">Foto Lobo</span>
+                  </div>
+                </div>
+                <div class="artist__scrim" aria-hidden="true"></div>
+                <div class="artist__caption">
+                  <h2 class="artist__name">Lobo</h2>
+                  <p class="artist__craft">Black &amp; Grey</p>
+                </div>
+              </div>
+
+              <div class="artist-entry__body">
+                <p class="artist-entry__bio">
+                  Lavora in black &amp; grey nello studio di Roma.
+                </p>
+                <a class="artist-entry__link" href="artista-lobo.html">
+                  Vedi i lavori
+                  <span class="visually-hidden">di Lobo</span>
+                  <span class="artist__arrow" aria-hidden="true">&#8594;</span>
+                </a>
+              </div>
+
+            </article>
+          </li>
+
+          <li class="roster__slot">
+            <article class="artist-entry" id="giuseppe">
+
+              <div class="artist">
+                <div class="artist__media">
+                  <div class="placeholder" aria-hidden="true">
+                    <span class="placeholder__label">Foto Giuseppe</span>
+                  </div>
+                </div>
+                <div class="artist__scrim" aria-hidden="true"></div>
+                <div class="artist__caption">
+                  <h2 class="artist__name">Giuseppe</h2>
+                  <p class="artist__craft">Black &amp; Grey</p>
+                </div>
+              </div>
+
+              <div class="artist-entry__body">
+                <p class="artist-entry__bio">
+                  Lavora in black &amp; grey nello studio di Roma.
+                </p>
+                <a class="artist-entry__link" href="artista-giuseppe.html">
+                  Vedi i lavori
+                  <span class="visually-hidden">di Giuseppe</span>
+                  <span class="artist__arrow" aria-hidden="true">&#8594;</span>
+                </a>
+              </div>
+
+            </article>
+          </li>
+
+          <li class="roster__slot">
+            <article class="artist-entry" id="christian">
+
+              <div class="artist">
+                <div class="artist__media">
+                  <div class="placeholder" aria-hidden="true">
+                    <span class="placeholder__label">Foto Christian</span>
+                  </div>
+                </div>
+                <div class="artist__scrim" aria-hidden="true"></div>
+                <div class="artist__caption">
+                  <h2 class="artist__name">Christian</h2>
+                  <p class="artist__craft">Black &amp; Grey</p>
+                </div>
+              </div>
+
+              <div class="artist-entry__body">
+                <p class="artist-entry__bio">
+                  Lavora in black &amp; grey nello studio di Roma.
+                </p>
+                <a class="artist-entry__link" href="artista-christian.html">
+                  Vedi i lavori
+                  <span class="visually-hidden">di Christian</span>
+                  <span class="artist__arrow" aria-hidden="true">&#8594;</span>
+                </a>
               </div>
 
             </article>
@@ -347,8 +526,8 @@
        Il logo qui punta a index.html come quello in header. "Torna su" resta
        su #top: la sentinella è in cima anche a questa pagina.
 
-       ⚠️ PLACEHOLDER — indirizzo, telefono, handle e orari sono gli stessi
-       dati non confermati della home. Vanno aggiornati in index.html,
+       Indirizzo e telefono da Google Maps, come in home. Handle Instagram
+       e fascia oraria settimanale vanno ancora confermati. Vanno aggiornati in index.html,
        artisti.html e nei due menu overlay insieme.
        ========================================================================== -->
 
@@ -357,11 +536,9 @@
 
       <div class="footer__top">
 
-        <!-- PLACEHOLDER — sostituire con l'SVG del logo reale, come in header. -->
         <div class="footer__brand">
           <a class="logo footer__logo" href="index.html" aria-label="Big Art Gallery, torna alla home">
-            <span class="logo__diamond" aria-hidden="true"></span>
-            <span class="logo__text">BIG</span>
+            <img class="logo__img" src="assets/logo.png" alt="" width="303" height="265">
           </a>
           <p class="footer__tagline">Black &amp; Grey Tattoo Studio</p>
         </div>
@@ -369,15 +546,20 @@
         <div class="footer__col">
           <h2 class="footer__label">Dove siamo</h2>
           <address class="footer__value">
-            Via Nomentana 1111<br>
-            00100 Roma RM
+            <a class="footer__link"
+               href="https://www.google.com/maps/search/?api=1&amp;query=Big%20Art%20Gallery%2C%20Via%20delle%20Passiflore%2C%2031%2C%2000172%20Roma"
+               target="_blank" rel="noopener">
+              Via delle Passiflore, 31<br>
+              00172 Roma RM
+              <span class="visually-hidden">(si apre in una nuova scheda)</span>
+            </a>
           </address>
         </div>
 
         <div class="footer__col">
           <h2 class="footer__label">Prenotazioni</h2>
           <p class="footer__value">
-            <a class="footer__link" href="tel:+393511234567">351 1234567</a>
+            <a class="footer__link" href="tel:+39065434834">06 543 4834</a>
           </p>
         </div>
 

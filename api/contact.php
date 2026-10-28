@@ -18,11 +18,11 @@ header('Cache-Control: no-store');
 // ---------------------------------------------------------------------------
 
 // Casella che riceve le richieste (di solito info@ o prenotazioni@ del dominio).
-const MAIL_TO = 'INFO@TUODOMINIO.IT';
+const MAIL_TO = 'info@bigartgallerystudio.com';
 
 // Mittente: su Aruba DEVE essere una casella dello stesso dominio,
 // altrimenti mail() viene scartata o finisce in spam.
-const MAIL_FROM = 'noreply@TUODOMINIO.IT';
+const MAIL_FROM = 'website@bigartgallerystudio.com';
 
 // Oggetto della mail in arrivo.
 const MAIL_SUBJECT = 'Nuova richiesta tattoo — Big Art Gallery';
@@ -57,6 +57,7 @@ $email     = trim((string) ($data['email'] ?? ''));
 $telefono  = trim((string) ($data['telefono'] ?? ''));
 $stile     = trim((string) ($data['stile'] ?? ''));
 $messaggio = trim((string) ($data['messaggio'] ?? ''));
+$artista   = trim((string) ($data['artista'] ?? ''));
 $lang      = trim((string) ($data['lang'] ?? 'it'));
 if ($lang !== 'en') {
     $lang = 'it';
@@ -72,6 +73,25 @@ $stili_ammessi = [
     'Other',
     'Other / not sure yet',
 ];
+
+// Le pagine artista-*.html mandano anche il nome dell'artista. Insieme
+// chiuso: un valore fuori lista viene semplicemente ignorato, non e' un
+// errore del form — l'utente non lo ha scritto lui.
+$artisti_ammessi = [
+    'Big',
+    'Simone',
+    'Valerio',
+    'Blessed',
+    'Alessandro',
+    'Angela',
+    'Lobo',
+    'Giuseppe',
+    'Christian',
+];
+
+if (!in_array($artista, $artisti_ammessi, true)) {
+    $artista = '';
+}
 
 function str_len(string $value): int
 {
@@ -108,9 +128,10 @@ if (MAIL_TO === 'INFO@TUODOMINIO.IT' || MAIL_FROM === 'noreply@TUODOMINIO.IT') {
     exit;
 }
 
-// Newline negli header = injection. Si strappano prima di usare i valori.
+// Newline negli header = injection. Si strappano prima di usare il valore.
+// Nel Reply-To va solo l'indirizzo, già validato: il nome libero con < , "
+// renderebbe l'header malformato. Il nome resta nel corpo della mail.
 $safe_email = str_replace(["\r", "\n"], '', $email);
-$safe_nome  = str_replace(["\r", "\n"], '', $nome);
 
 $en = $lang === 'en';
 
@@ -152,11 +173,17 @@ $lines = $en
         'Lingua: italiano',
     ];
 
+// Richiesta partita dalla pagina di un artista: la riga va subito sotto lo
+// stile, prima del blocco del progetto. Dal form della home non c'e'.
+if ($artista !== '') {
+    array_splice($lines, 6, 0, [($en ? 'Artist:    ' : 'Artista:   ') . $artista]);
+}
+
 $body = implode("\n", $lines);
 
 $headers = [
     'From: Big Art Gallery <' . MAIL_FROM . '>',
-    'Reply-To: ' . $safe_nome . ' <' . $safe_email . '>',
+    'Reply-To: ' . $safe_email,
     'MIME-Version: 1.0',
     'Content-Type: text/plain; charset=UTF-8',
     'Content-Transfer-Encoding: 8bit',
