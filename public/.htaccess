@@ -37,6 +37,14 @@ DirectoryIndex index.html index.php
   RewriteEngine On
   # RewriteBase /preview/
 
+  # --- URL pulito: .../index.html -> .../ (301) ----------------------------
+  # Per vecchi link e segnalibri: i link interni puntano già alla cartella.
+  # THE_REQUEST è la richiesta originale del browser, quindi la DirectoryIndex
+  # interna (/ -> index.html) non entra in loop. Funziona anche in
+  # sottocartella: il path catturato include già /preview/.
+  RewriteCond %{THE_REQUEST} \s(/(?:[^?\s]*/)?)index\.html[\s?]
+  RewriteRule ^ %1 [R=301,L]
+
   # --- 404 sotto /en/ -------------------------------------------------------
   # Scommenta a go-live in root, insieme a ErrorDocument 404 /404.html.
   # In una sottocartella di test lascialo spento: /en/404.html punterebbe
