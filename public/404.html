@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="it" data-lang-redirect="off">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pagina non trovata — Big Art Gallery</title>
+  <meta name="description" content="Questa pagina non esiste. Torna alla home di Big Art Gallery, tattoo studio a Roma.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0a0a0a">
+
+  <!-- Apache serve questo file lasciando l'URL sbagliato nella barra
+       (es. /percorso/inesistente). Senza <base> i path relativi
+       css/js/immagini si risolverebbero rispetto a quel percorso, non
+       rispetto alla root del sito.
+
+       In root di dominio lascia href="/".
+       In sottocartella (es. esempio.it/sito/) cambia in href="/sito/".
+       Vedi DEPLOY.md. -->
+  <base href="/">
+
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" href="assets/favicon.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+
+  <!-- FONT — Oswald + Archivo serviti dal sito (fonts/, @font-face in
+       css/style.css). Niente Google Fonts: nessuna richiesta a terzi,
+       quindi l'IP del visitatore non arriva a Google. -->
+  <link rel="preload" href="fonts/oswald-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+
+  <link rel="alternate" hreflang="it" href="404.html">
+  <link rel="alternate" hreflang="en" href="en/404.html">
+  <link rel="alternate" hreflang="x-default" href="404.html">
+  <script src="js/lang.js"></script>
+</head>
+<body class="error-page">
+
+  <a class="skip-link" href="#main">Vai al contenuto</a>
+
+  <main id="main" class="error-page__main container">
+
+    <a class="logo error-page__logo" href="index.html" aria-label="Big Art Gallery, torna alla home">
+      <img class="logo__img" src="assets/logo.png" alt="" width="303" height="265">
+    </a>
+
+    <nav class="lang-switch error-page__lang" aria-label="Lingua">
+      <span class="lang-switch__current" lang="it" aria-current="true">IT</span>
+      <span class="lang-switch__sep" aria-hidden="true"></span>
+      <a class="lang-switch__link" href="en/404.html" lang="en" hreflang="en" data-set-lang="en">EN</a>
+    </nav>
+
+    <p class="error-page__code">404</p>
+    <h1 class="error-page__title">Questa pagina non è in mostra</h1>
+
+    <div class="rule error-page__rule" aria-hidden="true">
+      <span class="rule__diamond"></span>
+    </div>
+
+    <p class="error-page__body">
+      Il percorso che hai aperto non esiste. Torna in galleria, oppure
+      vai a vedere gli artisti.
+    </p>
+
+    <div class="error-page__actions">
+      <a class="btn btn--primary" href="index.html">Torna alla home</a>
+      <a class="btn btn--outline" href="artisti.html">Gli artisti</a>
+    </div>
+
+  </main>
+
+</body>
+</html>

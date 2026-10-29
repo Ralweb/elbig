@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Blessed &mdash; Artists &mdash; Big Art Gallery</title>
+  <meta name="description" content="Blessed at Big Art Gallery, Rome: hard contrast, graphic subjects, solid black. See the work and book a consultation.">
+
+  <!-- Colore della barra browser su mobile: allineato al fondo pagina -->
+  <meta name="theme-color" content="#0a0a0a">
+
+  <link rel="icon" href="../assets/favicon.ico" sizes="any">
+  <link rel="icon" href="../assets/favicon.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+
+  <!-- og:image quando arriva il ritratto reale: images/artista-blessed.jpg -->
+  <meta property="og:type" content="profile">
+  <meta property="og:locale" content="en_GB">
+  <meta property="og:locale:alternate" content="it_IT">
+  <meta property="og:title" content="Blessed &mdash; Big Art Gallery">
+  <meta property="og:description" content="Blessed at Big Art Gallery, Rome: hard contrast, graphic subjects, solid black. See the work and book a consultation.">
+
+  <!-- FONT — Oswald + Archivo serviti dal sito (fonts/, @font-face in
+       css/style.css). Niente Google Fonts: nessuna richiesta a terzi,
+       quindi l'IP del visitatore non arriva a Google. -->
+  <link rel="preload" href="../fonts/oswald-latin.woff2" as="font" type="font/woff2" crossorigin>
+
+  <link rel="stylesheet" href="../css/style.css">
+
+  <link rel="alternate" hreflang="it" href="../artista-blessed.html">
+  <link rel="alternate" hreflang="en" href="artista-blessed.html">
+  <link rel="alternate" hreflang="x-default" href="../artista-blessed.html">
+  <script src="../js/lang.js"></script>
+</head>
+
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ==========================================================================
+       HEADER + NAV
+
+       Stessi componenti della home, con due sole differenze, entrambe dovute
+       al fatto che qui NON siamo più in home:
+
+       1. Logo e voce "Home" puntano a index.html, non a #top. Il logo resta
+          la via di ritorno alla home, come ovunque nel sito.
+       2. Le ancore di sezione diventano assolute (index.html#our-work): da
+          qui #our-work non esiste, e un'ancora morta è peggio di un link.
+
+       "Contatti" resta #contatti: il footer di questa pagina è lo stesso
+       della home e porta lo stesso id. La voce "Artisti" punta a artisti.html
+       senza aria-current: il catalogo è un’altra pagina, non questa.
+       ========================================================================== -->
+
+  <div id="top" class="header-sentinel"></div>
+
+  <header class="site-header" id="site-header">
+    <div class="site-header__inner container">
+
+      <a class="logo" href="index.html" aria-label="Big Art Gallery, back to home">
+        <img class="logo__img" src="../assets/logo.png" alt="" width="303" height="265">
+      </a>
+
+      <nav class="nav-desktop" aria-label="Main">
+        <ul class="nav-desktop__list" role="list">
+          <li><a class="nav-desktop__link" href="index.html">Home</a></li>
+          <li><a class="nav-desktop__link" href="index.html#our-work">Our Work</a></li>
+          <li><a class="nav-desktop__link" href="artisti.html">Artists</a></li>
+          <li><a class="nav-desktop__link" href="index.html#studio">Studio</a></li>
+          <li><a class="nav-desktop__link" href="#contatti">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="site-header__actions">
+        <nav class="lang-switch" aria-label="Language">
+          <a class="lang-switch__link" href="../artista-blessed.html" lang="it" hreflang="it" data-set-lang="it">IT</a>
+          <span class="lang-switch__sep" aria-hidden="true"></span>
+          <span class="lang-switch__current" lang="en" aria-current="true">EN</span>
+        </nav>
+
+        <!-- data-open-modal apre il modale contatti (js/main.js). Resta un
+             <a href="#contatti">: senza JS cade sui recapiti del footer. -->
+        <a class="btn btn--primary btn--sm" href="#contatti" data-open-modal>
+          <span class="btn__label">Book your tattoo</span>
+          <span class="btn__label btn__label--short">Book</span>
+        </a>
+
+        <button
+          class="nav-toggle"
+          id="nav-toggle"
+          type="button"
+          aria-label="Open menu"
+          aria-expanded="false"
+          aria-controls="nav-overlay">
+          <span class="nav-toggle__bar" aria-hidden="true"></span>
+          <span class="nav-toggle__bar" aria-hidden="true"></span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <div class="nav-overlay" id="nav-overlay" inert>
+    <nav class="nav-overlay__nav container" aria-label="Menu">
+
+      <ul class="nav-overlay__list" role="list">
+        <li class="nav-overlay__item">
+          <a class="nav-overlay__link" href="index.html">Home</a>
+        </li>
+        <li class="nav-overlay__item">
+          <a class="nav-overlay__link" href="index.html#our-work">Our Work</a>
+        </li>
+        <li class="nav-overlay__item">
+          <a class="nav-overlay__link" href="artisti.html">Artists</a>
+        </li>
+        <li class="nav-overlay__item">
+          <a class="nav-overlay__link" href="index.html#studio">Studio</a>
+        </li>
+        <li class="nav-overlay__item">
+          <a class="nav-overlay__link" href="#contatti">Contact</a>
+        </li>
+      </ul>
+
+      <div class="nav-overlay__foot">
+
+        <!-- Il selettore lingua vive qui sotto i 900px: nell'header, accanto
+             a logo, bottone e hamburger, toglieva aria alla CTA su schermi
+             stretti. Sta sopra i recapiti perché è informazione
+             di servizio come loro. Da 900px in su torna nell'header — vedi il
+             blocco "Lingua" nel CSS. -->
+        <nav class="lang-switch" aria-label="Language">
+          <a class="lang-switch__link" href="../artista-blessed.html" lang="it" hreflang="it" data-set-lang="it">IT</a>
+          <span class="lang-switch__sep" aria-hidden="true"></span>
+          <span class="lang-switch__current" lang="en" aria-current="true">EN</span>
+        </nav>
+
+        <!-- Indirizzo e telefono da Google Maps. -->
+        <div class="nav-overlay__meta">
+          <p class="nav-overlay__meta-line">
+            <a href="https://www.google.com/maps/search/?api=1&amp;query=Big%20Art%20Gallery%2C%20Via%20delle%20Passiflore%2C%2031%2C%2000172%20Roma" target="_blank" rel="noopener">
+              Via delle Passiflore, 31, 00172 Roma RM
+              <span class="visually-hidden">(opens in a new tab)</span>
+            </a>
+          </p>
+          <p class="nav-overlay__meta-line">
+            <a href="tel:+39065434834">06 543 4834</a>
+          </p>
+          <p class="nav-overlay__meta-line">
+            <a href="https://instagram.com/bigartgallerystudio" target="_blank" rel="noopener">
+              &#64;bigartgallerystudio
+            </a>
+          </p>
+        </div>
+
+      </div>
+
+    </nav>
+  </div>
+
+  <main id="main">
+
+    <!-- ==========================================================================
+         TESTATA — LA STANZA DELL'ARTISTA
+
+         Terza forma della stessa parete: la home appende i ritratti in fila,
+         artisti.html e' il frontespizio del catalogo, questa e' la stanza di
+         un artista solo. Stessa fascia della testata di artisti.html
+         (--black-void, hairline di chiusura, spazio per l'header trasparente)
+         ma a bandiera invece che centrata — accanto al ritratto c'e' la sua
+         targhetta, e una didascalia a parete si legge allineata a sinistra.
+         E' la stessa ragione per cui la sezione Studio della home e' l'unico
+         blocco non centrato.
+
+         ⚠️ PLACEHOLDER — bio e ritratto sono testi e immagini di prova.
+         Vanno sostituiti con quelli reali prima della pubblicazione.
+         ========================================================================== -->
+
+    <section class="profile" aria-labelledby="profile-name">
+      <div class="profile__inner container">
+
+        <a class="profile__back" href="artisti.html">
+          <span class="profile__back-arrow" aria-hidden="true">&#8592;</span>
+          All artists
+        </a>
+
+        <!-- PLACEHOLDER — sostituire il <div class="placeholder"> con:
+
+             <img class="profile__img"
+                  src="../images/artista-blessed.jpg"
+                  alt="Portrait of Blessed, artist at Big Art Gallery"
+                  width="900" height="1200"
+                  fetchpriority="high" decoding="async">
+
+             Formato verticale 3/4 (il ritaglio lo fa object-fit), trattamento
+             b/n in CSS: il file originale resta intatto sul disco. -->
+        <div class="profile__media">
+          <div class="placeholder" aria-hidden="true">
+            <span class="placeholder__label">Photo Blessed</span>
+          </div>
+        </div>
+
+        <div class="profile__text">
+
+          <p class="profile__eyebrow">Black &amp; Grey</p>
+
+          <h1 class="profile__name" id="profile-name">Blessed</h1>
+
+          <div class="rule profile__rule" aria-hidden="true">
+            <span class="rule__diamond"></span>
+          </div>
+
+          <p class="profile__lead">
+            Hard contrast and graphic subjects, with solid black used as material.
+          </p>
+
+          <p class="profile__body">
+            This black and grey starts from the dark and takes light away: shapes come out of the ground instead of being drawn on top. It is the right approach for a piece that has to read from across a room.
+          </p>
+
+          <!-- La targhetta. Coppie chiave/valore, quindi un <dl>: non sono
+               due colonne di testo. Il rombo e' appuntato sul bordo, non
+               dentro — vedi il blocco "Pagina del singolo artista" nel CSS. -->
+          <div class="wall-label">
+            <span class="wall-label__pin" aria-hidden="true"></span>
+            <dl class="wall-label__list">
+              <div class="wall-label__row">
+                <dt class="wall-label__key">Speciality</dt>
+                <dd class="wall-label__value">Black &amp; Grey</dd>
+              </div>
+              <div class="wall-label__row">
+                <dt class="wall-label__key">Studio</dt>
+                <dd class="wall-label__value">Big Art Gallery, Rome</dd>
+              </div>
+              <div class="wall-label__row">
+                <dt class="wall-label__key">By appointment</dt>
+                <dd class="wall-label__value">Monday &ndash; Saturday, 10:00 &ndash; 19:00</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="profile__actions">
+            <!-- data-open-modal apre il modale contatti (js/main.js). Resta un
+                 <a href="#contatti">: senza JS cade sui recapiti del footer. -->
+            <a class="btn btn--primary" href="#contatti" data-open-modal>Book with Blessed</a>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         I LAVORI
+
+         Stesso componente di Our Work in home, senza una riga di override:
+         striscia che scorre sotto i 768px, griglia a tre e poi a sei colonne
+         sopra. Chi arriva dalla home deve riconoscere la stessa parete, qui
+         appesa a un nome solo.
+
+         I riquadri sono link: senza JS aprono il file, con JS il lightbox
+         della sezione. Cornice 3/4 in griglia, foto intera al click.
+         ========================================================================== -->
+
+    <section class="section work" id="lavori" aria-labelledby="lavori-title">
+
+      <div class="container">
+        <div class="section-head">
+          <h2 class="section-head__title" id="lavori-title">Work by Blessed</h2>
+          <div class="rule rule--sm section-head__rule" aria-hidden="true">
+            <span class="rule__diamond"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- I riquadri sono link: niente tabindex sullo scroller. Sotto i 768px
+           scorre in orizzontale; da quella soglia in su è una griglia. -->
+      <ul class="work__scroller"
+          role="list"
+          aria-label="Work by Blessed">
+
+        <!-- 3/4 frame in the grid (object-fit: cover). The file is uncropped:
+             the click opens the lightbox, where the true ratio is shown. -->
+
+        <li class="work__frame">
+          <a class="work__trigger"
+             href="../images/lavori/blessed-01.webp"
+             data-gallery
+             aria-label="Tattoo by Blessed, work 1">
+            <div class="work__media">
+              <img class="work__img"
+                   src="../images/lavori/blessed-01.webp"
+                   alt="Tattoo by Blessed, work 1"
+                   width="1200" height="1600"
+                   loading="lazy" decoding="async">
+            </div>
+          </a>
+        </li>
+
+        <li class="work__frame">
+          <a class="work__trigger"
+             href="../images/lavori/blessed-02.webp"
+             data-gallery
+             aria-label="Tattoo by Blessed, work 2">
+            <div class="work__media">
+              <img class="work__img"
+                   src="../images/lavori/blessed-02.webp"
+                   alt="Tattoo by Blessed, work 2"
+                   width="1200" height="1600"
+                   loading="lazy" decoding="async">
+            </div>
+          </a>
+        </li>
+
+        <li class="work__frame">
+          <a class="work__trigger"
+             href="../images/lavori/blessed-03.webp"
+             data-gallery
+             aria-label="Tattoo by Blessed, work 3">
+            <div class="work__media">
+              <img class="work__img"
+                   src="../images/lavori/blessed-03.webp"
+                   alt="Tattoo by Blessed, work 3"
+                   width="1200" height="1600"
+                   loading="lazy" decoding="async">
+            </div>
+          </a>
+        </li>
+
+      </ul>
+
+      <div class="container work__foot">
+
+        <div class="work__line" aria-hidden="true">
+          <span class="work__thumb"></span>
+        </div>
+
+        <ul class="work__tags" role="list">
+          <li class="work__tag">Black &amp; Grey</li>
+          <li class="work__tag">Graphic</li>
+        </ul>
+
+        <div class="work__cta">
+          <a class="btn btn--outline" href="#contatti" data-open-modal>Book with Blessed</a>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ==========================================================================
+         PRECEDENTE / SUCCESSIVO
+
+         La griglia degli artisti e' un ordine, e questa fascia lo rende
+         percorribile senza tornare al catalogo a ogni passo. In coda alla
+         lista si torna al primo: la parete e' un giro, non un vicolo cieco.
+         ========================================================================== -->
+
+    <nav class="artist-switch" aria-label="Other artists">
+      <div class="container artist-switch__inner">
+
+        <a class="artist-switch__link artist-switch__link--prev" href="artista-valerio.html">
+          <span class="artist-switch__arrow" aria-hidden="true">&#8592;</span>
+          <span class="artist-switch__text">
+            <span class="artist-switch__dir">Previous artist</span>
+            <span class="artist-switch__name">Valerio</span>
+          </span>
+        </a>
+
+        <a class="artist-switch__all" href="artisti.html">All artists</a>
+
+        <a class="artist-switch__link artist-switch__link--next" href="artista-alessandro.html">
+          <span class="artist-switch__text">
+            <span class="artist-switch__dir">Next artist</span>
+            <span class="artist-switch__name">Alessandro</span>
+          </span>
+          <span class="artist-switch__arrow" aria-hidden="true">&#8594;</span>
+        </a>
+
+      </div>
+    </nav>
+
+  </main>
+
+
+  <!-- ==========================================================================
+       FOOTER — identico a quello della home, id #contatti compreso: è il
+       bersaglio dei bottoni "Prenota" quando il JS non c'è.
+
+       Il logo qui punta a index.html come quello in header. "Torna su" resta
+       su #top: la sentinella è in cima anche a questa pagina.
+
+       Indirizzo e telefono da Google Maps, come in home. Handle Instagram
+       e fascia oraria settimanale vanno ancora confermati. Vanno aggiornati in index.html,
+       artisti.html, in ogni artista-*.html e nei menu overlay insieme.
+       ========================================================================== -->
+
+  <footer class="footer" id="contatti">
+    <div class="container">
+
+      <div class="footer__top">
+
+        <div class="footer__brand">
+          <a class="logo footer__logo" href="index.html" aria-label="Big Art Gallery, back to home">
+            <img class="logo__img" src="../assets/logo.png" alt="" width="303" height="265">
+          </a>
+          <p class="footer__tagline">Black &amp; Grey Tattoo Studio</p>
+        </div>
+
+        <div class="footer__col">
+          <h2 class="footer__label">Find us</h2>
+          <address class="footer__value">
+            <a class="footer__link"
+               href="https://www.google.com/maps/search/?api=1&amp;query=Big%20Art%20Gallery%2C%20Via%20delle%20Passiflore%2C%2031%2C%2000172%20Roma"
+               target="_blank" rel="noopener">
+              Via delle Passiflore, 31<br>
+              00172 Roma RM
+              <span class="visually-hidden">(opens in a new tab)</span>
+            </a>
+          </address>
+        </div>
+
+        <div class="footer__col">
+          <h2 class="footer__label">Bookings</h2>
+          <p class="footer__value">
+            <a class="footer__link" href="tel:+39065434834">06 543 4834</a>
+          </p>
+        </div>
+
+        <div class="footer__col">
+          <h2 class="footer__label">Instagram</h2>
+          <p class="footer__value">
+            <a class="footer__link"
+               href="https://instagram.com/bigartgallerystudio"
+               target="_blank" rel="noopener">
+              &#64;bigartgallerystudio
+              <span class="visually-hidden">(opens in a new tab)</span>
+            </a>
+          </p>
+        </div>
+
+        <div class="footer__col">
+          <h2 class="footer__label">Hours</h2>
+          <p class="footer__value">
+            Monday &ndash; Saturday<br>
+            10:00 &ndash; 19:00
+          </p>
+        </div>
+
+      </div>
+
+      <div class="footer__bottom">
+        <p class="footer__legal">&copy; 2026 Big Art Gallery S.r.l.s. &middot; VAT IT16110741002</p>
+
+        <nav class="lang-switch" aria-label="Language">
+          <a class="lang-switch__link" href="../artista-blessed.html" lang="it" hreflang="it" data-set-lang="it">IT</a>
+          <span class="lang-switch__sep" aria-hidden="true"></span>
+          <span class="lang-switch__current" lang="en" aria-current="true">EN</span>
+        </nav>
+
+        <a class="footer__legal-link" href="privacy.html">Privacy &amp; cookies</a>
+
+        <a class="footer__top-link" href="#top">
+          Back to top
+          <span class="footer__arrow" aria-hidden="true">&#8593;</span>
+        </a>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       MODALE CONTATTI — stesso markup di index.html.
+
+       Sta qui perché il bottone "Prenota il tuo tattoo" nell'header esiste
+       anche su questa pagina e deve fare la stessa cosa. Vive fuori da <main>
+       e in fondo al body: a modale aperto il JS mette `inert` su tutti gli
+       altri figli del body, e un elemento non può inertizzare il proprio
+       antenato.
+
+       ⚠️ Se si tocca il form, va toccato in tutte le pagine che lo portano.
+       ========================================================================== -->
+
+  <div class="modal" id="contact-modal" inert>
+
+    <div class="modal__scrim" id="contact-modal-scrim" aria-hidden="true"></div>
+
+    <div class="modal__panel"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="modal-title"
+         aria-describedby="modal-lead">
+
+      <button class="modal__close" type="button" id="contact-modal-close" aria-label="Close">
+        <span class="modal__close-mark" aria-hidden="true"></span>
+      </button>
+
+      <div class="modal__scroll">
+
+        <div class="modal__head" id="contact-modal-head">
+          <h2 class="modal__title" id="modal-title">Request your tattoo</h2>
+          <div class="rule rule--sm modal__rule" aria-hidden="true">
+            <span class="rule__diamond"></span>
+          </div>
+          <p class="modal__lead" id="modal-lead">
+            Tell us the idea, even if for now it&rsquo;s only a picture
+            in your head. We come back with a drawing proposal and a date.
+          </p>
+        </div>
+
+        <form class="form" id="contact-form" novalidate>
+
+          <div class="field">
+            <label class="field__label" for="cf-nome">Name</label>
+            <input class="field__input"
+                   type="text"
+                   id="cf-nome"
+                   name="nome"
+                   autocomplete="name"
+                   required
+                   aria-describedby="cf-nome-error">
+            <p class="field__error" id="cf-nome-error" hidden></p>
+          </div>
+
+          <div class="form__row">
+
+            <div class="field">
+              <label class="field__label" for="cf-email">Email</label>
+              <input class="field__input"
+                     type="email"
+                     id="cf-email"
+                     name="email"
+                     autocomplete="email"
+                     inputmode="email"
+                     required
+                     aria-describedby="cf-email-error">
+              <p class="field__error" id="cf-email-error" hidden></p>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="cf-telefono">
+                Phone
+                <span class="field__optional">optional</span>
+              </label>
+              <input class="field__input"
+                     type="tel"
+                     id="cf-telefono"
+                     name="telefono"
+                     autocomplete="tel"
+                     inputmode="tel"
+                     aria-describedby="cf-telefono-error">
+              <p class="field__error" id="cf-telefono-error" hidden></p>
+            </div>
+
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="cf-stile">Style</label>
+            <div class="field__select-wrap">
+              <select class="field__input field__select"
+                      id="cf-stile"
+                      name="stile"
+                      required
+                      aria-describedby="cf-stile-error">
+                <option value="" disabled selected>Choose a style</option>
+                <option value="Black &amp; Grey">Black &amp; Grey</option>
+                <option value="Realism">Realism</option>
+                <option value="Fine Line">Fine Line</option>
+                <option value="Lettering">Lettering</option>
+                <option value="Other">Other / not sure yet</option>
+              </select>
+              <span class="field__chevron" aria-hidden="true"></span>
+            </div>
+            <p class="field__error" id="cf-stile-error" hidden></p>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="cf-messaggio">The project</label>
+            <textarea class="field__input field__textarea"
+                      id="cf-messaggio"
+                      name="messaggio"
+                      rows="4"
+                      required
+                      placeholder="Subject, placement, rough size, references you like."
+                      aria-describedby="cf-messaggio-error"></textarea>
+            <p class="field__error" id="cf-messaggio-error" hidden></p>
+          </div>
+
+          <!-- Da quale pagina parte la richiesta. Non e' un campo del
+               form (niente .field__input, niente validazione): lo legge
+               js/main.js e finisce nella mail. Sul form della home non
+               esiste, e la mail semplicemente non porta la riga. -->
+          <input type="hidden" id="cf-artista" name="artista" value="Blessed">
+
+          <!-- Trappola per bot: un campo che un umano non vede e non
+               raggiunge col tab. Se arriva compilato, l'invio viene scartato
+               in silenzio. -->
+          <div class="form__trap" aria-hidden="true">
+            <label for="cf-sito">Do not fill in this field</label>
+            <input type="text" id="cf-sito" name="sito" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div class="form__foot">
+            <button class="btn btn--primary form__submit" type="submit" id="cf-submit">
+              Send request
+            </button>
+
+            <p class="form__status" id="cf-status" role="status" hidden></p>
+
+            <p class="form__note">
+              We reply within two working days. No commitment.
+            </p>
+
+            <p class="form__note">
+              We only use your details to reply to your request.
+              <a href="privacy.html" target="_blank" rel="noopener">Privacy policy<span class="visually-hidden"> (opens in a new tab)</span></a>
+            </p>
+          </div>
+
+        </form>
+
+        <div class="modal__done" id="contact-done" tabindex="-1" hidden>
+          <span class="modal__done-mark" aria-hidden="true"></span>
+          <h3 class="modal__done-title">Request sent</h3>
+          <p class="modal__done-body">
+            We have your idea. We&rsquo;ll write within two working days
+            to the address you left us.
+          </p>
+          <button class="btn btn--outline" type="button" id="contact-done-close">
+            Close
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/main.js" defer></script>
+</body>
+</html>

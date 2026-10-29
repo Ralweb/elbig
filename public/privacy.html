@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Privacy e cookie &mdash; Big Art Gallery</title>
+  <meta name="description" content="Come Big Art Gallery tratta i dati personali raccolti dal sito e dal modulo di contatto, e perch&eacute; il sito non usa cookie.">
+
+  <!-- Colore della barra browser su mobile: allineato al fondo pagina -->
+  <meta name="theme-color" content="#0a0a0a">
+
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" href="assets/favicon.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+
+  <!-- Open Graph: da completare con og:image quando arrivano le foto reali -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="it_IT">
+  <meta property="og:locale:alternate" content="en_GB">
+  <meta property="og:title" content="Privacy e cookie &mdash; Big Art Gallery">
+  <meta property="og:description" content="Come Big Art Gallery tratta i dati personali raccolti dal sito e dal modulo di contatto, e perch&eacute; il sito non usa cookie.">
+
+  <!-- FONT — Oswald + Archivo serviti dal sito (fonts/, @font-face in
+       css/style.css). Niente Google Fonts: nessuna richiesta a terzi,
+       quindi l'IP del visitatore non arriva a Google. -->
+  <link rel="preload" href="fonts/oswald-latin.woff2" as="font" type="font/woff2" crossorigin>
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <link rel="alternate" hreflang="it" href="privacy.html">
+  <link rel="alternate" hreflang="en" href="en/privacy.html">
+  <link rel="alternate" hreflang="x-default" href="privacy.html">
+  <script src="js/lang.js"></script>
+</head>
+
+<body>
+
+  <a class="skip-link" href="#main">Vai al contenuto</a>
+
+  <!-- ==========================================================================
+       HEADER + NAV — come artisti.html, senza voce corrente: questa pagina
+       non è nel menu, ci si arriva dal footer e dal modulo di contatto.
+       ========================================================================== -->
+
+  <div id="top" class="header-sentinel"></div>
+
+  <header class="site-header" id="site-header">
+    <div class="site-header__inner container">
+
+      <a class="logo" href="index.html" aria-label="Big Art Gallery, torna alla home">
+        <img class="logo__img" src="assets/logo.png" alt="" width="303" height="265">
+      </a>
+
+      <nav class="nav-desktop" aria-label="Principale">
+        <ul class="nav-desktop__list" role="list">
+          <li><a class="nav-desktop__link" href="index.html">Home</a></li>
+          <li><a class="nav-desktop__link" href="index.html#our-work">Our Work</a></li>
+          <li><a class="nav-desktop__link" href="artisti.html">Artisti</a></li>
+          <li><a class="nav-desktop__link" href="index.html#studio">Studio</a></li>
+          <li><a class="nav-desktop__link" href="#contatti">Contatti</a></li>
+        </ul>
+      </nav>
+
+      <div class="site-header__actions">
+        <nav class="lang-switch" aria-label="Lingua">
+          <span class="lang-switch__current" lang="it" aria-current="true">IT</span>
+          <span class="lang-switch__sep" aria-hidden="true"></span>
+          <a class="lang-switch__link" href="en/privacy.html" lang="en" hreflang="en" data-set-lang="en">EN</a>
+        </nav>
+
+        <!-- data-open-modal apre il modale contatti (js/main.js). Resta un
+             <a href="#contatti">: senza JS cade sui recapiti del footer. -->
+        <a class="btn btn--primary btn--sm" href="#contatti" data-open-modal>
+          <span class="btn__label">Prenota il tuo tattoo</span>
+          <span class="btn__label btn__label--short">Prenota</span>
+        </a>
+
+        <button
+          class="nav-toggle"
+          id="nav-toggle"
+          type="button"
+          aria-label="Apri il menu"
+          aria-expanded="false"
+          aria-controls="nav-overlay">
+          <span class="nav-toggle__bar" aria-hidden="true"></span>
+          <span class="nav-toggle__bar" aria-hidden="true"></span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <div class="nav-overlay" id="nav-overlay" inert>
+    <nav class="nav-overlay__nav container" aria-label="Menu">
+
+      <ul class="nav-overlay__list" role="list">
+        <li class="nav-overlay__item">
+          <a class="nav-overlay__link" href="index.html">Home</a>
+        </li>
+        <li class="nav-overlay__item">
+          <a class="nav-overlay__link" href="index.html#our-work">Our Work</a>
+        </li>
+        <li class="nav-overlay__item">
+          <a class="nav-overlay__link" href="artisti.html">Artisti</a>
+        </li>
+        <li class="nav-overlay__item">
+          <a class="nav-overlay__link" href="index.html#studio">Studio</a>
+        </li>
+        <li class="nav-overlay__item">
+          <a class="nav-overlay__link" href="#contatti">Contatti</a>
+        </li>
+      </ul>
+
+      <div class="nav-overlay__foot">
+
+        <!-- Il selettore lingua vive qui sotto i 900px: nell'header, accanto
+             a logo, bottone e hamburger, toglieva aria alla CTA su schermi
+             stretti. Sta sopra i recapiti perché è informazione
+             di servizio come loro. Da 900px in su torna nell'header — vedi il
+             blocco "Lingua" nel CSS. -->
+        <nav class="lang-switch" aria-label="Lingua">
+          <span class="lang-switch__current" lang="it" aria-current="true">IT</span>
+          <span class="lang-switch__sep" aria-hidden="true"></span>
+          <a class="lang-switch__link" href="en/privacy.html" lang="en" hreflang="en" data-set-lang="en">EN</a>
+        </nav>
+
+        <!-- Indirizzo e telefono da Google Maps. -->
+        <div class="nav-overlay__meta">
+          <p class="nav-overlay__meta-line">
+            <a href="https://www.google.com/maps/search/?api=1&amp;query=Big%20Art%20Gallery%2C%20Via%20delle%20Passiflore%2C%2031%2C%2000172%20Roma" target="_blank" rel="noopener">
+              Via delle Passiflore, 31, 00172 Roma RM
+              <span class="visually-hidden">(si apre in una nuova scheda)</span>
+            </a>
+          </p>
+          <p class="nav-overlay__meta-line">
+            <a href="tel:+39065434834">06 543 4834</a>
+          </p>
+          <p class="nav-overlay__meta-line">
+            <a href="https://instagram.com/bigartgallerystudio" target="_blank" rel="noopener">
+              &#64;bigartgallerystudio
+            </a>
+          </p>
+        </div>
+
+      </div>
+
+    </nav>
+  </div>
+
+  <main id="main">
+
+    <!-- ==========================================================================
+         INFORMATIVA PRIVACY E COOKIE (GDPR art. 13)
+
+         Il testo va fatto rileggere al consulente del cliente. Se un giorno
+         si aggiungono analytics, mappe incorporate, embed Instagram o font
+         esterni, questa pagina va aggiornata e serve un banner di consenso.
+         Tenere allineato con en/privacy.html.
+         ========================================================================== -->
+
+    <section class="page-hero" aria-labelledby="privacy-title">
+      <div class="page-hero__inner container">
+
+        <h1 class="page-hero__title" id="privacy-title">Privacy e cookie</h1>
+
+        <div class="rule page-hero__rule" aria-hidden="true">
+          <span class="rule__diamond"></span>
+        </div>
+
+        <p class="page-hero__lead">
+          Quali dati raccogliamo quando visiti il sito o ci scrivi, perch&eacute;
+          e per quanto tempo.
+        </p>
+
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="container">
+        <div class="legal">
+
+          <h2>Titolare del trattamento</h2>
+          <p>
+            <strong>BIG ART GALLERY S.r.l.s.</strong><br>
+            Sede legale: Via Nino Ilari, 11 &ndash; 00169 Roma RM<br>
+            Studio: Via delle Passiflore, 31 &ndash; 00172 Roma RM<br>
+            C.F. e P. IVA 16110741002<br>
+            Email: <a href="mailto:info@bigartgallerystudio.com">info@bigartgallerystudio.com</a><br>
+            Telefono: <a href="tel:+39065434834">06 543 4834</a>
+          </p>
+
+          <h2>Quali dati trattiamo</h2>
+          <p><strong>Dati che ci invii con il modulo di contatto:</strong></p>
+          <ul>
+            <li>nome, indirizzo email e, se lo indichi, numero di telefono;</li>
+            <li>stile scelto, artista scelto e descrizione dell&rsquo;idea che hai in mente;</li>
+            <li>data, ora e indirizzo IP da cui parte l&rsquo;invio, registrati per riconoscere abusi e spam.</li>
+          </ul>
+          <p>
+            Ti chiediamo di <strong>non inserire nel modulo informazioni sulla salute</strong>
+            (allergie, terapie, cicatrici e simili): ne parliamo di persona in studio,
+            durante la consulenza.
+          </p>
+          <p><strong>Dati di navigazione:</strong> come ogni sito web, il server che lo ospita
+            registra in automatico l&rsquo;indirizzo IP, la data e l&rsquo;ora, la pagina richiesta
+            e il tipo di browser. Servono solo al funzionamento e alla sicurezza del sito.</p>
+
+          <h2>Perch&eacute; li trattiamo e su quale base</h2>
+          <ul>
+            <li><strong>Rispondere alla tua richiesta</strong> e organizzare la consulenza o
+              l&rsquo;appuntamento: misure precontrattuali richieste da te
+              (art. 6.1.b GDPR).</li>
+            <li><strong>Sicurezza del sito e prevenzione degli abusi</strong>: nostro legittimo
+              interesse (art. 6.1.f GDPR).</li>
+          </ul>
+          <p>
+            Non usiamo i tuoi dati per newsletter, pubblicit&agrave; o profilazione, e non li
+            vendiamo n&eacute; li cediamo a terzi.
+          </p>
+
+          <h2>&Egrave; obbligatorio fornirli?</h2>
+          <p>
+            No, ma senza nome, email e descrizione della richiesta non possiamo risponderti.
+            Il telefono &egrave; facoltativo.
+          </p>
+
+          <h2>Chi li riceve</h2>
+          <p>
+            I dati restano al nostro studio. Il sito e la posta elettronica sono ospitati da
+            <strong>Aruba S.p.A.</strong>, che agisce come responsabile del trattamento su
+            server in Italia/Unione Europea. I dati non vengono trasferiti fuori dall&rsquo;Unione
+            Europea.
+          </p>
+
+          <h2>Per quanto tempo</h2>
+          <ul>
+            <li>Richieste dal modulo: per il tempo necessario a gestirle e comunque non oltre
+              <strong>12 mesi</strong> dall&rsquo;ultimo contatto, se non diventano un appuntamento.
+              Se diventano un appuntamento, li conserviamo per il tempo previsto dagli obblighi
+              di legge legati al servizio.</li>
+            <li>Dati di navigazione: per il tempo strettamente necessario alla sicurezza del
+              servizio, secondo le impostazioni del fornitore di hosting.</li>
+          </ul>
+
+          <h2>I tuoi diritti</h2>
+          <p>
+            Puoi chiederci in ogni momento di accedere ai tuoi dati, correggerli,
+            cancellarli, limitarne il trattamento, opporti al trattamento o riceverli in un
+            formato leggibile (artt. 15&ndash;22 GDPR). Basta scrivere a
+            <a href="mailto:info@bigartgallerystudio.com">info@bigartgallerystudio.com</a>.
+          </p>
+          <p>
+            Se ritieni che il trattamento violi la normativa, puoi presentare reclamo al
+            Garante per la protezione dei dati personali
+            (<a href="https://www.garanteprivacy.it" target="_blank" rel="noopener">garanteprivacy.it<span class="visually-hidden"> (si apre in una nuova scheda)</span></a>).
+          </p>
+
+          <h2 id="cookie">Cookie</h2>
+          <p>
+            Questo sito <strong>non usa cookie</strong>: n&eacute; di profilazione, n&eacute;
+            di statistica, n&eacute; di terze parti. Per questo non trovi un banner di consenso.
+          </p>
+          <p>
+            L&rsquo;unica informazione salvata nel tuo browser &egrave; la
+            <strong>lingua che scegli</strong> (italiano o inglese), nella memoria locale del
+            browser (localStorage, voce <code>elbig-lang</code>). &Egrave; uno strumento
+            tecnico, necessario a mostrarti il sito nella lingua scelta, e non richiede
+            consenso. Puoi cancellarlo quando vuoi dalle impostazioni del browser.
+          </p>
+          <p>
+            I caratteri tipografici sono serviti dal nostro stesso server: navigando il sito
+            non contatti servizi esterni.
+          </p>
+
+          <h2>Link ad altri siti</h2>
+          <p>
+            I link a Instagram, Google Maps e al nostro shop online aprono siti esterni, con le
+            loro informative e i loro cookie. Finch&eacute; non li apri, non ricevono nessun
+            dato da questo sito.
+          </p>
+
+          <p class="legal__updated">Ultimo aggiornamento: 29 ottobre 2026</p>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       FOOTER — identico a quello della home, id #contatti compreso: è il
+       bersaglio dei bottoni "Prenota" quando il JS non c'è.
+
+       Il logo qui punta a index.html come quello in header. "Torna su" resta
+       su #top: la sentinella è in cima anche a questa pagina.
+
+       Indirizzo e telefono da Google Maps, come in home. Handle Instagram
+       e fascia oraria settimanale vanno ancora confermati. Vanno aggiornati in index.html,
+       artisti.html e nei due menu overlay insieme.
+       ========================================================================== -->
+
+  <footer class="footer" id="contatti">
+    <div class="container">
+
+      <div class="footer__top">
+
+        <div class="footer__brand">
+          <a class="logo footer__logo" href="index.html" aria-label="Big Art Gallery, torna alla home">
+            <img class="logo__img" src="assets/logo.png" alt="" width="303" height="265">
+          </a>
+          <p class="footer__tagline">Black &amp; Grey Tattoo Studio</p>
+        </div>
+
+        <div class="footer__col">
+          <h2 class="footer__label">Dove siamo</h2>
+          <address class="footer__value">
+            <a class="footer__link"
+               href="https://www.google.com/maps/search/?api=1&amp;query=Big%20Art%20Gallery%2C%20Via%20delle%20Passiflore%2C%2031%2C%2000172%20Roma"
+               target="_blank" rel="noopener">
+              Via delle Passiflore, 31<br>
+              00172 Roma RM
+              <span class="visually-hidden">(si apre in una nuova scheda)</span>
+            </a>
+          </address>
+        </div>
+
+        <div class="footer__col">
+          <h2 class="footer__label">Prenotazioni</h2>
+          <p class="footer__value">
+            <a class="footer__link" href="tel:+39065434834">06 543 4834</a>
+          </p>
+        </div>
+
+        <div class="footer__col">
+          <h2 class="footer__label">Instagram</h2>
+          <p class="footer__value">
+            <a class="footer__link"
+               href="https://instagram.com/bigartgallerystudio"
+               target="_blank" rel="noopener">
+              &#64;bigartgallerystudio
+              <span class="visually-hidden">(si apre in una nuova scheda)</span>
+            </a>
+          </p>
+        </div>
+
+        <div class="footer__col">
+          <h2 class="footer__label">Orari</h2>
+          <p class="footer__value">
+            Luned&igrave; &ndash; Sabato<br>
+            10:00 &ndash; 19:00
+          </p>
+        </div>
+
+      </div>
+
+      <div class="footer__bottom">
+        <p class="footer__legal">&copy; 2026 Big Art Gallery S.r.l.s. &middot; P. IVA 16110741002</p>
+
+        <nav class="lang-switch" aria-label="Lingua">
+          <span class="lang-switch__current" lang="it" aria-current="true">IT</span>
+          <span class="lang-switch__sep" aria-hidden="true"></span>
+          <a class="lang-switch__link" href="en/privacy.html" lang="en" hreflang="en" data-set-lang="en">EN</a>
+        </nav>
+
+        <a class="footer__legal-link" href="privacy.html" aria-current="page">Privacy e cookie</a>
+
+        <a class="footer__top-link" href="#top">
+          Torna su
+          <span class="footer__arrow" aria-hidden="true">&#8593;</span>
+        </a>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       MODALE CONTATTI — stesso markup di index.html.
+
+       Sta qui perché il bottone "Prenota il tuo tattoo" nell'header esiste
+       anche su questa pagina e deve fare la stessa cosa. Vive fuori da <main>
+       e in fondo al body: a modale aperto il JS mette `inert` su tutti gli
+       altri figli del body, e un elemento non può inertizzare il proprio
+       antenato.
+
+       ⚠️ Se si tocca il form, va toccato in entrambe le pagine.
+       ========================================================================== -->
+
+  <div class="modal" id="contact-modal" inert>
+
+    <div class="modal__scrim" id="contact-modal-scrim" aria-hidden="true"></div>
+
+    <div class="modal__panel"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="modal-title"
+         aria-describedby="modal-lead">
+
+      <button class="modal__close" type="button" id="contact-modal-close" aria-label="Chiudi">
+        <span class="modal__close-mark" aria-hidden="true"></span>
+      </button>
+
+      <div class="modal__scroll">
+
+        <div class="modal__head" id="contact-modal-head">
+          <h2 class="modal__title" id="modal-title">Richiedi il tuo tattoo</h2>
+          <div class="rule rule--sm modal__rule" aria-hidden="true">
+            <span class="rule__diamond"></span>
+          </div>
+          <p class="modal__lead" id="modal-lead">
+            Raccontaci l&rsquo;idea, anche se per ora &egrave; solo
+            un&rsquo;immagine in testa. Ti rispondiamo con una proposta di
+            disegno e una data.
+          </p>
+        </div>
+
+        <form class="form" id="contact-form" novalidate>
+
+          <div class="field">
+            <label class="field__label" for="cf-nome">Nome</label>
+            <input class="field__input"
+                   type="text"
+                   id="cf-nome"
+                   name="nome"
+                   autocomplete="name"
+                   required
+                   aria-describedby="cf-nome-error">
+            <p class="field__error" id="cf-nome-error" hidden></p>
+          </div>
+
+          <div class="form__row">
+
+            <div class="field">
+              <label class="field__label" for="cf-email">Email</label>
+              <input class="field__input"
+                     type="email"
+                     id="cf-email"
+                     name="email"
+                     autocomplete="email"
+                     inputmode="email"
+                     required
+                     aria-describedby="cf-email-error">
+              <p class="field__error" id="cf-email-error" hidden></p>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="cf-telefono">
+                Telefono
+                <span class="field__optional">facoltativo</span>
+              </label>
+              <input class="field__input"
+                     type="tel"
+                     id="cf-telefono"
+                     name="telefono"
+                     autocomplete="tel"
+                     inputmode="tel"
+                     aria-describedby="cf-telefono-error">
+              <p class="field__error" id="cf-telefono-error" hidden></p>
+            </div>
+
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="cf-stile">Stile</label>
+            <div class="field__select-wrap">
+              <select class="field__input field__select"
+                      id="cf-stile"
+                      name="stile"
+                      required
+                      aria-describedby="cf-stile-error">
+                <option value="" disabled selected>Scegli uno stile</option>
+                <option value="Black &amp; Grey">Black &amp; Grey</option>
+                <option value="Realism">Realism</option>
+                <option value="Fine Line">Fine Line</option>
+                <option value="Lettering">Lettering</option>
+                <option value="Altro">Altro / non lo so ancora</option>
+              </select>
+              <span class="field__chevron" aria-hidden="true"></span>
+            </div>
+            <p class="field__error" id="cf-stile-error" hidden></p>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="cf-messaggio">Il progetto</label>
+            <textarea class="field__input field__textarea"
+                      id="cf-messaggio"
+                      name="messaggio"
+                      rows="4"
+                      required
+                      placeholder="Soggetto, zona del corpo, dimensione indicativa, riferimenti che ti piacciono."
+                      aria-describedby="cf-messaggio-error"></textarea>
+            <p class="field__error" id="cf-messaggio-error" hidden></p>
+          </div>
+
+          <!-- Trappola per bot: un campo che un umano non vede e non
+               raggiunge col tab. Se arriva compilato, l'invio viene scartato
+               in silenzio. -->
+          <div class="form__trap" aria-hidden="true">
+            <label for="cf-sito">Non compilare questo campo</label>
+            <input type="text" id="cf-sito" name="sito" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div class="form__foot">
+            <button class="btn btn--primary form__submit" type="submit" id="cf-submit">
+              Invia la richiesta
+            </button>
+
+            <p class="form__status" id="cf-status" role="status" hidden></p>
+
+            <p class="form__note">
+              Ti rispondiamo entro due giorni lavorativi. Nessun impegno.
+            </p>
+
+            <p class="form__note">
+              Usiamo i tuoi dati solo per rispondere alla richiesta.
+              <a href="privacy.html" target="_blank" rel="noopener">Informativa privacy<span class="visually-hidden"> (si apre in una nuova scheda)</span></a>
+            </p>
+          </div>
+
+        </form>
+
+        <div class="modal__done" id="contact-done" tabindex="-1" hidden>
+          <span class="modal__done-mark" aria-hidden="true"></span>
+          <h3 class="modal__done-title">Richiesta inviata</h3>
+          <p class="modal__done-body">
+            Abbiamo la tua idea. Ti scriviamo entro due giorni lavorativi
+            all&rsquo;indirizzo che ci hai lasciato.
+          </p>
+          <button class="btn btn--outline" type="button" id="contact-done-close">
+            Chiudi
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="js/main.js" defer></script>
+</body>
+</html>

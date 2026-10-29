@@ -8,40 +8,26 @@ Canonico previsto a go-live: **`https://tuodominio.it`** (senza `www`). I redire
 
 ## 1. Cosa caricare via FTP
 
+**Tutto e solo il contenuto di `public/`.** Il sito vive lì dentro; il resto della repo (questo file, `documentation/`, `.git/`, `.claude/`…) resta in locale e non va mai sul server.
+
 Destinazione sul server Aruba Linux: cartella pubblica **`/www/`** (su alcuni piani Windows è `/httpdocs/` — questo progetto si aspetta Apache + `.htaccess`, quindi hosting **Linux**).
 
-Carica **il contenuto** della cartella di progetto, non la cartella stessa, così `index.html` finisce in root pubblica.
-
-### Sì — questi file e cartelle
+Carica **il contenuto** di `public/`, non la cartella stessa: `public/index.html` deve finire in `/www/index.html`. In FileZilla: a sinistra entri in `public/`, selezioni tutto, trascini in `/www/`.
 
 ```
-index.html
-artisti.html
-artista-*.html (nove pagine: big, simone, valerio, blessed, alessandro,
-                angela, lobo, giuseppe, christian)
-404.html
-.htaccess
-css/           (style.css)
-js/            (main.js, lang.js)
-en/            (index.html, artisti.html, artista-*.html, 404.html — versione inglese)
-images/        (foto del cliente, quando ci sono)
-assets/        (favicon.svg, poi logo/favicon.ico)
-api/           (contact.php)
+public/
+  index.html, artisti.html, artista-*.html, privacy.html, 404.html
+  .htaccess
+  favicon.ico
+  css/  js/  fonts/  images/  assets/  api/
+  en/   (stesse pagine in inglese, privacy.html compresa)
 ```
 
 In FileZilla attiva *Server → Forza visualizzazione file nascosti*, altrimenti `.htaccess` non si vede e non si carica.
 
-Trasferimento: **testo/ASCII** per html, css, js, php, htaccess; **binario** per immagini, svg, font, ico.
+Trasferimento: **testo/ASCII** per html, css, js, php, htaccess; **binario** per immagini, svg, font (`.woff2`), ico.
 
-### No — non caricare
-
-| Percorso | Perché |
-| --- | --- |
-| `documentation/` | Brief interni |
-| `DEPLOY.md` | Questo file |
-| `.agents/`, `.claude/`, `skills-lock.json` | Skill per lo sviluppo |
-| `.git/` | Cronologia git |
-| `node_modules/` | Non c’è, e non deve esserci |
+Il Mac crea `.DS_Store` anche dentro `public/`: se finisce sul server non succede niente, `.htaccess` blocca i file che iniziano col punto e quelli di lavoro (`.md`, `.json`, `.env`, `.bak`…). È una rete di sicurezza, non un motivo per caricare altro.
 
 ---
 
@@ -53,11 +39,11 @@ Percorso sul server, rispetto alla root pubblica:
 /www/api/contact.php
 ```
 
-Il JavaScript chiama l’endpoint risolvendolo da `js/main.js` (non dalla pagina), così funziona sia da `index.html` sia da `en/index.html`. Lo script PHP vive in `api/contact.php`.
+Il JavaScript chiama l’endpoint risolvendolo da `js/main.js` (non dalla pagina), così funziona sia da `index.html` sia da `en/index.html`. Lo script PHP vive in `public/api/contact.php`.
 
 Il form invia anche `lang` (`it` o `en`): oggetto e corpo della mail seguono la lingua del visitatore. `MAIL_SUBJECT` resta il fallback italiano.
 
-**Prima di caricare** apri `api/contact.php` e sostituisci le tre costanti in testa:
+**Prima di caricare** apri `public/api/contact.php` e sostituisci le tre costanti in testa:
 
 ```php
 const MAIL_TO   = 'INFO@TUODOMINIO.IT';       // casella che riceve le richieste
@@ -111,7 +97,7 @@ ErrorDocument 404 /sito/404.html
 2. **SSL** attivo sul dominio (Let’s Encrypt / certificato incluso nel piano). Senza SSL il redirect HTTPS in `.htaccess` manda in loop o in errore.
 3. Crea la casella `MAIL_FROM` (e quella `MAIL_TO`, se diversa).
 4. Credenziali FTP dal pannello (host tipo `ftp.tuodominio.it`, utente, password).
-5. Connettiti, apri `/www/`, carica l’elenco del punto 1.
+5. Connettiti, apri `/www/`, carica il contenuto di `public/` (punto 1).
 6. Verifica che `.htaccess` sia davvero sul server (file nascosti).
 7. Apri `https://tuodominio.it` (o `https://tuodominio.it/sito/` se in sottocartella).
 
@@ -149,7 +135,9 @@ Spunta tutto prima di considerare il sito pubblico. I dati oggi in pagina sono q
 - [ ] Testo about dello studio riletto col cliente (`index.html`, sezione Studio)
 - [ ] Bio artisti sostituite: quella corta in `artisti.html` e quella lunga in `artista-*.html` (IT **e** EN)
 - [ ] Nomi degli artisti confermati. Se cambiano: rinominare i file `artista-*.html`, i link in `index.html` e `artisti.html`, la fascia precedente/successivo in fondo a ogni pagina artista, il campo `cf-artista` di ciascuna e la lista `$artisti_ammessi` in `api/contact.php`
-- [ ] P. IVA e link privacy / cookie nel footer (obbligatori per un’attività italiana)
+- [x] Ragione sociale, sede legale e P. IVA nel footer e in `privacy.html` / `en/privacy.html`
+- [ ] Numero REA e capitale sociale nel footer (art. 2250 c.c., obbligatori per le società) — da chiedere al cliente
+- [ ] Informativa privacy riletta dal consulente del cliente (tempi di conservazione compresi)
 
 ### Immagini (oggi sono placeholder)
 
@@ -199,6 +187,15 @@ Sostituire indirizzo, telefono, orari e Instagram **ovunque** compaiono:
 - [ ] URL inesistente (es. `/questa-non-c-e`) mostra la 404 del sito, non quella di Aruba
 - [ ] URL inesistente sotto `/en/` mostra `en/404.html` (RewriteRule scommentata)
 - [ ] 404: CSS caricato, bottoni Home / Artisti funzionanti anche da un path annidato (`/foo/bar`)
+
+### Privacy e sicurezza
+
+- [ ] Nessuna richiesta a domini esterni: DevTools → Network, ricarica, tutto da `tuodominio.it` (i font sono in `fonts/`, non Google Fonts)
+- [ ] Footer: link “Privacy e cookie” → `privacy.html` (e `en/privacy.html` da EN)
+- [ ] Modale: link “Informativa privacy” sotto il bottone si apre in una nuova scheda
+- [ ] Console del browser pulita: nessun errore `Content-Security-Policy` (se compare, una risorsa esterna è stata aggiunta senza aggiornare la CSP in `.htaccess`)
+- [ ] `https://tuodominio.it/.htaccess` e `https://tuodominio.it/.DS_Store` rispondono 403
+- [ ] Se si aggiungono analytics, mappe o video incorporati, feed Instagram: aggiornare informativa e CSP, e serve un banner cookie con consenso
 
 ### HTTPS, www, mobile
 
