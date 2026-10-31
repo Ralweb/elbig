@@ -89,6 +89,12 @@ ErrorDocument 404 /sito/404.html
 # RewriteRule ^en/ /sito/en/404.html [L]
 ```
 
+### URL senza .html
+
+I link interni puntano a `artisti`, `privacy`, `gift-card`… senza estensione. `.htaccess` serve il file `.html` corrispondente, e chi arriva con un vecchio link `pagina.html` (Google, segnalibri, Stripe) riceve un 301 sull'indirizzo pulito; `index.html` diventa `/` e `en/index.html` diventa `/en/`.
+
+Le regole valgono col sito **in root**. In una sottocartella di test i redirect puntano alla root sbagliata: lì vanno commentate (blocco "URL senza .html" in `.htaccess`).
+
 ---
 
 ## 4. Passi sul pannello Aruba, poi FTP
@@ -123,7 +129,88 @@ I redirect HTTPS/www si scommentano **solo** quando questo sito sostituisce Word
 
 ---
 
-## 6. Checklist pre-live
+## 6. Gift card (Stripe)
+
+Sostituisce il WordPress/WooCommerce su `shop.bigartgallerystudio.com`. Pagine `gift-card.html` ed `en/gift-card.html`, pagamento su Stripe Checkout, codici in un database SQLite sul server. Niente MySQL, niente Composer.
+
+### File
+
+```
+public/
+  gift-card.html, en/gift-card.html   pagina d'acquisto
+  js/giftcard.js                      form → checkout
+  api/giftcard-checkout.php           crea il pagamento Stripe
+  api/stripe-webhook.php              Stripe conferma → codice + mail
+  api/giftcard-cron.php               regali programmati + mail da riprovare
+  admin/index.php, admin/admin.css    pagina dello studio
+  private/                            BLOCCATA dal browser (.htaccess)
+    config.php                        chiavi — NON in git, va caricato via FTP
+    config.example.php                modello di config.php
+    lib.php, mail.php                 codice condiviso, template email
+    data/giftcards.sqlite             creato da solo al primo acquisto
+```
+
+`private/.htaccess` è un file nascosto: in FileZilla attiva la visualizzazione dei file nascosti e verifica che sia sul server. Dopo il deploy, `https://bigartgallerystudio.com/private/config.php` deve rispondere **403**.
+
+### 1. Stripe (prima in modalità test)
+
+1. Crea l'account Stripe a nome della S.r.l.s. e completa la verifica (dati aziendali, IBAN).
+2. **Sviluppatori → Chiavi API**: copia la chiave segreta `sk_test_…` in `STRIPE_SECRET_KEY`.
+3. **Sviluppatori → Webhook → Aggiungi endpoint**:
+   - URL: `https://bigartgallerystudio.com/api/stripe-webhook.php`
+   - eventi: `checkout.session.completed`, `checkout.session.async_payment_succeeded`
+   - copia la "chiave segreta di firma" `whsec_…` in `STRIPE_WEBHOOK_SECRET`.
+4. **Impostazioni → Metodi di pagamento**: carte, Apple Pay, Google Pay (PayPal se il cliente lo vuole). Il codice non li elenca: Stripe mostra quelli attivi.
+5. **Impostazioni → Email clienti**: attiva le ricevute di pagamento, se il cliente le vuole oltre alla nostra mail.
+
+### 2. config.php
+
+Copia `private/config.example.php` in `private/config.php` e compila: chiavi Stripe, `CRON_KEY` (stringa lunga casuale), `ADMIN_PASSWORD`, caselle mail. Finché resta un `XXX` checkout, webhook, cron e admin rispondono "non configurato".
+
+`GC_MAIL_FROM` deve essere una casella reale del dominio su Aruba, come per il form contatti.
+
+### 3. Cron (regali programmati)
+
+L'hosting Aruba non ha cron. Usa [cron-job.org](https://cron-job.org) (gratis): nuovo cronjob ogni **10 minuti** su
+
+```
+https://bigartgallerystudio.com/api/giftcard-cron.php?key=CRON_KEY
+```
+
+Risposta attesa: `ok, mail inviate: N`. Senza cron, i regali con consegna immediata partono comunque (li manda il webhook); restano ferme solo le consegne programmate e le mail da riprovare.
+
+### 4. Prova in test
+
+1. Compra una gift card con la carta di prova `4242 4242 4242 4242`, scadenza futura qualsiasi, CVC qualsiasi.
+2. Devono arrivare la mail con il codice e l'avviso allo studio; la card compare in `/admin/`.
+3. Prova un regalo programmato tra 15 minuti: deve partire al giro di cron successivo.
+4. Stripe → Webhook → l'endpoint deve mostrare risposte **200**.
+
+### 5. Go-live
+
+1. Stripe in modalità live: nuova `sk_live_…` e **nuovo** endpoint webhook live (il `whsec_` cambia).
+2. Aggiorna `config.php` e ricaricalo via FTP.
+3. Un acquisto vero da pochi euro (importo libero, minimo 20 €), poi rimborsalo da Stripe.
+
+### 6. Vecchio shop
+
+Quando la nuova pagina è live, nella cartella del sottodominio `shop.` lascia solo un `.htaccess`:
+
+```apache
+Redirect 301 / https://bigartgallerystudio.com/gift-card.html
+```
+
+Prima fai il backup di WordPress (file + database). Il sottodominio si toglie dopo qualche mese, quando non arriva più traffico.
+
+### Admin
+
+`https://bigartgallerystudio.com/admin/`: cerca un codice (bastano anche 4 caratteri), vede importo, scadenza, acquirente e destinatario, segna come usata con una nota, rimanda la mail. Dopo 5 password sbagliate in 15 minuti lo stesso IP resta bloccato per un quarto d'ora.
+
+Backup: scarica ogni tanto `private/data/giftcards.sqlite` via FTP. I pagamenti restano comunque su Stripe (con `giftcard_ref` nei metadati).
+
+---
+
+## 7. Checklist pre-live
 
 Spunta tutto prima di considerare il sito pubblico. I dati oggi in pagina sono quelli del mockup, **non** quelli reali.
 
@@ -204,6 +291,17 @@ Sostituire indirizzo, telefono, orari e Instagram **ovunque** compaiono:
 - [ ] Certificato valido, lucchetto ok su iPhone e Android
 - [ ] Home, artisti, modale: viewport 360–414, 768, 1280+
 - [ ] Nessun mix http/https su immagini o script
+
+### Gift card
+
+- [ ] `private/config.php` compilato e caricato; `/private/config.php` risponde 403
+- [ ] Acquisto di prova in test: mail al cliente, avviso allo studio, card in `/admin/`
+- [ ] Regalo programmato: parte al giro di cron (cron-job.org attivo)
+- [ ] Webhook Stripe con risposte 200
+- [ ] Condizioni della gift card e informativa privacy rilette dal consulente (recesso, IVA buoni multiuso)
+- [ ] Stripe in live con chiave e webhook live
+- [ ] Bottone gift card in `index.html` ed `en/index.html` da `shop.…` a `gift-card.html` (istruzioni nel commento sopra la sezione)
+- [ ] `shop.bigartgallerystudio.com` → 301 su `gift-card.html`
 
 ### Dopo il primo giorno live
 

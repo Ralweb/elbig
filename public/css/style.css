@@ -4272,3 +4272,397 @@ body.has-lightbox-open {
   margin-block-start: var(--space-xl);
   font-size: var(--fs-small);
 }
+
+
+/* ============================================================================
+   PAGINA GIFT CARD — gift-card.html, en/gift-card.html
+
+   Il form d'acquisto accanto alla carta della home, che qui porta sopra
+   l'importo scelto. Da 960px la carta resta ferma a sinistra mentre il
+   form scorre: si vede cosa si sta comprando fino al bottone di pagamento.
+   Sotto, la carta sta in testa, più piccola, e il form segue in colonna.
+
+   I campi sono quelli del modale contatti (.field, .field__input…). Nuovi
+   qui solo i controlli che il modale non ha: tagli, scelta del destinatario,
+   casella delle condizioni.
+   ========================================================================== */
+
+.gc__layout {
+  display: grid;
+  gap: var(--space-2xl);
+  max-width: 68rem;
+  margin-inline: auto;
+}
+
+@media (min-width: 960px) {
+  .gc__layout {
+    grid-template-columns: 5fr 6fr;
+    align-items: start;
+    gap: var(--space-3xl);
+  }
+
+  .gc__preview {
+    position: sticky;
+    inset-block-start: calc(var(--header-height) + var(--space-xl));
+  }
+}
+
+.gc__stack {
+  width: min(24rem, 100%);
+  margin-block-start: 0;
+  margin-inline: auto;
+}
+
+.gc__stack .giftcard__mark {
+  width: 20%;
+}
+
+/* L'importo è la sola riga grande della carta: condensed bold come i
+   titoli, così si legge come cifra stampata e non come testo. */
+.gc__amount {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 6vw, 2.5rem);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-title);
+  line-height: 1;
+}
+
+.gc-form {
+  margin-block-start: 0;
+}
+
+.gc-form__row {
+  display: grid;
+  gap: var(--space-lg);
+}
+
+@media (min-width: 560px) {
+  .gc-form__row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.gc-group {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.gc-group__legend {
+  padding: 0;
+  margin-block-end: var(--space-xs);
+}
+
+.gc-custom {
+  margin-block-start: var(--space-md);
+}
+
+/* Le frecce del campo numerico sono un controllo grigio del sistema
+   operativo in mezzo a una riga hairline: si scrive la cifra e basta. */
+.gc-custom .field__input {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.gc-custom .field__input::-webkit-inner-spin-button,
+.gc-custom .field__input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+/* --- Tagli ---
+   Radio veri, nascosti ma raggiungibili da tastiera: le frecce scorrono i
+   tagli come in qualsiasi gruppo di radio. Il taglio scelto si riempie di
+   bianco, come il bottone primario: è la stessa scelta, fatta prima. */
+
+.gc-amounts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2xs);
+}
+
+.gc-chip {
+  position: relative;
+  display: flex;
+}
+
+.gc-chip input,
+.gc-option input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.gc-chip span {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding-inline: var(--space-xs);
+  border: var(--hairline) solid var(--color-border);
+  border-radius: var(--radius-button);
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.02em;
+  line-height: 1;
+  pointer-events: none;
+  transition:
+    background-color var(--duration-fast) ease,
+    border-color var(--duration-fast) ease,
+    color var(--duration-fast) ease;
+}
+
+.gc-chip--wide {
+  grid-column: 1 / -1;
+}
+
+.gc-chip--wide span {
+  font-size: var(--fs-eyebrow);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.gc-chip input:checked + span {
+  background-color: var(--color-bg-inverse);
+  border-color: var(--color-bg-inverse);
+  color: var(--color-text-inverse);
+}
+
+.gc-chip input:focus-visible + span,
+.gc-option input:focus-visible ~ .gc-option__mark {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .gc-chip:hover input:not(:checked) + span {
+    border-color: var(--color-border-strong);
+  }
+}
+
+
+/* --- A chi la mandiamo ---
+   Due superfici con il rombo del monogramma: vuoto, o pieno se scelto.
+   È lo stesso rombo pieno della conferma del modale — "questa è fatta". */
+
+.gc-options {
+  display: grid;
+  gap: var(--space-2xs);
+}
+
+@media (min-width: 560px) {
+  .gc-options {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.gc-option {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-3xs) var(--space-xs);
+  align-content: start;
+  padding: var(--space-sm);
+  border: var(--hairline) solid var(--color-border);
+  border-radius: var(--radius-card);
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) ease,
+    background-color var(--duration-fast) ease;
+}
+
+.gc-option:has(input:checked) {
+  border-color: var(--color-border-strong);
+  background-color: var(--color-bg-raised);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .gc-option:hover {
+    border-color: var(--color-border-strong);
+  }
+}
+
+.gc-option__mark {
+  align-self: center;
+  width: 8px;
+  height: 8px;
+  margin-inline: 2px;
+  border: var(--hairline) solid var(--color-text-faint);
+  transform: rotate(45deg);
+  transition:
+    background-color var(--duration-fast) ease,
+    border-color var(--duration-fast) ease;
+}
+
+.gc-option input:checked ~ .gc-option__mark {
+  background-color: var(--white);
+  border-color: var(--white);
+}
+
+.gc-option__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wide);
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.gc-option__hint {
+  grid-column: 2;
+  font-size: var(--fs-small);
+  line-height: var(--lh-tight);
+  color: var(--color-text-faint);
+}
+
+
+/* --- Blocco regalo --- */
+
+.gc-gift {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding-inline-start: var(--space-sm);
+  border-inline-start: var(--hairline) solid var(--color-border);
+}
+
+.gc-hint {
+  margin-block-start: calc(var(--space-sm) * -1);
+  font-size: var(--fs-small);
+  line-height: var(--lh-tight);
+  color: var(--color-text-faint);
+}
+
+
+/* --- Condizioni --- */
+
+.gc-terms {
+  padding-block-start: var(--space-md);
+  border-block-start: var(--hairline) solid var(--color-border-soft);
+}
+
+.gc-terms__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.gc-terms__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  margin-block: var(--space-sm) var(--space-md);
+  font-size: var(--fs-small);
+  line-height: var(--lh-body);
+  color: var(--color-text-muted);
+}
+
+/* Il punto elenco è il rombo piccolo dei divisori. */
+.gc-terms__list li {
+  position: relative;
+  padding-inline-start: var(--space-sm);
+}
+
+.gc-terms__list li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 1px;
+  inset-block-start: 0.7em;
+  width: 4px;
+  height: 4px;
+  border: var(--hairline) solid var(--color-text-faint);
+  transform: rotate(45deg);
+}
+
+.gc-check {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  font-size: var(--fs-small);
+  line-height: var(--lh-tight);
+  cursor: pointer;
+}
+
+.gc-check input {
+  flex: 0 0 auto;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin: 0;
+  accent-color: var(--white);
+  cursor: pointer;
+}
+
+.gc-check:has(input[aria-invalid="true"]) {
+  color: var(--color-error);
+}
+
+
+/* --- Esiti di ritorno da Stripe --- */
+
+.gc-notice {
+  max-width: 40rem;
+  margin: 0 auto var(--space-xl);
+  padding: var(--space-xs) var(--space-sm);
+  border: var(--hairline) solid var(--color-border-strong);
+  border-radius: var(--radius-card);
+  font-size: var(--fs-small);
+  line-height: var(--lh-tight);
+  text-align: center;
+}
+
+.gc-done {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  max-width: 34rem;
+  margin-inline: auto;
+  padding-block: var(--space-xl);
+  text-align: center;
+}
+
+.gc-done:focus {
+  outline: none;
+}
+
+.gc-done__mark {
+  width: 10px;
+  height: 10px;
+  background-color: var(--white);
+  transform: rotate(45deg);
+}
+
+.gc-done__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-subtitle);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wide);
+  line-height: var(--lh-title);
+  text-transform: uppercase;
+}
+
+.gc-done__body {
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+  color: var(--color-text-muted);
+}
+
+.gc-done__note {
+  font-size: var(--fs-small);
+  color: var(--color-text-faint);
+}
+
+.gc-done__note a {
+  color: var(--color-text-muted);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}

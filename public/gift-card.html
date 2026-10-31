@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Gift card &mdash; Big Art Gallery</title>
+  <meta name="description" content="Regala un tatuaggio da Big Art Gallery, Roma: gift card da 50 a 500 &euro; o importo libero, valida 12 mesi, consegna via email anche in un giorno e un&rsquo;ora a scelta.">
+
+  <!-- Colore della barra browser su mobile: allineato al fondo pagina -->
+  <meta name="theme-color" content="#0a0a0a">
+
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" href="assets/favicon.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+
+  <!-- Open Graph: da completare con og:image quando arrivano le foto reali -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="it_IT">
+  <meta property="og:locale:alternate" content="en_GB">
+  <meta property="og:title" content="Gift card &mdash; Big Art Gallery">
+  <meta property="og:description" content="Regala un tatuaggio da Big Art Gallery, Roma: gift card da 50 a 500 &euro; o importo libero, valida 12 mesi, consegna via email anche in un giorno e un&rsquo;ora a scelta.">
+
+  <!-- FONT — Oswald + Archivo serviti dal sito (fonts/, @font-face in
+       css/style.css). Niente Google Fonts: nessuna richiesta a terzi,
+       quindi l'IP del visitatore non arriva a Google. -->
+  <link rel="preload" href="fonts/oswald-latin.woff2" as="font" type="font/woff2" crossorigin>
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <link rel="alternate" hreflang="it" href="gift-card">
+  <link rel="alternate" hreflang="en" href="en/gift-card">
+  <link rel="alternate" hreflang="x-default" href="gift-card">
+  <script src="js/lang.js"></script>
+</head>
+
+<body>
+
+  <a class="skip-link" href="#main">Vai al contenuto</a>
+
+  <!-- ==========================================================================
+       HEADER + NAV — come artisti.html, senza voce corrente: questa pagina
+       non è nel menu, ci si arriva dalla sezione Gift card della home.
+       ========================================================================== -->
+
+  <div id="top" class="header-sentinel"></div>
+
+  <header class="site-header" id="site-header">
+    <div class="site-header__inner container">
+
+      <a class="logo" href="./" aria-label="Big Art Gallery, torna alla home">
+        <img class="logo__img" src="assets/logo.png" alt="" width="303" height="265">
+      </a>
+
+      <nav class="nav-desktop" aria-label="Principale">
+        <ul class="nav-desktop__list" role="list">
+          <li><a class="nav-desktop__link" href="./">Home</a></li>
+          <li><a class="nav-desktop__link" href="./#our-work">Our Work</a></li>
+          <li><a class="nav-desktop__link" href="artisti">Artisti</a></li>
+          <li><a class="nav-desktop__link" href="./#studio">Studio</a></li>
+          <li><a class="nav-desktop__link" href="#contatti">Contatti</a></li>
+        </ul>
+      </nav>
+
+      <div class="site-header__actions">
+        <nav class="lang-switch" aria-label="Lingua">
+          <span class="lang-switch__current" lang="it" aria-current="true">IT</span>
+          <span class="lang-switch__sep" aria-hidden="true"></span>
+          <a class="lang-switch__link" href="en/gift-card" lang="en" hreflang="en" data-set-lang="en">EN</a>
+        </nav>
+
+        <!-- data-open-modal apre il modale contatti (js/main.js). Resta un
+             <a href="#contatti">: senza JS cade sui recapiti del footer. -->
+        <a class="btn btn--primary btn--sm" href="#contatti" data-open-modal>
+          <span class="btn__label">Prenota il tuo tattoo</span>
+          <span class="btn__label btn__label--short">Prenota</span>
+        </a>
+
+        <button
+          class="nav-toggle"
+          id="nav-toggle"
+          type="button"
+          aria-label="Apri il menu"
+          aria-expanded="false"
+          aria-controls="nav-overlay">
+          <span class="nav-toggle__bar" aria-hidden="true"></span>
+          <span class="nav-toggle__bar" aria-hidden="true"></span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <div class="nav-overlay" id="nav-overlay" inert>
+    <nav class="nav-overlay__nav container" aria-label="Menu">
+
+      <ul class="nav-overlay__list" role="list">
+        <li class="nav-overlay__item">
+          <a class="nav-overlay__link" href="./">Home</a>
+        </li>
+        <li class="nav-overlay__item">
+          <a class="nav-overlay__link" href="./#our-work">Our Work</a>
+        </li>
+        <li class="nav-overlay__item">
+          <a class="nav-overlay__link" href="artisti">Artisti</a>
+        </li>
+        <li class="nav-overlay__item">
+          <a class="nav-overlay__link" href="./#studio">Studio</a>
+        </li>
+        <li class="nav-overlay__item">
+          <a class="nav-overlay__link" href="#contatti">Contatti</a>
+        </li>
+      </ul>
+
+      <div class="nav-overlay__foot">
+
+        <!-- Il selettore lingua vive qui sotto i 900px: nell'header, accanto
+             a logo, bottone e hamburger, toglieva aria alla CTA su schermi
+             stretti. Sta sopra i recapiti perché è informazione
+             di servizio come loro. Da 900px in su torna nell'header — vedi il
+             blocco "Lingua" nel CSS. -->
+        <nav class="lang-switch" aria-label="Lingua">
+          <span class="lang-switch__current" lang="it" aria-current="true">IT</span>
+          <span class="lang-switch__sep" aria-hidden="true"></span>
+          <a class="lang-switch__link" href="en/gift-card" lang="en" hreflang="en" data-set-lang="en">EN</a>
+        </nav>
+
+        <!-- Indirizzo e telefono da Google Maps. -->
+        <div class="nav-overlay__meta">
+          <p class="nav-overlay__meta-line">
+            <a href="https://www.google.com/maps/search/?api=1&amp;query=Big%20Art%20Gallery%2C%20Via%20delle%20Passiflore%2C%2031%2C%2000172%20Roma" target="_blank" rel="noopener">
+              Via delle Passiflore, 31, 00172 Roma RM
+              <span class="visually-hidden">(si apre in una nuova scheda)</span>
+            </a>
+          </p>
+          <p class="nav-overlay__meta-line">
+            <a href="tel:+39065434834">06 543 4834</a>
+          </p>
+          <p class="nav-overlay__meta-line">
+            <a href="https://instagram.com/bigartgallerystudio" target="_blank" rel="noopener">
+              &#64;bigartgallerystudio
+            </a>
+          </p>
+        </div>
+
+      </div>
+
+    </nav>
+  </div>
+
+  <main id="main">
+
+    <!-- ==========================================================================
+         GIFT CARD — acquisto
+
+         Al posto del vecchio shop WooCommerce su shop.bigartgallerystudio.com.
+         Il form non paga: js/giftcard.js lo manda ad api/giftcard-checkout.php,
+         che apre il pagamento su Stripe. Da lì si torna qui con ?esito=ok
+         (mostra #gc-done) o ?esito=annullato (mostra #gc-cancelled).
+
+         Tagli in pagina = GC_AMOUNTS in private/config.php: se cambiano, vanno
+         cambiati in tutti e due i posti, e in en/gift-card.html.
+         Tenere allineato con en/gift-card.html.
+         ========================================================================== -->
+
+    <section class="page-hero" aria-labelledby="gc-title">
+      <div class="page-hero__inner container">
+
+        <h1 class="page-hero__title" id="gc-title">Gift card</h1>
+
+        <div class="rule page-hero__rule" aria-hidden="true">
+          <span class="rule__diamond"></span>
+        </div>
+
+        <p class="page-hero__lead">
+          Regala un tatuaggio. Tu scegli l&rsquo;importo; il disegno,
+          l&rsquo;artista e la data li sceglie chi la riceve.
+        </p>
+
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="container gc">
+
+        <!-- Ritorno da Stripe con pagamento riuscito. Il codice qui non c'è:
+             arriva per mail quando Stripe conferma al webhook, di solito in
+             pochi secondi. -->
+        <div class="gc-done" id="gc-done" tabindex="-1" hidden>
+          <span class="gc-done__mark" aria-hidden="true"></span>
+          <h2 class="gc-done__title">Pagamento ricevuto</h2>
+          <p class="gc-done__body">
+            Grazie. Tra pochi minuti ti arriva una mail con il codice della
+            gift card. Se l&rsquo;hai programmata per qualcun altro, la
+            ricever&agrave; il giorno e all&rsquo;ora che hai scelto.
+          </p>
+          <p class="gc-done__note">
+            Non la trovi? Guarda nello spam, oppure scrivici a
+            <a href="mailto:info@bigartgallerystudio.com">info@bigartgallerystudio.com</a>.
+          </p>
+          <a class="btn btn--outline" href="./">Torna alla home</a>
+        </div>
+
+        <p class="gc-notice" id="gc-cancelled" role="status" hidden>
+          Pagamento annullato: non ti &egrave; stato addebitato nulla. Puoi riprovare quando vuoi.
+        </p>
+
+        <div class="gc__layout" id="gc-layout">
+
+          <!-- La stessa carta della home, con l'importo scelto sopra. Si
+               aggiorna mentre si sceglie: aria-hidden, perché lo stesso
+               importo lo dice il bottone di pagamento. -->
+          <div class="gc__preview" aria-hidden="true">
+            <div class="giftcard__stack gc__stack">
+              <span class="giftcard__card giftcard__card--back"></span>
+              <span class="giftcard__card giftcard__card--front">
+                <span class="giftcard__center">
+                  <span class="logo giftcard__mark">
+                    <img class="logo__img" src="assets/logo.png" alt="" width="303" height="265">
+                  </span>
+                  <span class="giftcard__kind">Gift card</span>
+                  <span class="gc__amount" data-gc-amount>100 &euro;</span>
+                </span>
+                <span class="giftcard__row giftcard__row--foot">
+                  <span>Valida 12 mesi</span>
+                  <span>Roma</span>
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <form class="form gc-form" id="gc-form" novalidate>
+
+            <fieldset class="gc-group">
+              <legend class="field__label gc-group__legend">Importo</legend>
+              <div class="gc-amounts">
+                <label class="gc-chip"><input type="radio" name="importo" value="50"><span>50 &euro;</span></label>
+                <label class="gc-chip"><input type="radio" name="importo" value="100" checked><span>100 &euro;</span></label>
+                <label class="gc-chip"><input type="radio" name="importo" value="200"><span>200 &euro;</span></label>
+                <label class="gc-chip"><input type="radio" name="importo" value="300"><span>300 &euro;</span></label>
+                <label class="gc-chip"><input type="radio" name="importo" value="400"><span>400 &euro;</span></label>
+                <label class="gc-chip"><input type="radio" name="importo" value="500"><span>500 &euro;</span></label>
+                <label class="gc-chip gc-chip--wide"><input type="radio" name="importo" value="altro"><span>Altro importo</span></label>
+              </div>
+
+              <div class="field gc-custom" id="gc-custom" hidden>
+                <label class="field__label" for="gc-importo-altro">
+                  Importo in euro
+                  <span class="field__optional">da 20 a 2.000 &euro;</span>
+                </label>
+                <input class="field__input"
+                       type="number"
+                       id="gc-importo-altro"
+                       name="importo_altro"
+                       min="20"
+                       max="2000"
+                       step="1"
+                       inputmode="numeric"
+                       aria-describedby="gc-importo-altro-error">
+                <p class="field__error" id="gc-importo-altro-error" hidden></p>
+              </div>
+            </fieldset>
+
+            <fieldset class="gc-group">
+              <legend class="field__label gc-group__legend">A chi la mandiamo</legend>
+              <div class="gc-options">
+                <label class="gc-option">
+                  <input type="radio" name="regalo" value="0" checked>
+                  <span class="gc-option__mark" aria-hidden="true"></span>
+                  <span class="gc-option__title">A me</span>
+                  <span class="gc-option__hint">La ricevo io e la regalo come voglio: inoltro, stampa, biglietto.</span>
+                </label>
+                <label class="gc-option">
+                  <input type="radio" name="regalo" value="1">
+                  <span class="gc-option__mark" aria-hidden="true"></span>
+                  <span class="gc-option__title">Direttamente a chi la riceve</span>
+                  <span class="gc-option__hint">Scegli giorno e ora: la mail parte da sola, con il tuo messaggio.</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <div class="gc-form__row">
+              <div class="field">
+                <label class="field__label" for="gc-nome">Il tuo nome</label>
+                <input class="field__input" type="text" id="gc-nome" name="nome" autocomplete="name" maxlength="120" required aria-describedby="gc-nome-error">
+                <p class="field__error" id="gc-nome-error" hidden></p>
+              </div>
+              <div class="field">
+                <label class="field__label" for="gc-email">La tua email</label>
+                <input class="field__input" type="email" id="gc-email" name="email" autocomplete="email" inputmode="email" maxlength="180" required aria-describedby="gc-email-error">
+                <p class="field__error" id="gc-email-error" hidden></p>
+              </div>
+            </div>
+
+            <div class="gc-gift" id="gc-gift" hidden>
+
+              <div class="gc-form__row">
+                <div class="field">
+                  <label class="field__label" for="gc-dest-nome">Nome di chi la riceve</label>
+                  <input class="field__input" type="text" id="gc-dest-nome" name="dest_nome" autocomplete="off" maxlength="120" aria-describedby="gc-dest-nome-error">
+                  <p class="field__error" id="gc-dest-nome-error" hidden></p>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="gc-dest-email">Email di chi la riceve</label>
+                  <input class="field__input" type="email" id="gc-dest-email" name="dest_email" autocomplete="off" inputmode="email" maxlength="180" aria-describedby="gc-dest-email-error">
+                  <p class="field__error" id="gc-dest-email-error" hidden></p>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="gc-messaggio">
+                  Il tuo messaggio
+                  <span class="field__optional">facoltativo</span>
+                </label>
+                <textarea class="field__input field__textarea" id="gc-messaggio" name="messaggio" rows="3" maxlength="500"
+                          placeholder="Due righe da leggere prima del codice."
+                          aria-describedby="gc-messaggio-error"></textarea>
+                <p class="field__error" id="gc-messaggio-error" hidden></p>
+              </div>
+
+              <div class="gc-form__row">
+                <div class="field">
+                  <label class="field__label" for="gc-data">Giorno di consegna</label>
+                  <input class="field__input" type="date" id="gc-data" name="data" aria-describedby="gc-data-error gc-data-hint">
+                  <p class="field__error" id="gc-data-error" hidden></p>
+                </div>
+                <div class="field">
+                  <label class="field__label" for="gc-ora">Ora</label>
+                  <input class="field__input" type="time" id="gc-ora" name="ora" value="09:00" step="900" aria-describedby="gc-data-hint">
+                </div>
+              </div>
+              <p class="gc-hint" id="gc-data-hint">
+                Ora italiana. Oggi con un orario gi&agrave; passato = parte subito dopo il pagamento.
+                Puoi programmarla fino a 6 mesi avanti; i 12 mesi di validit&agrave; partono dalla consegna.
+              </p>
+
+            </div>
+
+            <div class="gc-terms">
+              <h2 class="gc-terms__title">Condizioni</h2>
+              <!-- ⚠️ Da far rileggere al consulente del cliente, insieme al
+                   trattamento IVA dei buoni (multiuso: IVA all'utilizzo). -->
+              <ul class="gc-terms__list" role="list">
+                <li>Vale 12 mesi dalla consegna: dal giorno dell&rsquo;acquisto, o dal giorno scelto per l&rsquo;invio se &egrave; un regalo.</li>
+                <li>Si usa nello studio Big Art Gallery, Via delle Passiflore 31, Roma, su appuntamento.</li>
+                <li>L&rsquo;importo si scala dal prezzo del lavoro. Non &egrave; convertibile in denaro.</li>
+                <li>Il codice vale per chi lo presenta: custodiscilo come un contante.</li>
+                <li>Se non l&rsquo;hai ancora usata, puoi recedere entro 14 giorni dall&rsquo;acquisto scrivendo a info@bigartgallerystudio.com.</li>
+              </ul>
+              <label class="gc-check">
+                <input type="checkbox" id="gc-termini" name="termini" value="1" aria-describedby="gc-termini-error">
+                <span>Ho letto e accetto le condizioni della gift card.</span>
+              </label>
+              <p class="field__error" id="gc-termini-error" hidden></p>
+            </div>
+
+            <div class="form__trap" aria-hidden="true">
+              <label for="gc-sito">Non compilare questo campo</label>
+              <input type="text" id="gc-sito" name="sito" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div class="form__foot">
+              <button class="btn btn--primary form__submit" type="submit" id="gc-submit">
+                Paga <span data-gc-amount>100 &euro;</span>
+              </button>
+
+              <p class="form__status" id="gc-status" role="status" hidden></p>
+
+              <p class="form__note">
+                Pagamento sicuro su Stripe: carta, Apple Pay, Google Pay.
+                I dati della carta non passano dal nostro sito.
+              </p>
+              <p class="form__note">
+                Usiamo i dati solo per emettere e consegnare la gift card.
+                <a href="privacy#gift-card" target="_blank" rel="noopener">Informativa privacy<span class="visually-hidden"> (si apre in una nuova scheda)</span></a>
+              </p>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       FOOTER — identico a quello della home, id #contatti compreso: è il
+       bersaglio dei bottoni "Prenota" quando il JS non c'è.
+
+       Il logo qui punta a index.html come quello in header. "Torna su" resta
+       su #top: la sentinella è in cima anche a questa pagina.
+
+       Indirizzo e telefono da Google Maps, come in home. Handle Instagram
+       e fascia oraria settimanale vanno ancora confermati. Vanno aggiornati in index.html,
+       artisti.html e nei due menu overlay insieme.
+       ========================================================================== -->
+
+  <footer class="footer" id="contatti">
+    <div class="container">
+
+      <div class="footer__top">
+
+        <div class="footer__brand">
+          <a class="logo footer__logo" href="./" aria-label="Big Art Gallery, torna alla home">
+            <img class="logo__img" src="assets/logo.png" alt="" width="303" height="265">
+          </a>
+          <p class="footer__tagline">Black &amp; Grey Tattoo Studio</p>
+        </div>
+
+        <div class="footer__col">
+          <h2 class="footer__label">Dove siamo</h2>
+          <address class="footer__value">
+            <a class="footer__link"
+               href="https://www.google.com/maps/search/?api=1&amp;query=Big%20Art%20Gallery%2C%20Via%20delle%20Passiflore%2C%2031%2C%2000172%20Roma"
+               target="_blank" rel="noopener">
+              Via delle Passiflore, 31<br>
+              00172 Roma RM
+              <span class="visually-hidden">(si apre in una nuova scheda)</span>
+            </a>
+          </address>
+        </div>
+
+        <div class="footer__col">
+          <h2 class="footer__label">Prenotazioni</h2>
+          <p class="footer__value">
+            <a class="footer__link" href="tel:+39065434834">06 543 4834</a>
+          </p>
+        </div>
+
+        <div class="footer__col">
+          <h2 class="footer__label">Instagram</h2>
+          <p class="footer__value">
+            <a class="footer__link"
+               href="https://instagram.com/bigartgallerystudio"
+               target="_blank" rel="noopener">
+              &#64;bigartgallerystudio
+              <span class="visually-hidden">(si apre in una nuova scheda)</span>
+            </a>
+          </p>
+        </div>
+
+        <div class="footer__col">
+          <h2 class="footer__label">Orari</h2>
+          <p class="footer__value">
+            Luned&igrave; &ndash; Sabato<br>
+            10:00 &ndash; 19:00
+          </p>
+        </div>
+
+      </div>
+
+      <div class="footer__bottom">
+        <p class="footer__legal">&copy; 2026 Big Art Gallery S.r.l.s. &middot; P. IVA 16110741002</p>
+
+        <nav class="lang-switch" aria-label="Lingua">
+          <span class="lang-switch__current" lang="it" aria-current="true">IT</span>
+          <span class="lang-switch__sep" aria-hidden="true"></span>
+          <a class="lang-switch__link" href="en/gift-card" lang="en" hreflang="en" data-set-lang="en">EN</a>
+        </nav>
+
+        <a class="footer__legal-link" href="privacy">Privacy e cookie</a>
+
+        <a class="footer__top-link" href="#top">
+          Torna su
+          <span class="footer__arrow" aria-hidden="true">&#8593;</span>
+        </a>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       MODALE CONTATTI — stesso markup di index.html.
+
+       Sta qui perché il bottone "Prenota il tuo tattoo" nell'header esiste
+       anche su questa pagina e deve fare la stessa cosa. Vive fuori da <main>
+       e in fondo al body: a modale aperto il JS mette `inert` su tutti gli
+       altri figli del body, e un elemento non può inertizzare il proprio
+       antenato.
+
+       ⚠️ Se si tocca il form, va toccato in entrambe le pagine.
+       ========================================================================== -->
+
+  <div class="modal" id="contact-modal" inert>
+
+    <div class="modal__scrim" id="contact-modal-scrim" aria-hidden="true"></div>
+
+    <div class="modal__panel"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="modal-title"
+         aria-describedby="modal-lead">
+
+      <button class="modal__close" type="button" id="contact-modal-close" aria-label="Chiudi">
+        <span class="modal__close-mark" aria-hidden="true"></span>
+      </button>
+
+      <div class="modal__scroll">
+
+        <div class="modal__head" id="contact-modal-head">
+          <h2 class="modal__title" id="modal-title">Richiedi il tuo tattoo</h2>
+          <div class="rule rule--sm modal__rule" aria-hidden="true">
+            <span class="rule__diamond"></span>
+          </div>
+          <p class="modal__lead" id="modal-lead">
+            Raccontaci l&rsquo;idea, anche se per ora &egrave; solo
+            un&rsquo;immagine in testa. Ti rispondiamo con una proposta di
+            disegno e una data.
+          </p>
+        </div>
+
+        <form class="form" id="contact-form" novalidate>
+
+          <div class="field">
+            <label class="field__label" for="cf-nome">Nome</label>
+            <input class="field__input"
+                   type="text"
+                   id="cf-nome"
+                   name="nome"
+                   autocomplete="name"
+                   required
+                   aria-describedby="cf-nome-error">
+            <p class="field__error" id="cf-nome-error" hidden></p>
+          </div>
+
+          <div class="form__row">
+
+            <div class="field">
+              <label class="field__label" for="cf-email">Email</label>
+              <input class="field__input"
+                     type="email"
+                     id="cf-email"
+                     name="email"
+                     autocomplete="email"
+                     inputmode="email"
+                     required
+                     aria-describedby="cf-email-error">
+              <p class="field__error" id="cf-email-error" hidden></p>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="cf-telefono">
+                Telefono
+                <span class="field__optional">facoltativo</span>
+              </label>
+              <input class="field__input"
+                     type="tel"
+                     id="cf-telefono"
+                     name="telefono"
+                     autocomplete="tel"
+                     inputmode="tel"
+                     aria-describedby="cf-telefono-error">
+              <p class="field__error" id="cf-telefono-error" hidden></p>
+            </div>
+
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="cf-stile">Stile</label>
+            <div class="field__select-wrap">
+              <select class="field__input field__select"
+                      id="cf-stile"
+                      name="stile"
+                      required
+                      aria-describedby="cf-stile-error">
+                <option value="" disabled selected>Scegli uno stile</option>
+                <option value="Black &amp; Grey">Black &amp; Grey</option>
+                <option value="Realism">Realism</option>
+                <option value="Fine Line">Fine Line</option>
+                <option value="Lettering">Lettering</option>
+                <option value="Altro">Altro / non lo so ancora</option>
+              </select>
+              <span class="field__chevron" aria-hidden="true"></span>
+            </div>
+            <p class="field__error" id="cf-stile-error" hidden></p>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="cf-messaggio">Il progetto</label>
+            <textarea class="field__input field__textarea"
+                      id="cf-messaggio"
+                      name="messaggio"
+                      rows="4"
+                      required
+                      placeholder="Soggetto, zona del corpo, dimensione indicativa, riferimenti che ti piacciono."
+                      aria-describedby="cf-messaggio-error"></textarea>
+            <p class="field__error" id="cf-messaggio-error" hidden></p>
+          </div>
+
+          <!-- Trappola per bot: un campo che un umano non vede e non
+               raggiunge col tab. Se arriva compilato, l'invio viene scartato
+               in silenzio. -->
+          <div class="form__trap" aria-hidden="true">
+            <label for="cf-sito">Non compilare questo campo</label>
+            <input type="text" id="cf-sito" name="sito" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div class="form__foot">
+            <button class="btn btn--primary form__submit" type="submit" id="cf-submit">
+              Invia la richiesta
+            </button>
+
+            <p class="form__status" id="cf-status" role="status" hidden></p>
+
+            <p class="form__note">
+              Ti rispondiamo entro due giorni lavorativi. Nessun impegno.
+            </p>
+
+            <p class="form__note">
+              Usiamo i tuoi dati solo per rispondere alla richiesta.
+              <a href="privacy" target="_blank" rel="noopener">Informativa privacy<span class="visually-hidden"> (si apre in una nuova scheda)</span></a>
+            </p>
+          </div>
+
+        </form>
+
+        <div class="modal__done" id="contact-done" tabindex="-1" hidden>
+          <span class="modal__done-mark" aria-hidden="true"></span>
+          <h3 class="modal__done-title">Richiesta inviata</h3>
+          <p class="modal__done-body">
+            Abbiamo la tua idea. Ti scriviamo entro due giorni lavorativi
+            all&rsquo;indirizzo che ci hai lasciato.
+          </p>
+          <button class="btn btn--outline" type="button" id="contact-done-close">
+            Chiudi
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="js/main.js" defer></script>
+  <script src="js/giftcard.js" defer></script>
+</body>
+</html>

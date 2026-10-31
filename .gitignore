@@ -1,3 +1,7 @@
 .agents/*
 .claude/*
 .DS_Store
+
+# Gift card: chiavi e database restano fuori da git
+public/private/config.php
+public/private/data/

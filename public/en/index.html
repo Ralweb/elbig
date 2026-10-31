@@ -70,7 +70,7 @@
           <li><a class="nav-desktop__link" href="#studio">Studio</a></li>
           <li><a class="nav-desktop__link" href="#contatti">Contact</a></li>
           <li>
-            <a class="nav-desktop__link nav-desktop__link--ext" href="artisti.html">
+            <a class="nav-desktop__link nav-desktop__link--ext" href="artisti">
               All artists
               <span aria-hidden="true">&#8599;</span>
             </a>
@@ -131,7 +131,7 @@
           <a class="nav-overlay__link" href="#contatti">Contact</a>
         </li>
         <li class="nav-overlay__item">
-          <a class="nav-overlay__link" href="artisti.html">
+          <a class="nav-overlay__link" href="artisti">
             All artists
             <span class="visually-hidden">(separate page)</span>
             <span class="nav-overlay__ext" aria-hidden="true">&#8599;</span>
@@ -486,7 +486,7 @@
                al posto della foto c'è un'etichetta di servizio. -->
 
           <li class="artists__slot">
-            <a class="artist" href="artista-big.html">
+            <a class="artist" href="artista-big">
               <div class="artist__media">
                 <img class="artist__img"
                      src="../images/artista-big.webp"
@@ -507,7 +507,7 @@
           </li>
 
           <li class="artists__slot">
-            <a class="artist" href="artista-simone.html">
+            <a class="artist" href="artista-simone">
               <div class="artist__media">
                 <img class="artist__img"
                      src="../images/artista-simone.webp"
@@ -528,7 +528,7 @@
           </li>
 
           <li class="artists__slot">
-            <a class="artist" href="artista-valerio.html">
+            <a class="artist" href="artista-valerio">
               <div class="artist__media">
                 <img class="artist__img"
                      src="../images/artista-valerio.webp"
@@ -549,7 +549,7 @@
           </li>
 
           <li class="artists__slot">
-            <a class="artist" href="artista-blessed.html">
+            <a class="artist" href="artista-blessed">
               <div class="artist__media">
                 <div class="placeholder" aria-hidden="true">
                   <span class="placeholder__label">Photo Blessed</span>
@@ -568,7 +568,7 @@
           </li>
 
           <li class="artists__slot">
-            <a class="artist" href="artista-alessandro.html">
+            <a class="artist" href="artista-alessandro">
               <div class="artist__media">
                 <div class="placeholder" aria-hidden="true">
                   <span class="placeholder__label">Photo Alessandro</span>
@@ -587,7 +587,7 @@
           </li>
 
           <li class="artists__slot">
-            <a class="artist" href="artista-angela.html">
+            <a class="artist" href="artista-angela">
               <div class="artist__media">
                 <div class="placeholder" aria-hidden="true">
                   <span class="placeholder__label">Photo Angela</span>
@@ -606,7 +606,7 @@
           </li>
 
           <li class="artists__slot">
-            <a class="artist" href="artista-lobo.html">
+            <a class="artist" href="artista-lobo">
               <div class="artist__media">
                 <div class="placeholder" aria-hidden="true">
                   <span class="placeholder__label">Photo Lobo</span>
@@ -625,7 +625,7 @@
           </li>
 
           <li class="artists__slot">
-            <a class="artist" href="artista-giuseppe.html">
+            <a class="artist" href="artista-giuseppe">
               <div class="artist__media">
                 <div class="placeholder" aria-hidden="true">
                   <span class="placeholder__label">Photo Giuseppe</span>
@@ -644,7 +644,7 @@
           </li>
 
           <li class="artists__slot">
-            <a class="artist" href="artista-christian.html">
+            <a class="artist" href="artista-christian">
               <div class="artist__media">
                 <div class="placeholder" aria-hidden="true">
                   <span class="placeholder__label">Photo Christian</span>
@@ -671,7 +671,7 @@
         </div>
 
         <div class="artists__cta">
-          <a class="btn btn--outline" href="artisti.html">See all artists</a>
+          <a class="btn btn--outline" href="artisti">See all artists</a>
         </div>
 
       </div>
@@ -799,10 +799,12 @@
          pagina il pieno bianco è della prenotazione; la gift card è la seconda
          strada, e la gerarchia si deve vedere prima di leggere.
 
-         ⚠️ PLACEHOLDER — href="#": manca l'URL dello shop dove si acquista la
-         card. Se lo shop sta su un dominio esterno, il link va completato con
-         target="_blank" rel="noopener" e con lo <span class="visually-hidden">
-         "(si apre in una nuova scheda)", come sul link Instagram qui sotto.
+         ⚠️ Il bottone punta ANCORA al vecchio WooCommerce su
+         shop.bigartgallerystudio.com, finché Stripe non è configurato.
+         La pagina nuova (gift-card.html) è già online ma raggiungibile solo
+         dal link diretto. A go-live con Stripe il bottone diventa:
+           <a class="btn btn--outline giftcard__btn" href="gift-card">
+         senza target, rel e freccia ↗ (stesso sito, stessa scheda).
          ========================================================================== -->
 
     <section class="section giftcard" id="gift-card" aria-labelledby="giftcard-title">
@@ -833,12 +835,11 @@
               <span class="giftcard__kind">Gift card</span>
             </span>
 
-            <!-- ⚠️ PLACEHOLDER — taglio e scadenza vanno confermati col
-                 cliente. Finché non sono certi la carta non dichiara né
-                 importi né mesi di validità: meglio muta che sbagliata. -->
+            <!-- Validità confermata col cliente: 12 mesi (GC_VALIDITY_MONTHS
+                 in private/config.php). Se cambia, cambia anche qui. -->
             <span class="giftcard__row giftcard__row--foot">
               <span>Amount of your choice</span>
-              <span>Roma</span>
+              <span>Valid 12 months</span>
             </span>
           </span>
 
@@ -1001,7 +1002,7 @@
           <span class="lang-switch__current" lang="en" aria-current="true">EN</span>
         </nav>
 
-        <a class="footer__legal-link" href="privacy.html">Privacy &amp; cookies</a>
+        <a class="footer__legal-link" href="privacy">Privacy &amp; cookies</a>
 
         <a class="footer__top-link" href="#top">
           Back to top
@@ -1169,7 +1170,7 @@
 
             <p class="form__note">
               We only use your details to reply to your request.
-              <a href="privacy.html" target="_blank" rel="noopener">Privacy policy<span class="visually-hidden"> (opens in a new tab)</span></a>
+              <a href="privacy" target="_blank" rel="noopener">Privacy policy<span class="visually-hidden"> (opens in a new tab)</span></a>
             </p>
           </div>
 

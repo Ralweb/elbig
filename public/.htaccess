@@ -26,7 +26,7 @@ DirectoryIndex index.html index.php
   RewriteEngine On
   RewriteRule (^|/)\.(?!well-known/) - [F,L]
 </IfModule>
-<FilesMatch "\.(md|log|bak|sql|ini|env|sh|json|lock|orig|swp)$|~$">
+<FilesMatch "\.(md|log|bak|sql|sqlite|sqlite-journal|db|ini|env|sh|json|lock|orig|swp)$|~$">
   Require all denied
 </FilesMatch>
 
@@ -54,6 +54,28 @@ DirectoryIndex index.html index.php
   # RewriteCond %{REQUEST_FILENAME} !-f
   # RewriteCond %{REQUEST_FILENAME} !-d
   # RewriteRule ^en/ /en/404.html [L]
+
+  # --- URL senza .html ------------------------------------------------------
+  # /gift-card.html → 301 su /gift-card, /index.html → /. Si guarda
+  # THE_REQUEST (la riga che ha scritto il browser) e non l'URL interno:
+  # così la riscrittura qui sotto, che aggiunge .html, non rimbalza in loop.
+  # Vale solo col sito in root: in sottocartella i path vanno prefissati.
+  RewriteCond %{THE_REQUEST} ^[A-Z]+\s/+((?:[^\s?]*/)?)index\.html[\s?] [NC]
+  RewriteRule ^ /%1 [R=301,L,NE]
+
+  RewriteCond %{THE_REQUEST} ^[A-Z]+\s/+([^\s?]+)\.html[\s?] [NC]
+  RewriteRule ^ /%1 [R=301,L,NE]
+
+  # /gift-card/ con la barra → /gift-card. Servita con la barra, la pagina
+  # cercherebbe css/ e js/ dentro una cartella /gift-card/ che non esiste.
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.+)/$ /$1 [R=301,L]
+
+  # /gift-card → serve gift-card.html, se esiste. Le cartelle (/en/,
+  # /admin/) passano oltre e prendono il loro index.
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME}.html -f
+  RewriteRule ^(.+)$ $1.html [L]
 
   # --- Canonico SENZA www + HTTPS (un solo 301) ---------------------------
   # Scommenta SOLO a go-live sul dominio vuoto, senza WordPress accanto.
